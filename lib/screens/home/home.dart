@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import './appbar.dart';
+import 'package:frontend_flutter/widgets/app_bar/index.dart';
 
-void main() => runApp(BeepApp());
-
-class BeepApp extends StatelessWidget {
+class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
