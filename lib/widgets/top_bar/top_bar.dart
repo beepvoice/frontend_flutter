@@ -1,10 +1,10 @@
 import "package:flutter/material.dart";
 
-class AppBar extends StatelessWidget {
+class TopBar extends StatelessWidget {
   final String title;
-  final double barHeight = 5.0;
+  final double barHeight = 40.0;
 
-  AppBar(title) : title = title;
+  TopBar(title) : title = title;
 
   @override
   Widget build(BuildContext context) {
