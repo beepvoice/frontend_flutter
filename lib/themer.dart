@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 const primaryColor = const Color(0xFF29C3EF);
 const primaryColorDark = const Color(0xFF3270F8);
 const accentColor = const Color(0xFF103168);
+const indicatorColor = const Color(0xFFFF7865);
 
 ThemeData buildTheme() {
   final ThemeData base = ThemeData.light();
@@ -10,8 +11,10 @@ ThemeData buildTheme() {
   return base.copyWith(
       accentColor: accentColor,
       primaryColor: primaryColor,
+      primaryColorLight: Colors.white,
       primaryColorDark: primaryColorDark,
       highlightColor: accentColor,
+      indicatorColor: indicatorColor,
       textTheme: buildTextTheme(base.textTheme),
       primaryTextTheme: buildTextTheme(base.textTheme),
       accentTextTheme: buildTextTheme(base.textTheme),

@@ -11,6 +11,7 @@ class TopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final double statusbarHeight = MediaQuery.of(context).padding.top;
 
+    // TODO: Fix cropping by moving onto stack, refactor widget into smaller parts
     return Material(
         type: MaterialType.canvas,
         elevation: 10.0,
