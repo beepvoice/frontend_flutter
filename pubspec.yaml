@@ -8,7 +8,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  font_awesome_flutter: ^8.4.0
+  flutter_svg: ^0.10.3
 
 
 dev_dependencies:
@@ -16,6 +16,12 @@ dev_dependencies:
     sdk: flutter
 
 flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/logo.svg
+    - assets/logo.png
+
   fonts:
   - family: Inter
     fonts:

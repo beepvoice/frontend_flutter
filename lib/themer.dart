@@ -11,9 +11,13 @@ ThemeData buildTheme() {
       accentColor: accentColor,
       primaryColor: primaryColor,
       primaryColorDark: primaryColorDark,
+      highlightColor: accentColor,
       textTheme: buildTextTheme(base.textTheme),
       primaryTextTheme: buildTextTheme(base.textTheme),
-      accentTextTheme: buildTextTheme(base.textTheme));
+      accentTextTheme: buildTextTheme(base.textTheme),
+      iconTheme: buildIconTheme(),
+      primaryIconTheme: buildIconTheme(),
+      accentIconTheme: buildIconTheme());
 }
 
 TextTheme buildTextTheme(TextTheme base) {
@@ -29,4 +33,8 @@ TextTheme buildTextTheme(TextTheme base) {
           fontFamily: 'Inter',
           displayColor: Colors.white,
           bodyColor: accentColor);
+}
+
+IconThemeData buildIconTheme() {
+  return IconThemeData(color: Colors.white, opacity: 1.0, size: 24.0);
 }
