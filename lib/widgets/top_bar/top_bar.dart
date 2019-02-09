@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 
 class TopBar extends StatelessWidget {
   final String title;
-  final double barHeight = 40.0;
+  final double barHeight = 50.0;
 
   TopBar(title) : title = title;
 
@@ -10,21 +10,22 @@ class TopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final double statusbarHeight = MediaQuery.of(context).padding.top;
 
-    return new Container(
-      padding: new EdgeInsets.only(top: statusbarHeight),
-      height: statusbarHeight + barHeight,
-      child: new Center(
-        child: new Text(
-          title,
-          style: new TextStyle(
-              fontSize: 20.0, color: Colors.white, fontWeight: FontWeight.bold),
-        ),
+    return Container(
+      padding: EdgeInsets.only(top: statusbarHeight, bottom: statusbarHeight),
+      height: statusbarHeight * 2,
+      child: Row(
+        children: <Widget>[
+          Text("Conversations", style: Theme.of(context).textTheme.display1)
+        ],
       ),
-      decoration: new BoxDecoration(
-        gradient: new LinearGradient(
-            colors: [Colors.red, Colors.blue],
-            begin: const FractionalOffset(0.0, 0.0),
-            end: const FractionalOffset(0.5, 0.0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+            colors: [
+              Theme.of(context).primaryColor,
+              Theme.of(context).primaryColorDark
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
             stops: [0.0, 1.0],
             tileMode: TileMode.clamp),
       ),
