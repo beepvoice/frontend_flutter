@@ -47,7 +47,7 @@ class TopBar extends StatelessWidget {
                     ],
                   ),
                   Positioned(
-                      child: Text("Conversations",
+                      child: Text(title,
                           style: Theme.of(context).textTheme.display1)),
                 ]),
                 Row(
