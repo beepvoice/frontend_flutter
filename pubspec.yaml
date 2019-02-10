@@ -1,5 +1,5 @@
 name: frontend_flutter
-description: A new Flutter project.
+description: The new way to communicate with your friends and family by merging the efficiency of voice calls with the convenience of messaging. 
 version: 1.0.0+1
 
 environment:
@@ -8,12 +8,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_svg: ^0.10.3
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: "^0.7.0"
+
+flutter_icons:
+  image_path: "assets/icon.png"
+  ios: true
+  android: true
 
 flutter:
   uses-material-design: true
