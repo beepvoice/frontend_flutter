@@ -5,7 +5,7 @@ import 'themer.dart';
 
 class Routes {
   final routes = <String, WidgetBuilder>{
-    '/home': (BuildContext context) => Home()
+    '/home': (BuildContext context) => Container(child: Home()),
   };
 
   final theme = buildTheme();
@@ -15,7 +15,7 @@ class Routes {
       title: "Beep",
       theme: theme,
       routes: routes,
-      home: Home(),
+      home: Container(child: Home()),
     ));
   }
 }

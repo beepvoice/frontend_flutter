@@ -2,10 +2,11 @@ import "package:flutter/material.dart";
 
 class TopBar extends StatelessWidget {
   final String title;
+  final int pageNumber;
   final double barHeight = 100.0;
   final String logo = "assets/logo.png";
 
-  TopBar(title) : title = title;
+  TopBar({@required this.title, @required this.pageNumber});
 
   @override
   Widget build(BuildContext context) {
@@ -34,16 +35,8 @@ class TopBar extends StatelessWidget {
                               width: 24.0,
                               height: 24.0)),
                       Spacer(),
-                      IconButton(
-                          icon: Icon(Icons.search),
-                          onPressed: () {
-                            print("Pressed");
-                          }),
-                      IconButton(
-                          icon: Icon(Icons.dehaze),
-                          onPressed: () {
-                            print("Pressed");
-                          })
+                      IconButton(icon: Icon(Icons.search), onPressed: () {}),
+                      IconButton(icon: Icon(Icons.dehaze), onPressed: () {})
                     ],
                   ),
                   Positioned(
@@ -55,7 +48,7 @@ class TopBar extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Opacity(
-                          opacity: 1.0,
+                          opacity: (pageNumber == 0) ? 1.0 : 0.6,
                           child: Padding(
                               padding: EdgeInsets.only(left: 5.0),
                               child: Container(
@@ -65,7 +58,7 @@ class TopBar extends StatelessWidget {
                                       color: Colors.white,
                                       shape: BoxShape.circle)))),
                       Opacity(
-                          opacity: 0.6,
+                          opacity: (pageNumber == 1) ? 1.0 : 0.6,
                           child: Padding(
                               padding: EdgeInsets.only(left: 5.0),
                               child: Container(
@@ -75,7 +68,7 @@ class TopBar extends StatelessWidget {
                                       color: Colors.white,
                                       shape: BoxShape.circle)))),
                       Opacity(
-                          opacity: 0.6,
+                          opacity: (pageNumber == 2) ? 1.0 : 0.6,
                           child: Padding(
                               padding: EdgeInsets.only(left: 5.0),
                               child: Container(
