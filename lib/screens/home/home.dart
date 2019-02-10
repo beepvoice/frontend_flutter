@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 
 import "package:frontend_flutter/widgets/top_bar/index.dart";
-import "package:frontend_flutter/widgets/user_avatar/index.dart";
+import "package:frontend_flutter/widgets/conversation_item/index.dart";
 
 class Home extends StatelessWidget {
   @override
@@ -9,7 +9,7 @@ class Home extends StatelessWidget {
     return Scaffold(
         body: Column(children: <Widget>[
       TopBar("BeepApp"),
-      UserAvatar(),
+      ConversationItem(),
     ]));
   }
 }

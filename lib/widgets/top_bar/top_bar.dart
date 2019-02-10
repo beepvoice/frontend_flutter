@@ -16,7 +16,7 @@ class TopBar extends StatelessWidget {
         type: MaterialType.canvas,
         elevation: 10.0,
         child: Container(
-          padding: EdgeInsets.only(top: statusbarHeight, bottom: 13.0),
+          padding: EdgeInsets.only(top: statusbarHeight, bottom: 10.0),
           child: Material(
               type: MaterialType.transparency,
               elevation: 10.0,
