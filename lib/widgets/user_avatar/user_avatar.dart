@@ -4,8 +4,13 @@ class UserAvatar extends StatelessWidget {
   final bool active;
   final String name;
   final EdgeInsetsGeometry padding;
+  final double radius;
 
-  UserAvatar({this.active, this.name, this.padding: const EdgeInsets.all(0.0)});
+  UserAvatar(
+      {@required this.active,
+      @required this.name,
+      this.padding: const EdgeInsets.all(0.0),
+      this.radius: 20.0});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +18,9 @@ class UserAvatar extends StatelessWidget {
         padding: padding,
         child: Stack(alignment: Alignment.bottomRight, children: <Widget>[
           CircleAvatar(
-              backgroundColor: Colors.brown.shade800, child: Text(name)),
+              backgroundColor: Colors.brown.shade800,
+              child: Text(name),
+              radius: radius),
           active
               ? Container(
                   width: 12.0,

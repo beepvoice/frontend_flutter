@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 
 import "package:frontend_flutter/widgets/top_bar/index.dart";
 import "package:frontend_flutter/widgets/conversation_list/index.dart";
+import "package:frontend_flutter/widgets/contact_list/index.dart";
 import "package:frontend_flutter/widgets/bottom_bar/index.dart";
 
 class Home extends StatefulWidget {
@@ -41,7 +42,7 @@ class _HomeState extends State<Home> {
           Expanded(
               child: PageView(controller: controller, children: <Widget>[
             ConversationList(items: List<String>.generate(4, (i) => "Item $i")),
-            ConversationList(items: List<String>.generate(5, (i) => "Item $i")),
+            ContactList(items: List<String>.generate(5, (i) => "Item $i")),
             ConversationList(items: List<String>.generate(6, (i) => "Item $i"))
           ]))
         ]),
