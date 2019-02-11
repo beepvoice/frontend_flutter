@@ -14,7 +14,6 @@ ThemeData buildTheme() {
       primaryColor: primaryColor,
       primaryColorLight: Colors.white,
       primaryColorDark: primaryColorDark,
-      highlightColor: highlightColor,
       indicatorColor: indicatorColor,
       textTheme: buildTextTheme(base.textTheme),
       primaryTextTheme: buildTextTheme(base.textTheme),

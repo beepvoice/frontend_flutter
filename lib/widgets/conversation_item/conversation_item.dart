@@ -26,15 +26,18 @@ class ConversationItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
-                  Padding(
+                  UserAvatar(
                       padding: EdgeInsets.only(top: 10.0, left: 10.0),
-                      child: UserAvatar(active: true, name: "IT")),
-                  Padding(
+                      active: true,
+                      name: "IT"),
+                  UserAvatar(
                       padding: EdgeInsets.only(top: 10.0, left: 10.0),
-                      child: UserAvatar(active: true, name: "AM")),
-                  Padding(
+                      active: true,
+                      name: "AM"),
+                  UserAvatar(
                       padding: EdgeInsets.only(top: 10.0, left: 10.0),
-                      child: UserAvatar(active: false, name: "SU")),
+                      active: false,
+                      name: "SU"),
                 ])
           ]),
     );
