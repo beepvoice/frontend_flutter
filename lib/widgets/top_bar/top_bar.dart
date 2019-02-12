@@ -36,7 +36,8 @@ class TopBar extends StatelessWidget {
                               height: 24.0)),
                       Spacer(),
                       IconButton(icon: Icon(Icons.search), onPressed: () {}),
-                      IconButton(icon: Icon(Icons.dehaze), onPressed: () {})
+                      IconButton(
+                          icon: Icon(Icons.add_comment), onPressed: () {})
                     ],
                   ),
                   Positioned(

@@ -7,6 +7,8 @@ class ConversationItem extends StatelessWidget {
     return ListTile(
       isThreeLine: true,
       onTap: () => {},
+      contentPadding:
+          EdgeInsets.only(top: 3.0, left: 20.0, right: 20.0, bottom: 3.0),
       title: Text("Family Chat", style: Theme.of(context).textTheme.title),
       subtitle: Text("Mum I might have forgotten to close the windows",
           maxLines: 2,
