@@ -41,7 +41,7 @@ class TopBar extends StatelessWidget {
                   ),
                   Positioned(
                       child: Text(title,
-                          style: Theme.of(context).textTheme.display1)),
+                          style: Theme.of(context).accentTextTheme.display1)),
                 ]),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.center,

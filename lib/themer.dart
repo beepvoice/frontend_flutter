@@ -8,6 +8,7 @@ const indicatorColor = const Color(0xFFFF7865);
 
 ThemeData buildTheme() {
   final ThemeData base = ThemeData.light();
+  final TextTheme textBase = buildTextTheme(base.textTheme);
 
   return base.copyWith(
       accentColor: accentColor,
@@ -15,9 +16,9 @@ ThemeData buildTheme() {
       primaryColorLight: Colors.white,
       primaryColorDark: primaryColorDark,
       indicatorColor: indicatorColor,
-      textTheme: buildTextTheme(base.textTheme),
-      primaryTextTheme: buildTextTheme(base.textTheme),
-      accentTextTheme: buildTextTheme(base.textTheme),
+      textTheme: textBase,
+      primaryTextTheme: textBase,
+      accentTextTheme: buildAltTextTheme(textBase),
       iconTheme: buildIconTheme(),
       primaryIconTheme: buildIconTheme(),
       accentIconTheme: buildIconTheme());
@@ -26,8 +27,10 @@ ThemeData buildTheme() {
 TextTheme buildTextTheme(TextTheme base) {
   return base
       .copyWith(
+          display2: base.display2
+              .copyWith(fontSize: 18.0, fontWeight: FontWeight.w400),
           display1: base.display1
-              .copyWith(fontSize: 18.0, fontWeight: FontWeight.w500),
+              .copyWith(fontSize: 20.0, fontWeight: FontWeight.w500),
           title:
               base.title.copyWith(fontSize: 16.0, fontWeight: FontWeight.w500),
           subtitle: base.subtitle
@@ -38,8 +41,12 @@ TextTheme buildTextTheme(TextTheme base) {
               base.body1.copyWith(fontSize: 12.0, fontWeight: FontWeight.w400))
       .apply(
           fontFamily: 'Inter',
-          displayColor: Colors.white,
+          displayColor: accentColor,
           bodyColor: accentColor);
+}
+
+TextTheme buildAltTextTheme(TextTheme base) {
+  return base.apply(displayColor: Colors.white, bodyColor: Colors.white);
 }
 
 IconThemeData buildIconTheme() {
