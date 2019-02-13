@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
-import "package:frontend_flutter/widgets/conversation_item/index.dart";
+
+import "conversation_item.dart";
 
 class ConversationList extends StatelessWidget {
   final List<String> items;

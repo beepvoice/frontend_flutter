@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'screens/home/index.dart';
+import 'src/ui/screens/home.dart';
 import 'themer.dart';
 
 class Routes {

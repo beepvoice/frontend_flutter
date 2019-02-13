@@ -1,9 +1,9 @@
 import "package:flutter/material.dart";
 
-import "package:frontend_flutter/widgets/top_bar/index.dart";
-import "package:frontend_flutter/widgets/conversation_list/index.dart";
-import "package:frontend_flutter/widgets/contact_list/index.dart";
-import "package:frontend_flutter/widgets/bottom_bar/index.dart";
+import "../widgets/top_bar.dart";
+import "../widgets/conversation_list.dart";
+import "../widgets/contact_list.dart";
+import "../widgets/bottom_bar.dart";
 
 class Home extends StatefulWidget {
   @override

@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
-import "package:frontend_flutter/widgets/contact_item/index.dart";
+
+import "contact_item.dart";
 
 class ContactList extends StatelessWidget {
   final List<String> items;

@@ -1,12 +1,13 @@
 import "package:flutter/material.dart";
-import "package:frontend_flutter/widgets/user_avatar/index.dart";
+
+import "user_avatar.dart";
 
 class ContactItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
         contentPadding:
-            EdgeInsets.only(top: 3.0, left: 20.0, right: 20.0, bottom: 3.0),
+            EdgeInsets.only(top: 0.0, left: 20.0, right: 20.0, bottom: 0.0),
         leading: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
           /*Icon(Icons.star, color: Theme.of(context).primaryColorDark),*/
           Text("A",
@@ -23,6 +24,8 @@ class ContactItem extends StatelessWidget {
         title: Text("Ambrose Chua",
             style: Theme.of(context).textTheme.display2,
             overflow: TextOverflow.ellipsis),
+        subtitle: Text("Last seen just now",
+            style: Theme.of(context).textTheme.subtitle),
         onTap: () => {});
   }
 }

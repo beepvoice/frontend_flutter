@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
-import "package:frontend_flutter/widgets/user_avatar/index.dart";
+
+import "user_avatar.dart";
 
 class ConversationItem extends StatelessWidget {
   @override
@@ -8,7 +9,7 @@ class ConversationItem extends StatelessWidget {
       isThreeLine: true,
       onTap: () => {},
       contentPadding:
-          EdgeInsets.only(top: 3.0, left: 20.0, right: 20.0, bottom: 3.0),
+          EdgeInsets.only(top: 0.0, left: 20.0, right: 20.0, bottom: 0.0),
       title: Text("Family Chat", style: Theme.of(context).textTheme.title),
       subtitle: Text("Mum I might have forgotten to close the windows",
           maxLines: 2,
@@ -28,7 +29,7 @@ class ConversationItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   UserAvatar(
-                      padding: EdgeInsets.only(top: 10.0, left: 10.0),
+                      padding: EdgeInsets.only(top: 10.0, left: 1.0),
                       active: true,
                       name: "IT"),
                   UserAvatar(
