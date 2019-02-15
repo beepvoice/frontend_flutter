@@ -115,3 +115,6 @@ unlinked_spec.ds
 
 # Assets
 assets/
+
+# Generated files fom json_serializable
+*.g.dart
