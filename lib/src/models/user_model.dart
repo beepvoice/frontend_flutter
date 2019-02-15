@@ -1,10 +1,10 @@
 import "package:json_annotation/json_annotation.dart";
 
-part 'user.g.dart';
+part 'user_model.g.dart';
 
 @JsonSerializable()
 class User {
-  final int id;
+  final String id;
 
   @JsonKey(name: 'first_name')
   final String firstName;

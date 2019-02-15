@@ -1,8 +1,13 @@
 import "package:flutter/material.dart";
 
+import "../../models/user_model.dart";
 import "user_avatar.dart";
 
 class ContactItem extends StatelessWidget {
+  final User user;
+
+  ContactItem({@required this.user});
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -17,11 +22,11 @@ class ContactItem extends StatelessWidget {
                   color: Theme.of(context).primaryColorDark)),
           UserAvatar(
               active: true,
-              name: "SU",
+              name: user.firstName[0] + user.lastName[0],
               radius: 22.0,
               padding: EdgeInsets.only(left: 20.0))
         ]),
-        title: Text("Ambrose Chua",
+        title: Text(user.firstName + " " + user.lastName,
             style: Theme.of(context).textTheme.display2,
             overflow: TextOverflow.ellipsis),
         subtitle: Text("Last seen just now",

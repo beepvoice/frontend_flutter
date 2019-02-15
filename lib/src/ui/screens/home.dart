@@ -42,7 +42,7 @@ class _HomeState extends State<Home> {
           Expanded(
               child: PageView(controller: controller, children: <Widget>[
             ConversationList(items: List<String>.generate(4, (i) => "Item $i")),
-            ContactList(items: List<String>.generate(5, (i) => "Item $i")),
+            ContactList(),
             ConversationList(items: List<String>.generate(6, (i) => "Item $i"))
           ]))
         ]),
