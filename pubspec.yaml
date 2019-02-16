@@ -11,12 +11,14 @@ dependencies:
   json_annotation: ^2.0.0
   rxdart: ^0.20.0
   http: ^0.12.0+1
+  eventsource: ^0.2.1
+  flutter_webrtc: ^00.1.0
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: "^0.7.0"
+  flutter_launcher_icons: ^0.7.0
   build_runner: ^1.0.0
   json_serializable: ^2.0.0
 

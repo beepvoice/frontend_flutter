@@ -17,5 +17,3 @@ class ContactBloc {
     _contactsFetcher.close();
   }
 }
-
-final bloc = ContactBloc();

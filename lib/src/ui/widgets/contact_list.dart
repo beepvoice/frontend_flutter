@@ -4,10 +4,30 @@ import '../../models/user_model.dart';
 import '../../blocs/contact_bloc.dart';
 import "contact_item.dart";
 
-class ContactList extends StatelessWidget {
+class ContactList extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _ContactListState();
+  }
+}
+
+class _ContactListState extends State<ContactList> {
+  final bloc = ContactBloc();
+
+  @override
+  void initState() {
+    super.initState();
+    bloc.fetchAllContacts();
+  }
+
+  @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    bloc.fetchAllContacts();
     return StreamBuilder(
         stream: bloc.allContacts,
         builder: (context, AsyncSnapshot<List<User>> snapshot) {
