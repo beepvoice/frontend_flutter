@@ -1,8 +1,8 @@
-import 'dart:async';
-import 'dart:convert';
-import 'package:eventsource/eventsource.dart';
-import 'package:flutter_webrtc/webrtc.dart';
-import 'package:http/http.dart' as http;
+import "dart:async";
+import "dart:convert";
+import "package:eventsource/eventsource.dart";
+import "package:flutter_webrtc/webrtc.dart";
+import "package:http/http.dart" as http;
 
 // Available utility enums
 enum SignalingResponse { SUCCESSFULL, NO_DEVICE, NO_DATA }
@@ -25,14 +25,12 @@ class PeerConnectionFactory {
   //Callbacks
   OnMessageCallback onMessageCallback;
 
-  // could be const
-  Map<String, dynamic> _iceServers = {
+  final Map<String, dynamic> _iceServers = {
     "iceServers": [
       {"url": "stun:stun.l.google.com:19302"}
     ]
   };
 
-  // could be const
   final Map<String, dynamic> _config = {
     "mandatory": {},
     "optional": [
@@ -40,7 +38,6 @@ class PeerConnectionFactory {
     ]
   };
 
-  // could be const
   final Map<String, dynamic> _constraints = {
     "mandatory": {
       "OfferToReceiveAudio": true,
@@ -50,11 +47,13 @@ class PeerConnectionFactory {
   };
 
   PeerConnectionFactory(this._localUserId, this._localDeviceId, this._stream,
-      this.onMessageCallback);
+      this.onMessageCallback) {
+    _initialize();
+  }
 
   // initialize() method sets up a subscription to the eventsource and
   // attaches a callback to it
-  initialize() async {
+  _initialize() async {
     _signalingServer = await EventSource.connect(
         "localhost:10201/subscribe/$_localUserId/device/$_localDeviceId");
     _signalingServer.listen((event) {

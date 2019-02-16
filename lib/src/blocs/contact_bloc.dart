@@ -2,6 +2,7 @@ import "package:rxdart/rxdart.dart";
 import "../resources/repository.dart";
 import "../models/user_model.dart";
 
+// TODO: SHOULD BE A INHERITED SCOPED BLOC Widget
 class ContactBloc {
   final _repository = Repository();
   final _contactsFetcher = PublishSubject<List<User>>();

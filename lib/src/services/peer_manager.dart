@@ -1,7 +1,7 @@
 import "package:flutter_webrtc/webrtc.dart";
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:async';
+import "package:http/http.dart" as http;
+import "dart:convert";
+import "dart:async";
 import "peer_connection_factory.dart";
 
 class PeerManager {
@@ -16,8 +16,18 @@ class PeerManager {
   Map<String, RTCPeerConnection> _currentConnections;
 
   PeerManager(this._selfUserId, this._selfDeviceId) {
-    _peerConnectionFactory =
-        PeerConnectionFactory(_selfUserId, _selfDeviceId, _localStream, signalEventHandler);
+    _initialize();
+  }
+
+  _initialize() async {
+    final Map<String, dynamic> mediaConstraints = {
+      "audio": true,
+      "video": false
+    };
+
+    _localStream = await navigator.getUserMedia(mediaConstraints);
+    _peerConnectionFactory = PeerConnectionFactory(
+        _selfUserId, _selfDeviceId, _localStream, _signalEventHandler);
   }
 
   addPeer(String userId) async {
@@ -26,12 +36,11 @@ class PeerManager {
     List<dynamic> deviceIds = _decoder.convert(response.body);
 
     deviceIds.forEach((deviceId) async {
-      RTCPeerConnection connection = await _peerConnectionFactory
-          .newPeerConnection(userId, deviceId);
+      RTCPeerConnection connection =
+          await _peerConnectionFactory.newPeerConnection(userId, deviceId);
 
       // Handle streams being added and removed remotely
-      connection.onAddStream =
-          (stream) => _currentStreams.add(stream);
+      connection.onAddStream = (stream) => _currentStreams.add(stream);
       connection.onRemoveStream =
           (stream) => _currentStreams.removeWhere((it) => stream.id == it.id);
 
@@ -40,9 +49,15 @@ class PeerManager {
     });
   }
 
-  leaveAll(void) async {}
+  leaveAll() async {
+    // DO WE NEED TO CLOSE THE REMOTE STREAMS???
+    _currentConnections.forEach((key, value) {
+      _peerConnectionFactory.leavePeerConnection(value);
+      _currentConnections[key] = null;
+    });
+  }
 
-  signalEventHandler(Map<String, dynamic> data) async {
+  _signalEventHandler(Map<String, dynamic> data) async {
     switch (data["type"]) {
       case SignalType.CANDIDATE:
         String userId = data["fromUser"];
@@ -60,8 +75,8 @@ class PeerManager {
         String userId = data["fromUser"];
         String deviceId = data["fromDevice"];
 
-        RTCPeerConnection connection = await _peerConnectionFactory
-            .newPeerConnection(userId, deviceId);
+        RTCPeerConnection connection =
+            await _peerConnectionFactory.newPeerConnection(userId, deviceId);
         _currentConnections["$userId-$deviceId"] = connection;
 
         connection.setRemoteDescription(
