@@ -3,6 +3,7 @@ import "dart:convert";
 import "package:eventsource/eventsource.dart";
 import "package:flutter_webrtc/webrtc.dart";
 import "package:http/http.dart" as http;
+import "../../settings.dart";
 
 // Available utility enums
 enum SignalingResponse { SUCCESSFULL, NO_DEVICE, NO_DATA }
@@ -51,7 +52,7 @@ class PeerConnectionFactory {
   // attaches a callback to it
   _initialize() async {
     _signalingServer = await EventSource.connect(
-        "localhost:10201/subscribe/$_localUserId/device/$_localDeviceId");
+        "$baseUrlSignaling/subscribe/$_localUserId/device/$_localDeviceId");
     _signalingServer.listen((event) {
       print(event.data);
       onMessageCallback(jsonDecode(event.data));

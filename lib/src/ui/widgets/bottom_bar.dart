@@ -1,7 +1,11 @@
 import "package:flutter/material.dart";
 
+import "../../services/peer_manager.dart";
+import "../../../settings.dart";
+
 class BottomBar extends StatelessWidget {
   final double barHeight = 80.0;
+  final _peerManager = PeerManager(globalUserId, "1");
 
   @override
   Widget build(BuildContext context) {

@@ -3,6 +3,7 @@ import "package:http/http.dart" as http;
 import "dart:convert";
 import "dart:async";
 import "peer_connection_factory.dart";
+import "../../settings.dart";
 
 class PeerManager {
   String _selfUserId;
@@ -30,8 +31,7 @@ class PeerManager {
   }
 
   addPeer(String userId) async {
-    var response =
-        await http.get("http://localhost:10201/user/$userId/devices");
+    var response = await http.get("$baseUrlSignaling/user/$userId/devices");
     List<dynamic> deviceIds = jsonDecode(response.body);
 
     deviceIds.forEach((deviceId) async {
@@ -76,6 +76,12 @@ class PeerManager {
 
         RTCPeerConnection connection =
             await _peerConnectionFactory.newPeerConnection(userId, deviceId);
+
+        // Handle streams being added and removed remotely
+        connection.onAddStream = (stream) => _currentStreams.add(stream);
+        connection.onRemoveStream =
+            (stream) => _currentStreams.removeWhere((it) => stream.id == it.id);
+
         _currentConnections["$userId-$deviceId"] = connection;
 
         connection.setRemoteDescription(
