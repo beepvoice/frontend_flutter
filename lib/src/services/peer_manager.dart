@@ -10,7 +10,6 @@ class PeerManager {
 
   PeerConnectionFactory _peerConnectionFactory;
   MediaStream _localStream;
-  JsonDecoder _decoder = JsonDecoder();
 
   List<MediaStream> _currentStreams;
   Map<String, RTCPeerConnection> _currentConnections;
@@ -33,7 +32,7 @@ class PeerManager {
   addPeer(String userId) async {
     var response =
         await http.get("http://localhost:10201/user/$userId/devices");
-    List<dynamic> deviceIds = _decoder.convert(response.body);
+    List<dynamic> deviceIds = jsonDecode(response.body);
 
     deviceIds.forEach((deviceId) async {
       RTCPeerConnection connection =

@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 
-import '../../models/user_model.dart';
-import '../../blocs/contact_bloc.dart';
+import "../../models/user_model.dart";
+import "../../blocs/contact_bloc.dart";
 import "contact_item.dart";
 
 class ContactList extends StatefulWidget {
@@ -17,7 +17,7 @@ class _ContactListState extends State<ContactList> {
   @override
   void initState() {
     super.initState();
-    bloc.fetchAllContacts();
+    bloc.fetchContacts();
   }
 
   @override
@@ -29,7 +29,7 @@ class _ContactListState extends State<ContactList> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: bloc.allContacts,
+        stream: bloc.contacts,
         builder: (context, AsyncSnapshot<List<User>> snapshot) {
           if (snapshot.hasData) {
             return buildList(snapshot);

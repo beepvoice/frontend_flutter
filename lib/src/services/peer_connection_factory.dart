@@ -18,10 +18,6 @@ class PeerConnectionFactory {
   EventSource _signalingServer;
   MediaStream _stream;
 
-  // TODO: Future should use a model
-  JsonEncoder encoder = JsonEncoder();
-  JsonDecoder decoder = JsonDecoder();
-
   //Callbacks
   OnMessageCallback onMessageCallback;
 
@@ -58,7 +54,7 @@ class PeerConnectionFactory {
         "localhost:10201/subscribe/$_localUserId/device/$_localDeviceId");
     _signalingServer.listen((event) {
       print(event.data);
-      onMessageCallback(decoder.convert(event.data));
+      onMessageCallback(jsonDecode(event.data));
     });
   }
 
@@ -115,7 +111,7 @@ class PeerConnectionFactory {
       String remoteDeviceId, Map<String, dynamic> data) async {
     var response = await http.post(
         "localhost:10201/user/$remoteUserId/device/$remoteDeviceId",
-        body: {"data": encoder.convert(data)});
+        body: {"data": jsonEncode(data)});
     switch (response.statusCode) {
       case 200:
         return SignalingResponse.SUCCESSFULL;

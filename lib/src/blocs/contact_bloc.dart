@@ -7,9 +7,9 @@ class ContactBloc {
   final _repository = Repository();
   final _contactsFetcher = PublishSubject<List<User>>();
 
-  Observable<List<User>> get allContacts => _contactsFetcher.stream;
+  Observable<List<User>> get contacts => _contactsFetcher.stream;
 
-  fetchAllContacts() async {
+  fetchContacts() async {
     List<User> contactList = await _repository.fetchContacts();
     _contactsFetcher.sink.add(contactList);
   }
