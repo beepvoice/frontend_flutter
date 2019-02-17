@@ -18,8 +18,12 @@ class UserAvatar extends StatelessWidget {
         padding: padding,
         child: Stack(alignment: Alignment.bottomRight, children: <Widget>[
           CircleAvatar(
-              backgroundColor: Colors.brown.shade800,
-              child: Text(user.firstName[0] + user.lastName[0]),
+              backgroundColor: _stringToColor(user.lastName),
+              child: Text(
+                user.firstName[0].toUpperCase() +
+                    user.lastName[0].toUpperCase(),
+                style: Theme.of(context).accentTextTheme.title,
+              ),
               radius: radius),
           /*active
               ? Container(
@@ -30,5 +34,18 @@ class UserAvatar extends StatelessWidget {
                       shape: BoxShape.circle))
               : Container(),*/
         ]));
+  }
+
+  // Hashing username into a pastel color
+  Color _stringToColor(String str) {
+    int hash = 0;
+
+    str.runes.forEach((int rune) {
+      hash = rune + ((hash << 5) - hash);
+    });
+
+    hash = hash % 360;
+
+    return HSLColor.fromAHSL(1.0, hash.toDouble(), 0.8, 0.4).toColor();
   }
 }
