@@ -41,9 +41,8 @@ class _HomeState extends State<Home> {
           TopBar(title: titleList[_pageNumber], pageNumber: _pageNumber),
           Expanded(
               child: PageView(controller: controller, children: <Widget>[
-            ConversationList(items: List<String>.generate(4, (i) => "Item $i")),
+            ConversationList(),
             ContactList(),
-            ConversationList(items: List<String>.generate(6, (i) => "Item $i"))
           ]))
         ]),
         bottomSheet: BottomBar());

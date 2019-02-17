@@ -21,10 +21,7 @@ class ContactItem extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).primaryColorDark)),
           UserAvatar(
-              active: true,
-              name: user.firstName[0] + user.lastName[0],
-              radius: 22.0,
-              padding: EdgeInsets.only(left: 20.0))
+              user: user, radius: 22.0, padding: EdgeInsets.only(left: 20.0))
         ]),
         title: Text(user.firstName + " " + user.lastName,
             style: Theme.of(context).textTheme.display2,

@@ -26,7 +26,7 @@ class _ConversationItemState extends State<ConversationItem> {
   @override
   void initState() {
     super.initState();
-    bloc.fetchConversationMembers();
+    bloc.fetchMembers();
   }
 
   @override
@@ -76,7 +76,7 @@ class _ConversationItemState extends State<ConversationItem> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: data
             .map((user) => UserAvatar(
-                padding: EdgeInsets.only(top: 10.0, left: 1.0), user: user))
+                padding: EdgeInsets.only(top: 10.0, left: 5.0), user: user))
             .toList());
   }
 }
