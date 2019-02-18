@@ -1,8 +1,7 @@
 import "package:flutter/material.dart";
 
-import "../../services/peer_manager.dart";
-import "../../blocs/bottom_bar_bus.dart";
-import "../../../settings.dart";
+import "../../blocs/voice_connection_bloc.dart";
+import 'package:flutter_webrtc/webrtc.dart';
 
 class BottomBar extends StatefulWidget {
   @override
@@ -13,18 +12,21 @@ class BottomBar extends StatefulWidget {
 
 class _BottomBarState extends State<BottomBar> {
   final double barHeight = 80.0;
-  PeerManager _peerManager;
+  final _renderer = new RTCVideoRenderer();
 
   @override
   void initState() {
     super.initState();
-    // _peerManager = PeerManager(globalUserId, "1");
-    print("hi");
+    initRenderers();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  initRenderers() async {
+    await _renderer.initialize();
   }
 
   @override
@@ -53,6 +55,11 @@ class _BottomBarState extends State<BottomBar> {
                           .display1
                           .copyWith(color: Theme.of(context).accentColor)),
                   Spacer(),
+                  Container(
+                    child: RTCVideoView(_renderer),
+                    width: 0,
+                    height: 0,
+                  ),
                   IconButton(
                       color: Theme.of(context).accentColor,
                       icon: Icon(Icons.info),
@@ -64,7 +71,7 @@ class _BottomBarState extends State<BottomBar> {
                       icon: Icon(Icons.close),
                       onPressed: () {
                         print("Pressed close");
-                        bottomBarBus
+                        voiceConnection
                             .publish(<String, dynamic>{"event": "close"});
                       }),
                 ])));

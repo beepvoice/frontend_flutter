@@ -54,10 +54,12 @@ class PeerConnectionFactory {
     _signalingServer = await EventSource.connect(
         "$baseUrlSignaling/subscribe/$_localUserId/device/$_localDeviceId");
 
-    print("subscribed");
     _signalingServer.listen((event) {
-      print("listen triggered");
-      // onMessageCallback(jsonDecode(event.data));
+      // Don't process empty colons
+      if (event.data == null) return;
+
+      print("signalling/ ${event.data}");
+      onMessageCallback(jsonDecode(event.data));
     });
   }
 
