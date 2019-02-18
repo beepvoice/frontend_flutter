@@ -1,11 +1,31 @@
 import "package:flutter/material.dart";
 
 import "../../services/peer_manager.dart";
+import "../../blocs/bottom_bar_bus.dart";
 import "../../../settings.dart";
 
-class BottomBar extends StatelessWidget {
+class BottomBar extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _BottomBarState();
+  }
+}
+
+class _BottomBarState extends State<BottomBar> {
   final double barHeight = 80.0;
-  final _peerManager = PeerManager(globalUserId, "1");
+  PeerManager _peerManager;
+
+  @override
+  void initState() {
+    super.initState();
+    // _peerManager = PeerManager(globalUserId, "1");
+    print("hi");
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +63,9 @@ class BottomBar extends StatelessWidget {
                       color: Theme.of(context).accentColor,
                       icon: Icon(Icons.close),
                       onPressed: () {
-                        print("Pressed");
+                        print("Pressed close");
+                        bottomBarBus
+                            .publish(<String, dynamic>{"event": "close"});
                       }),
                 ])));
   }
