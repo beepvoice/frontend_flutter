@@ -72,7 +72,7 @@ class _BottomBarState extends State<BottomBar> {
                       onPressed: () {
                         print("Pressed close");
                         voiceConnection
-                            .publish(<String, dynamic>{"event": "close"});
+                            .join("c-6f2ba396fb53961ff8a6ba9c5d286a25");
                       }),
                 ])));
   }

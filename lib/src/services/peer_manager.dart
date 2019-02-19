@@ -19,6 +19,8 @@ class PeerManager {
     _initialize();
   }
 
+  List<MediaStream> get streams => _currentStreams;
+
   _initialize() async {
     final Map<String, dynamic> mediaConstraints = {
       "audio": true,
@@ -54,6 +56,12 @@ class PeerManager {
       _peerConnectionFactory.leavePeerConnection(value);
       _currentConnections[key] = null;
     });
+
+    _currentStreams.forEach((stream) {
+      stream.dispose();
+    });
+
+    _currentStreams = [];
   }
 
   _signalEventHandler(Map<String, dynamic> data) async {

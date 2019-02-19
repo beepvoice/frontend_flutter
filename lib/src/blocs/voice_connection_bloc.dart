@@ -1,13 +1,19 @@
 import "package:rxdart/rxdart.dart";
+import "package:flutter_webrtc/webrtc.dart";
+import 'dart:async' show Stream;
+import 'package:async/async.dart' show StreamGroup;
 
+import "../resources/conversation_api_provider.dart";
+import "../models/user_model.dart";
 import "../services/peer_manager.dart";
 import "../../settings.dart";
 
 class VoiceConnection {
   final PeerManager _peerManager = PeerManager(globalUserId, "2");
+  final _conversationApiProvider = ConversationApiProvider();
   final _bottomBarBus = PublishSubject<Map<String, dynamic>>();
 
-  BottomBarBus() {
+  VoiceConnection() {
     _bottomBarBus.listen((data) => print(data));
   }
 
@@ -15,6 +21,19 @@ class VoiceConnection {
 
   publish(Map<String, dynamic> message) async {
     _bottomBarBus.sink.add(message);
+  }
+
+  join(String conversationId) async {
+    List<User> users =
+        await _conversationApiProvider.fetchConversationMembers(conversationId);
+
+    // Add the users to the streams
+    users.forEach((user) {
+      print("hi");
+      _peerManager.addPeer(user.id);
+    });
+
+    List<MediaStream> connectedStreams = _peerManager.streams;
   }
 
   dispose() {
