@@ -27,6 +27,10 @@ ThemeData buildTheme() {
 TextTheme buildTextTheme(TextTheme base) {
   return base
       .copyWith(
+          display4: base.display4
+              .copyWith(fontSize: 40.0, fontWeight: FontWeight.w600),
+          display3: base.display3
+              .copyWith(fontSize: 30.0, fontWeight: FontWeight.w700),
           display2: base.display2
               .copyWith(fontSize: 18.0, fontWeight: FontWeight.w500),
           display1: base.display1

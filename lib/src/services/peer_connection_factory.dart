@@ -44,13 +44,11 @@ class PeerConnectionFactory {
   };
 
   PeerConnectionFactory(this._localUserId, this._localDeviceId, this._stream,
-      this.onMessageCallback) {
-    _initialize();
-  }
+      this.onMessageCallback);
 
   // initialize() method sets up a subscription to the eventsource and
   // attaches a callback to it
-  _initialize() async {
+  initialize() async {
     _signalingServer = await EventSource.connect(
         "$baseUrlSignaling/subscribe/$_localUserId/device/$_localDeviceId");
 

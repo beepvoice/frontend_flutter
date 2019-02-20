@@ -15,13 +15,11 @@ class PeerManager {
   List<MediaStream> _currentStreams = [];
   Map<String, RTCPeerConnection> _currentConnections = {};
 
-  PeerManager(this._selfUserId, this._selfDeviceId) {
-    _initialize();
-  }
+  PeerManager(this._selfUserId, this._selfDeviceId);
 
   List<MediaStream> get streams => _currentStreams;
 
-  _initialize() async {
+  initialize() async {
     final Map<String, dynamic> mediaConstraints = {
       "audio": true,
       "video": false
@@ -30,6 +28,7 @@ class PeerManager {
     _localStream = await navigator.getUserMedia(mediaConstraints);
     _peerConnectionFactory = PeerConnectionFactory(
         _selfUserId, _selfDeviceId, _localStream, _signalEventHandler);
+    await _peerConnectionFactory.initialize();
   }
 
   addPeer(String userId) async {
@@ -64,7 +63,7 @@ class PeerManager {
   }
 
   _signalEventHandler(Map<String, dynamic> data) async {
-    switch (data["type"]) {
+    switch (SignalType.values[data["type"]]) {
       case SignalType.CANDIDATE:
         String userId = data["fromUser"];
         String deviceId = data["fromDevice"];

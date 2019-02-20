@@ -1,7 +1,5 @@
 import "package:rxdart/rxdart.dart";
 import "package:flutter_webrtc/webrtc.dart";
-import 'dart:async' show Stream;
-import 'package:async/async.dart' show StreamGroup;
 
 import "../resources/conversation_api_provider.dart";
 import "../models/user_model.dart";
@@ -15,6 +13,7 @@ class VoiceConnection {
 
   VoiceConnection() {
     _bottomBarBus.listen((data) => print(data));
+    _peerManager.initialize();
   }
 
   Observable<Map<String, dynamic>> get bus => _bottomBarBus.stream;
@@ -29,7 +28,6 @@ class VoiceConnection {
 
     // Add the users to the streams
     users.forEach((user) {
-      print("hi");
       _peerManager.addPeer(user.id);
     });
 
