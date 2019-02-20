@@ -116,11 +116,9 @@ class PeerConnectionFactory {
       String remoteDeviceId, Map<String, dynamic> data) async {
     var response = await http.post(
         "$baseUrlSignaling/user/$remoteUserId/device/$remoteDeviceId",
-        body: jsonEncode({"data": "hi"}));
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"data": data}));
 
-    print(response.statusCode);
-    print(remoteUserId);
-    print(remoteDeviceId);
     switch (response.statusCode) {
       case 200:
         return SignalingResponse.SUCCESSFULL;

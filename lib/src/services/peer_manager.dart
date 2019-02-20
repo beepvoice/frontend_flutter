@@ -12,8 +12,8 @@ class PeerManager {
   PeerConnectionFactory _peerConnectionFactory;
   MediaStream _localStream;
 
-  List<MediaStream> _currentStreams;
-  Map<String, RTCPeerConnection> _currentConnections;
+  List<MediaStream> _currentStreams = [];
+  Map<String, RTCPeerConnection> _currentConnections = {};
 
   PeerManager(this._selfUserId, this._selfDeviceId) {
     _initialize();
@@ -35,7 +35,6 @@ class PeerManager {
   addPeer(String userId) async {
     var response = await http.get("$baseUrlSignaling/user/$userId/devices");
     List<dynamic> deviceIds = jsonDecode(response.body);
-
     deviceIds.forEach((deviceId) async {
       RTCPeerConnection connection =
           await _peerConnectionFactory.newPeerConnection(userId, deviceId);
@@ -46,7 +45,7 @@ class PeerManager {
           (stream) => _currentStreams.removeWhere((it) => stream.id == it.id);
 
       // Add peer connection to the map
-      _currentConnections["$userId-$deviceId"] = connection;
+      _currentConnections.addAll({"$userId-$deviceId": connection});
     });
   }
 
