@@ -73,7 +73,7 @@ class PeerConnectionFactory {
         (candidate) => _sendToRemote(remoteUserId, remoteDeviceId, {
               "fromUser": this._localUserId,
               "fromDevice": this._localDeviceId,
-              "type": SignalType.CANDIDATE,
+              "type": SignalType.CANDIDATE.index,
               "sdpMLineIndex": candidate.sdpMlineIndex,
               "sdpMid": candidate.sdpMid,
               "candidate": candidate.candidate
@@ -82,10 +82,10 @@ class PeerConnectionFactory {
     // Create and send the offer
     RTCSessionDescription session = await connection.createOffer(_constraints);
     connection.setLocalDescription(session);
-    _sendToRemote(remoteUserId, remoteDeviceId, {
+    await _sendToRemote(remoteUserId, remoteDeviceId, {
       "fromUser": this._localUserId,
       "fromDevice": this._localDeviceId,
-      "type": SignalType.OFFER,
+      "type": SignalType.OFFER.index,
       "sdp": session.sdp,
       "session": session.type,
     });
@@ -106,7 +106,7 @@ class PeerConnectionFactory {
     _sendToRemote(remoteUserId, remoteDeviceId, {
       "fromUser": this._localUserId,
       "fromDevice": this._localDeviceId,
-      "type": SignalType.ANSWER,
+      "type": SignalType.ANSWER.index,
       "sdp": session.sdp,
       "session": session.type,
     });
@@ -116,8 +116,11 @@ class PeerConnectionFactory {
       String remoteDeviceId, Map<String, dynamic> data) async {
     var response = await http.post(
         "$baseUrlSignaling/user/$remoteUserId/device/$remoteDeviceId",
-        body: {"data": jsonEncode(data)});
+        body: jsonEncode({"data": "hi"}));
 
+    print(response.statusCode);
+    print(remoteUserId);
+    print(remoteDeviceId);
     switch (response.statusCode) {
       case 200:
         return SignalingResponse.SUCCESSFULL;
