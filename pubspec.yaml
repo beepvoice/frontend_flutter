@@ -14,6 +14,7 @@ dependencies:
   eventsource: ^0.2.1
   flutter_webrtc: ^0.1.0
   pin_code_text_field: ^1.1.3
+  flutter_svg: ^0.10.3
 
 dev_dependencies:
   flutter_test:
@@ -31,8 +32,8 @@ flutter:
   uses-material-design: true
   
   assets:
-    - assets/logo.svg
     - assets/logo.png
+    - assets/join.svg
 
   fonts:
   - family: Inter
