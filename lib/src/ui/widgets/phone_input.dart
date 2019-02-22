@@ -22,7 +22,6 @@ class PhoneInput extends StatelessWidget {
           Expanded(
               child: TextField(
                   autocorrect: false,
-                  autofocus: true,
                   cursorWidth: 2.0,
                   cursorColor: Colors.white,
                   style: Theme.of(context).accentTextTheme.title,

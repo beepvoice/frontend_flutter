@@ -15,7 +15,10 @@ class Login extends StatelessWidget {
     return Scaffold(
       body: Container(
         padding: EdgeInsets.only(
-            top: topPadding, bottom: bottomPadding, left: 20.0, right: 20.0),
+            top: topPadding,
+            bottom: bottomPadding + 10.0,
+            left: 20.0,
+            right: 20.0),
         child: Column(children: <Widget>[
           Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -31,7 +34,7 @@ class Login extends StatelessWidget {
           Padding(
               padding: EdgeInsets.only(top: 10.0),
               child: SvgPicture.asset(phoneSvg,
-                  width: MediaQuery.of(context).size.width)),
+                  height: MediaQuery.of(context).size.height / 4.5)),
           PhoneNumberForm(),
           Spacer(),
           TextButton(text: "Continue", onClickCallback: () => print("clicked")),
