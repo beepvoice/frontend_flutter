@@ -10,17 +10,20 @@ class TextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
-        child: Text(text.toUpperCase(),
-            style: Theme.of(context).textTheme.display1.copyWith(
-                fontSize: 15.0, color: Theme.of(context).primaryColorDark)),
+        child: Container(
+            width: MediaQuery.of(context).size.width,
+            child: Text(text.toUpperCase(),
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.display1.copyWith(
+                    fontSize: 15.0,
+                    color: Theme.of(context).primaryColorDark))),
         color: Colors.white,
         highlightColor: Colors.white,
         splashColor: Colors.white,
         padding:
             EdgeInsets.only(top: 10.0, bottom: 10.0, left: 30.0, right: 30.0),
         elevation: 2.0,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
         onPressed: onClickCallback);
   }
 }

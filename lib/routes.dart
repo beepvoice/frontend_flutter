@@ -19,7 +19,7 @@ class Routes {
       title: "Beep",
       theme: theme,
       routes: routes,
-      home: Login(),
+      home: Welcome(),
     ));
   }
 }

@@ -35,6 +35,7 @@ flutter:
     - assets/logo.png
     - assets/join.svg
     - assets/phoneno.svg
+    - assets/welcome.svg
 
   fonts:
   - family: Inter
