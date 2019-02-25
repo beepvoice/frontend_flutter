@@ -34,10 +34,12 @@ class Login extends StatelessWidget {
           Padding(
               padding: EdgeInsets.only(top: 10.0),
               child: SvgPicture.asset(phoneSvg,
-                  height: MediaQuery.of(context).size.height / 4.5)),
+                  height: MediaQuery.of(context).size.height / 5)),
           PhoneNumberForm(),
           Spacer(),
-          TextButton(text: "Continue", onClickCallback: () => print("clicked")),
+          TextButton(
+              text: "Continue",
+              onClickCallback: () => Navigator.pushNamed(context, '/otp')),
         ]),
         decoration: BoxDecoration(
           gradient: LinearGradient(
