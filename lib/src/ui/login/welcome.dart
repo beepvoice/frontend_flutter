@@ -1,11 +1,12 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
 
-import "../widgets/text_button.dart";
+import "./widgets/welcome_page.dart";
+import "./widgets/login_page.dart";
+import "./widgets/otp_page.dart";
 
 class Welcome extends StatelessWidget {
   final String logo = "assets/logo.png";
-  final String welcomeSvg = "assets/welcome.svg";
 
   @override
   Widget build(BuildContext context) {
@@ -32,21 +33,7 @@ class Welcome extends StatelessWidget {
                   child: Text("Beep",
                       style: Theme.of(context).accentTextTheme.display3)),
             ]),
-            Spacer(),
-            SvgPicture.asset(welcomeSvg,
-                width: MediaQuery.of(context).size.width - 40.0),
-            Spacer(),
-            Text("Hi, there.",
-                style: Theme.of(context).accentTextTheme.display4),
-            Padding(
-                padding: EdgeInsets.only(bottom: 20.0),
-                child: Text("Let's get you set up and ready to go!",
-                    style: Theme.of(context).accentTextTheme.title,
-                    textAlign: TextAlign.center)),
-            TextButton(
-                text: "Login",
-                onClickCallback: () => Navigator.pushNamed(context, "/login")),
-            TextButton(text: "Sign Up", onClickCallback: () => print("hello")),
+            Expanded(child: OtpPage()),
           ]),
       decoration: BoxDecoration(
         gradient: LinearGradient(
