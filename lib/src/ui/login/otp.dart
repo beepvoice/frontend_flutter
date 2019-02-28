@@ -1,11 +1,12 @@
 import "package:flutter/material.dart";
-import "../widgets/phone_no_form.dart";
-import "../widgets/text_button.dart";
 import "package:flutter_svg/flutter_svg.dart";
 
-class Login extends StatelessWidget {
+import "../widgets/text_button.dart";
+import "./widgets/otp_form.dart";
+
+class Otp extends StatelessWidget {
   final String logo = "assets/logo.png";
-  final String phoneSvg = "assets/phoneno.svg";
+  final String phoneSvg = "assets/authenticate.svg";
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +36,11 @@ class Login extends StatelessWidget {
               padding: EdgeInsets.only(top: 10.0),
               child: SvgPicture.asset(phoneSvg,
                   height: MediaQuery.of(context).size.height / 5)),
-          PhoneNumberForm(),
+          OtpForm(),
           Spacer(),
           TextButton(
-              text: "Continue",
-              onClickCallback: () => Navigator.pushNamed(context, '/otp')),
+              text: "Done",
+              onClickCallback: () => Navigator.pushNamed(context, '/home')),
         ]),
         decoration: BoxDecoration(
           gradient: LinearGradient(

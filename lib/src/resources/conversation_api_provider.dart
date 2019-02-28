@@ -10,6 +10,7 @@ import "../../settings.dart";
 class ConversationApiProvider {
   Future<Conversation> createConversation(String title) async {
     final response = await http.post("$baseUrlCore/user/conversation",
+        headers: {"Content-Type": "application/json"},
         body: jsonEncode({"title": title}));
 
     return Conversation.fromJson(jsonDecode(response.body));

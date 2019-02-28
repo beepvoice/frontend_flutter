@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 
-import "../../models/user_model.dart";
-import "../../blocs/contact_bloc.dart";
+import "../../../models/user_model.dart";
+import "../../../blocs/contact_bloc.dart";
 
 import "contact_item.dart";
 

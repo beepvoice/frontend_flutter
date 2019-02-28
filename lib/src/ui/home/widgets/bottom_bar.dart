@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
-
-import "../../blocs/voice_connection_bloc.dart";
 import 'package:flutter_webrtc/webrtc.dart';
+
+import "../../../blocs/voice_connection_bloc.dart";
 
 class BottomBar extends StatefulWidget {
   @override

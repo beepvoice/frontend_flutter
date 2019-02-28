@@ -15,5 +15,6 @@ class ContactApiProvider {
   }
 
   void createContact(User user) async =>
-      await http.post("$baseUrlCore/user/contact", body: user.toJson);
+      await http.post("$baseUrlCore/user/contact",
+          headers: {"Content-Type": "application/json"}, body: user.toJson);
 }

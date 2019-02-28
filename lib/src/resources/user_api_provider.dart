@@ -8,7 +8,8 @@ import "../../settings.dart";
 class UserApiProvider {
   Future<User> createUser(User user) async {
     // Prob need to add the headers
-    final response = await http.post("$baseUrlCore/user", body: user.toJson());
+    final response = await http.post("$baseUrlCore/user",
+        headers: {"Content-Type": "application/json"}, body: user.toJson());
 
     return User.fromJson(jsonDecode(response.body));
   }

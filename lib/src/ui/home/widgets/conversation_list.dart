@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 
-import "../../models/conversation_model.dart";
-import "../../blocs/conversation_bloc.dart";
+import "../../../models/conversation_model.dart";
+import "../../../blocs/conversation_bloc.dart";
 
 import "conversation_item.dart";
 

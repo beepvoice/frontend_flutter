@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'src/ui/screens/home.dart';
-import "src/ui/screens/welcome.dart";
-import "src/ui/screens/login.dart";
-import "src/ui/screens/otp.dart";
+import 'src/ui/home/home.dart';
+import "src/ui/login/welcome.dart";
+import "src/ui/login/login.dart";
+import "src/ui/login/otp.dart";
 import 'themer.dart';
 
 class Routes {
