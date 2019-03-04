@@ -45,7 +45,9 @@ class Welcome extends StatelessWidget {
                     builder = (BuildContext _) => LoginPage();
                     break;
                   case "welcome/otp":
-                    builder = (BuildContext _) => OtpPage();
+                    builder = (BuildContext _) => OtpPage(buttonCallback: () {
+                          Navigator.of(context).pushNamed("/home");
+                        });
                     break;
                   default:
                     throw Exception("Invalid route: ${settings.name}");

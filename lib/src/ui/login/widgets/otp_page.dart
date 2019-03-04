@@ -4,8 +4,14 @@ import "package:flutter_svg/flutter_svg.dart";
 
 import "../../widgets/text_button.dart";
 
+// Callback types
+typedef void ButtonCallback();
+
 class OtpPage extends StatelessWidget {
   final String phoneSvg = "assets/authenticate.svg";
+  final ButtonCallback buttonCallback;
+
+  OtpPage({@required this.buttonCallback});
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +52,7 @@ class OtpPage extends StatelessWidget {
                                 Theme.of(context).accentTextTheme.display3))),
               ]),
           Spacer(),
-          TextButton(
-              text: "Done", onClickCallback: () => Navigator.of(context).pop),
+          TextButton(text: "Done", onClickCallback: () => buttonCallback()),
         ]));
   }
 }
