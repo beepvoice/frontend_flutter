@@ -11,6 +11,9 @@ class LoginApiProvider {
     final response = await http.post("$baseUrlLogin/init",
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"phone_number": user.phoneNumber}));
+    if (response.statusCode == 400 || response.statusCode == 500) {
+      throw response.statusCode;
+    }
     return response.body;
   }
 
@@ -18,6 +21,9 @@ class LoginApiProvider {
     final response = await http.post("$baseUrlLogin/verify",
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"code": otp, "nonce": nonce, "clientid": clientid}));
+    if (response.statusCode == 400 || response.statusCode == 404 || response.statusCode == 500) {
+      throw response.statusCode;
+    }
     return response.body;
   }
 
