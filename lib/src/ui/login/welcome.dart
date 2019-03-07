@@ -17,10 +17,9 @@ class Welcome extends StatelessWidget {
         body: Container(
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.only(
-          top: topPadding,
-          bottom: bottomPadding + 10.0,
-          left: 15.0,
-          right: 15.0),
+        top: topPadding,
+        bottom: bottomPadding + 10.0,
+      ),
       child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -33,7 +32,29 @@ class Welcome extends StatelessWidget {
                   child: Text("Beep",
                       style: Theme.of(context).accentTextTheme.display3)),
             ]),
-            Expanded(child: OtpPage()),
+            Expanded(
+                child: Navigator(
+              initialRoute: "welcome/hello",
+              onGenerateRoute: (RouteSettings settings) {
+                WidgetBuilder builder;
+                switch (settings.name) {
+                  case "welcome/hello":
+                    builder = (BuildContext _) => WelcomePage();
+                    break;
+                  case "welcome/login":
+                    builder = (BuildContext _) => LoginPage();
+                    break;
+                  case "welcome/otp":
+                    builder = (BuildContext _) => OtpPage(buttonCallback: () {
+                          Navigator.of(context).pushNamed("/home");
+                        });
+                    break;
+                  default:
+                    throw Exception("Invalid route: ${settings.name}");
+                }
+                return MaterialPageRoute(builder: builder, settings: settings);
+              },
+            )),
           ]),
       decoration: BoxDecoration(
         gradient: LinearGradient(
