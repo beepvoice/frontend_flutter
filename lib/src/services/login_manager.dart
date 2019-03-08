@@ -5,15 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginManager {
   final loginApiProvider = LoginApiProvider();
-  User user;
   String clientid;
   String nonce;
-
-  LoginManager(User user, String clientid) {
-    this.user = user;
-    this.clientid = clientid;
-    this.nonce = "";
-  }
 
   // Returns JWT, blank string if nothing is found
   Future<String> getToken() async {
@@ -23,23 +16,24 @@ class LoginManager {
   }
 
   // Throws error status code if it occurs
-  Future<void> initAuthentication(User user) async {
+  Future<void> initAuthentication(String phoneNumber) async {
     try {
-      final nonce = await loginApiProvider.initAuthentication(user);
+      final nonce = await loginApiProvider.initAuthentication(phoneNumber);
       this.nonce = nonce;
-    } catch(e) {
+    } catch (e) {
       throw e;
     }
   }
 
   // Throws error status code if it occurs, otherwise returns jwt
-  Future<String> processOTP(String otp) async {
+  Future<String> processOtp(String otp) async {
     try {
-      final jwt = await loginApiProvider.verifyOtp(otp, this.nonce, this.clientid);
+      final jwt =
+          await loginApiProvider.verifyOtp(otp, this.nonce, this.clientid);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString("token", jwt);
       return jwt;
-    } catch(e) {
+    } catch (e) {
       throw e;
     }
   }

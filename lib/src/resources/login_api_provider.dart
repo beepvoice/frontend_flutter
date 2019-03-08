@@ -7,10 +7,10 @@ import "../models/user_model.dart";
 import "../../settings.dart";
 
 class LoginApiProvider {
-  Future<String> initAuthentication(User user) async {
+  Future<String> initAuthentication(String phoneNumber) async {
     final response = await http.post("$baseUrlLogin/init",
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"phone_number": user.phoneNumber}));
+        body: jsonEncode({"phone_number": phoneNumber}));
     if (response.statusCode == 400 || response.statusCode == 500) {
       throw response.statusCode;
     }
@@ -21,7 +21,9 @@ class LoginApiProvider {
     final response = await http.post("$baseUrlLogin/verify",
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"code": otp, "nonce": nonce, "clientid": clientid}));
-    if (response.statusCode == 400 || response.statusCode == 404 || response.statusCode == 500) {
+    if (response.statusCode == 400 ||
+        response.statusCode == 404 ||
+        response.statusCode == 500) {
       throw response.statusCode;
     }
     return response.body;
