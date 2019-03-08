@@ -1,8 +1,7 @@
 import "package:flutter_webrtc/webrtc.dart";
-import "package:http/http.dart" as http;
-import "dart:convert";
 import "peer_connection_factory.dart";
-import "../../settings.dart";
+
+import "../resources/signaling_api_provider.dart";
 
 class PeerManager {
   String _selfUserId;
@@ -10,6 +9,7 @@ class PeerManager {
 
   PeerConnectionFactory _peerConnectionFactory;
   MediaStream _localStream;
+  SignalingApiProvider signalingApiProvider = SignalingApiProvider();
 
   List<MediaStream> _currentStreams = [];
   Map<String, RTCPeerConnection> _currentConnections = {};
@@ -31,8 +31,8 @@ class PeerManager {
   }
 
   addPeer(String userId) async {
-    var response = await http.get("$baseUrlSignaling/user/$userId/devices");
-    List<dynamic> deviceIds = jsonDecode(response.body);
+    List<dynamic> deviceIds = await signalingApiProvider.getUserDevices(userId);
+
     deviceIds.forEach((deviceId) async {
       RTCPeerConnection connection =
           await _peerConnectionFactory.newPeerConnection(userId, deviceId);
