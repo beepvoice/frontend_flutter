@@ -1,5 +1,5 @@
 name: frontend_flutter
-description: The new way to communicate with your friends and family by merging the efficiency of voice calls with the convenience of messaging. 
+description: The new way to communicate with your friends and family by merging the efficiency of voice calls with the convenience of messaging.
 version: 1.0.0+1
 
 environment:
@@ -15,6 +15,7 @@ dependencies:
   flutter_webrtc: ^0.1.0
   pin_code_text_field: ^1.1.3
   flutter_svg: ^0.10.3
+  shared_preferences: ^0.5.1
 
 dev_dependencies:
   flutter_test:
@@ -30,7 +31,7 @@ flutter_icons:
 
 flutter:
   uses-material-design: true
-  
+
   assets:
     - assets/logo.png
     - assets/phoneno.svg
