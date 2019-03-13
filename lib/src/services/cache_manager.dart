@@ -22,17 +22,17 @@ class CacheManager {
 
   // Returns raw response body
   Future<String> fetch(String url, {bool update=false}) async {
-    List<Map> cached = await this.db.rawQuery("SELECT resource FROM cache WHERE url = ?", [ url ]);
-    if (cached.length > 0 && !update) { // Something exists in the cache
-      return cached[0]["resource"]; // Return the first result
-    }
-
     final response = await http.get(url);
-    if (response.statusCode < 200 || response.statusCode >= 300) { // Unsuccessful response
-      throw response.statusCode;
+    if (response.statusCode < 200 || response.statusCode >= 300) { // Unsuccessful response, use cache
+      List<Map> cached = await this.db.rawQuery("SELECT resource FROM cache WHERE url = ?", [ url ]);
+      if (cached.length > 0 && !update) { // Something exists in the cache
+        return cached[0]["resource"]; // Return the first result
+      } else {
+        throw response.statusCode;
+      }
+    } else {
+      await this.db.rawInsert("INSERT INTO cache (url, resource) VALUES (?, ?) ON CONFLICT(url) DO UPDATE SET resource = ?", [url, response.body, response.body]);
+      return response.body;
     }
-
-    await this.db.rawInsert("INSERT INTO cache (url, resource) VALUES (?, ?) ON CONFLICT(url) DO UPDATE SET resource = ?", [url, response.body, response.body]);
-    return response.body;
   }
 }
