@@ -4,7 +4,7 @@ import "package:http/http.dart" as http;
 
 import 'package:sqflite/sqflite.dart';
 
-class CacheManager {
+class CacheHttp {
   Database db;
 
   // Call this immediately after instantiating new CacheManager

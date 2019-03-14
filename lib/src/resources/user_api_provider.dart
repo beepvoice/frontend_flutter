@@ -3,9 +3,17 @@ import "dart:convert";
 import "package:http/http.dart" as http;
 
 import "../models/user_model.dart";
+import "../services/cache_http.dart";
 import "../../settings.dart";
 
 class UserApiProvider {
+  CacheHttp cache;
+
+  Future<void> init() async {
+    this.cache = new CacheHttp();
+    await this.cache.init();
+  }
+
   Future<User> createUser(User user) async {
     // Prob need to add the headers
     final response = await http.post("$baseUrlCore/user",
@@ -15,15 +23,20 @@ class UserApiProvider {
   }
 
   Future<User> fetchUserByPhone(String phoneNumber) async {
-    final uri = Uri.https(baseUrlCore, "/user", {"phone_number": phoneNumber});
-    final response = await http.get(uri);
-
-    return User.fromJson(jsonDecode(response.body));
+    try {
+      final responseBody = await this.cache.fetch("$baseUrlCore/user?phone_number=$phoneNumber");
+      return User.fromJson(jsonDecode(responseBody));
+    } catch(e) {
+      throw e;
+    }
   }
 
   Future<User> fetchUserById(String id) async {
-    final response = await http.get("$baseUrlCore/user/id/$id");
-
-    return User.fromJson(jsonDecode(response.body));
+    try {
+      final responseBody = await this.cache.fetch("$baseUrlCore/user/id/$id");
+      return User.fromJson(jsonDecode(responseBody));
+    } catch(e) {
+      throw e;
+    }
   }
 }
