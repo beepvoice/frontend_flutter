@@ -6,6 +6,7 @@ import 'package:sqflite/sqflite.dart';
 
 class CacheHttp {
   Database db;
+  bool hasInit = false;
 
   // Call this immediately after instantiating new CacheManager
   Future<void> init() async {
@@ -22,6 +23,10 @@ class CacheHttp {
 
   // Returns raw response body
   Future<String> fetch(String url, {bool update=false}) async {
+    if(!this.hasInit) {
+      this.hasInit = true;
+      await this.init();
+    }
     final response = await http.get(url);
     if (response.statusCode < 200 || response.statusCode >= 300) { // Unsuccessful response, use cache
       List<Map> cached = await this.db.rawQuery("SELECT resource FROM cache WHERE url = ?", [ url ]);
