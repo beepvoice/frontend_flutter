@@ -12,10 +12,6 @@ import "../../settings.dart";
 class ConversationApiProvider {
   CacheHttp cache = CacheHttp();
 
-  Future<void> init() async {
-    await this.cache.init();
-  }
-
   Future<Conversation> createConversation(String title) async {
     final response = await http.post("$baseUrlCore/user/conversation",
         headers: {"Content-Type": "application/json"},

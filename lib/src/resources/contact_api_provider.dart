@@ -9,10 +9,6 @@ import "../../settings.dart";
 class ContactApiProvider {
   CacheHttp cache = CacheHttp();
 
-  Future<void> init() async {
-    await this.cache.init();
-  }
-
   Future<List<User>> fetchContacts() async {
     try {
       final responseBody =

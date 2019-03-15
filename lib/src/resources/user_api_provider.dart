@@ -9,11 +9,6 @@ import "../../settings.dart";
 class UserApiProvider {
   CacheHttp cache;
 
-  Future<void> init() async {
-    this.cache = new CacheHttp();
-    await this.cache.init();
-  }
-
   Future<User> createUser(User user) async {
     // Prob need to add the headers
     final response = await http.post("$baseUrlCore/user",
@@ -24,9 +19,10 @@ class UserApiProvider {
 
   Future<User> fetchUserByPhone(String phoneNumber) async {
     try {
-      final responseBody = await this.cache.fetch("$baseUrlCore/user?phone_number=$phoneNumber");
+      final responseBody =
+          await this.cache.fetch("$baseUrlCore/user?phone_number=$phoneNumber");
       return User.fromJson(jsonDecode(responseBody));
-    } catch(e) {
+    } catch (e) {
       throw e;
     }
   }
@@ -35,7 +31,7 @@ class UserApiProvider {
     try {
       final responseBody = await this.cache.fetch("$baseUrlCore/user/id/$id");
       return User.fromJson(jsonDecode(responseBody));
-    } catch(e) {
+    } catch (e) {
       throw e;
     }
   }
