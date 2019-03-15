@@ -3,15 +3,22 @@ import "package:http/http.dart" as http;
 import "dart:convert";
 
 import "../models/user_model.dart";
+import "../services/cache_http.dart";
 import "../../settings.dart";
 
 class ContactApiProvider {
-  Future<List<User>> fetchContacts() async {
-    final response = await http.get("$baseUrlCore/user/$globalUserId/contact");
+  CacheHttp cache = CacheHttp();
 
-    return jsonDecode(response.body)
-        .map<User>((user) => User.fromJson(user))
-        .toList();
+  Future<List<User>> fetchContacts() async {
+    try {
+      final responseBody =
+          await this.cache.fetch("$baseUrlCore/user/$globalUserId/contact/");
+      return jsonDecode(responseBody)
+          .map<User>((user) => User.fromJson(user))
+          .toList();
+    } catch (e) {
+      throw e;
+    }
   }
 
   void createContact(User user) async =>

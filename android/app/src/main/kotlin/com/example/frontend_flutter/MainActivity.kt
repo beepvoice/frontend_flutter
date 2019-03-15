@@ -1,4 +1,4 @@
-package com.example.frontendflutter
+package com.example.frontend_flutter
 
 import android.os.Bundle
 
