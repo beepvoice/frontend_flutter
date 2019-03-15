@@ -5,6 +5,14 @@ import "package:http/http.dart" as http;
 import 'package:sqflite/sqflite.dart';
 
 class CacheHttp {
+  static final CacheHttp _cache = new CacheHttp._internal();
+
+  factory CacheHttp() {
+    return _cache;
+  }
+
+  CacheHttp._internal();
+
   Database db;
   bool hasInit = false;
 
