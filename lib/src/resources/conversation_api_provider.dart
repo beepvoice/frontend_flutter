@@ -10,10 +10,9 @@ import "../services/cache_http.dart";
 import "../../settings.dart";
 
 class ConversationApiProvider {
-  CacheHttp cache;
+  CacheHttp cache = CacheHttp();
 
   Future<void> init() async {
-    this.cache = new CacheHttp();
     await this.cache.init();
   }
 
@@ -30,32 +29,37 @@ class ConversationApiProvider {
 
   Future<List<Conversation>> fetchConversations() async {
     try {
-      final responseBody = await this.cache.fetch("$baseUrlCore/user/$globalUserId/conversation");
+      final responseBody = await this
+          .cache
+          .fetch("$baseUrlCore/user/$globalUserId/conversation/");
       return jsonDecode(responseBody)
           .map<Conversation>(
               (conversation) => Conversation.fromJson(conversation))
           .toList();
-    } catch(e) {
+    } catch (e) {
       throw e;
     }
   }
 
   Future<Conversation> fetchConversation(String id) async {
     try {
-      final responseBody = await this.cache.fetch("$baseUrlCore/user/conversation/$id");
+      final responseBody =
+          await this.cache.fetch("$baseUrlCore/user/conversation/$id");
       return Conversation.fromJson(jsonDecode(responseBody));
-    } catch(e) {
+    } catch (e) {
       throw e;
     }
   }
 
   Future<List<User>> fetchConversationMembers(String id) async {
     try {
-      final responseBody = await this.cache.fetch("$baseUrlCore/user/$globalUserId/conversation/$id/member");
+      final responseBody = await this
+          .cache
+          .fetch("$baseUrlCore/user/$globalUserId/conversation/$id/member/");
       return jsonDecode(responseBody)
           .map<User>((user) => User.fromJson(user))
           .toList();
-    } catch(e) {
+    } catch (e) {
       throw e;
     }
   }

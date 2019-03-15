@@ -7,20 +7,20 @@ import "../services/cache_http.dart";
 import "../../settings.dart";
 
 class ContactApiProvider {
-  CacheHttp cache;
+  CacheHttp cache = CacheHttp();
 
   Future<void> init() async {
-    this.cache = new CacheHttp();
     await this.cache.init();
   }
 
   Future<List<User>> fetchContacts() async {
     try {
-      final responseBody = await this.cache.fetch("$baseUrlCore/user/$globalUserId/contact");
+      final responseBody =
+          await this.cache.fetch("$baseUrlCore/user/$globalUserId/contact/");
       return jsonDecode(responseBody)
           .map<User>((user) => User.fromJson(user))
           .toList();
-    } catch(e) {
+    } catch (e) {
       throw e;
     }
   }
