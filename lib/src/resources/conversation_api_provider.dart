@@ -5,9 +5,13 @@ import "dart:convert";
 import "../models/conversation_model.dart";
 import "../models/user_model.dart";
 
+import "../services/cache_http.dart";
+
 import "../../settings.dart";
 
 class ConversationApiProvider {
+  CacheHttp cache = CacheHttp();
+
   Future<Conversation> createConversation(String title) async {
     final response = await http.post("$baseUrlCore/user/conversation",
         headers: {"Content-Type": "application/json"},
@@ -20,27 +24,39 @@ class ConversationApiProvider {
       await http.delete("$baseUrlCore/user/conversation/$id");
 
   Future<List<Conversation>> fetchConversations() async {
-    final response =
-        await http.get("$baseUrlCore/user/$globalUserId/conversation");
-
-    return jsonDecode(response.body)
-        .map<Conversation>(
-            (conversation) => Conversation.fromJson(conversation))
-        .toList();
+    try {
+      final responseBody = await this
+          .cache
+          .fetch("$baseUrlCore/user/$globalUserId/conversation/");
+      return jsonDecode(responseBody)
+          .map<Conversation>(
+              (conversation) => Conversation.fromJson(conversation))
+          .toList();
+    } catch (e) {
+      throw e;
+    }
   }
 
   Future<Conversation> fetchConversation(String id) async {
-    final response = await http.get("baseUrlCore/user/conversation/$id");
-
-    return Conversation.fromJson(jsonDecode(response.body));
+    try {
+      final responseBody =
+          await this.cache.fetch("$baseUrlCore/user/conversation/$id");
+      return Conversation.fromJson(jsonDecode(responseBody));
+    } catch (e) {
+      throw e;
+    }
   }
 
   Future<List<User>> fetchConversationMembers(String id) async {
-    final response = await http
-        .get("$baseUrlCore/user/$globalUserId/conversation/$id/member");
-
-    return jsonDecode(response.body)
-        .map<User>((user) => User.fromJson(user))
-        .toList();
+    try {
+      final responseBody = await this
+          .cache
+          .fetch("$baseUrlCore/user/$globalUserId/conversation/$id/member/");
+      return jsonDecode(responseBody)
+          .map<User>((user) => User.fromJson(user))
+          .toList();
+    } catch (e) {
+      throw e;
+    }
   }
 }
