@@ -2,7 +2,6 @@ import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
 
 import "../../widgets/text_button.dart";
-import "../../../models/user_model.dart";
 import "../../../services/login_manager.dart";
 import "phone_input.dart";
 
@@ -55,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
           TextButton(
               text: "Continue",
               onClickCallback: () {
-                widget.loginManager.initAuthentication("+65${controller.text}");
+                widget.loginManager.loginTest("+65${controller.text}");
                 Navigator.pushNamed(context, 'welcome/otp');
               }),
         ]));
