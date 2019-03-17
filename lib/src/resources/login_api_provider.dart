@@ -3,7 +3,6 @@ import "package:http/http.dart" as http;
 import "dart:convert";
 import "dart:io";
 
-import "../models/user_model.dart";
 import "../../settings.dart";
 
 class LoginApiProvider {

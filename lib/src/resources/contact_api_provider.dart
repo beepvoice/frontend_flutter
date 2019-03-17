@@ -13,8 +13,14 @@ class ContactApiProvider {
   LoginManager loginManager = LoginManager();
 
   Future<List<User>> fetchContacts() async {
+    final jwt = await loginManager.getToken();
+
     try {
-      final responseBody = await this.cache.fetch("$baseUrlCore/user/contact");
+      final responseBody =
+          await this.cache.fetch("$baseUrlCore/user/contact", headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $jwt"
+      });
       return jsonDecode(responseBody)
           .map<User>((user) => User.fromJson(user))
           .toList();
@@ -29,7 +35,7 @@ class ContactApiProvider {
     await http.post("$baseUrlCore/user/contact",
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
-          "X-User-Claim": jwt
+          HttpHeaders.authorizationHeader: "Bearer $jwt"
         },
         body: user.toJson);
   }

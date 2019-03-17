@@ -1,12 +1,12 @@
 import "../resources/login_api_provider.dart";
 import "../models/user_model.dart";
 import "../resources/user_api_provider.dart";
+import "../../settings.dart";
 
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginManager {
   final loginApiProvider = LoginApiProvider();
-  final userApiProvider = UserApiProvider();
   String clientid;
   String nonce;
 
@@ -40,10 +40,9 @@ class LoginManager {
     }
   }
 
-  Future<String> loginTest(String phoneNumber) async {
+  Future<String> loginTest() async {
     try {
-      User user = await userApiProvider.fetchUserByPhone(phoneNumber);
-      final jwt = await loginApiProvider.loginTest(user.id, "1");
+      final jwt = await loginApiProvider.loginTest(globalUserId, "1");
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString("token", jwt);
       return jwt;

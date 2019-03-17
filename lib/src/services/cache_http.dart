@@ -22,11 +22,12 @@ class CacheHttp {
 
   // Returns raw response body
   Future<String> fetch(String url,
-      {bool update = false, Map<String, dynamic> headers = const {}}) async {
+      {bool update = false, Map<String, String> headers = const {}}) async {
     if (!this.hasInit) {
       this.hasInit = true;
       await this.init();
     }
+    print("headers: $headers\n url: $url");
     try {
       final response = await http.get(url, headers: headers);
       if (response.statusCode < 200 || response.statusCode >= 300) {
@@ -40,6 +41,7 @@ class CacheHttp {
         return response.body;
       }
     } catch (e) {
+      print("Using cache");
       final body = await this.getCache(url);
       return body;
     }
