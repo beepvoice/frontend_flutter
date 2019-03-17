@@ -27,7 +27,6 @@ class CacheHttp {
       this.hasInit = true;
       await this.init();
     }
-    print("headers: $headers\n url: $url");
     try {
       final response = await http.get(url, headers: headers);
       if (response.statusCode < 200 || response.statusCode >= 300) {
@@ -41,7 +40,6 @@ class CacheHttp {
         return response.body;
       }
     } catch (e) {
-      print("Using cache");
       final body = await this.getCache(url);
       return body;
     }

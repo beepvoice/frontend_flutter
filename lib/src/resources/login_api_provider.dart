@@ -33,7 +33,6 @@ class LoginApiProvider {
         headers: {HttpHeaders.contentTypeHeader: "application/json"},
         body: jsonEncode({"userid": userId, "clientid": clientId}));
 
-    print("Generated jwt: ${response.body}");
     return response.body;
   }
 }
