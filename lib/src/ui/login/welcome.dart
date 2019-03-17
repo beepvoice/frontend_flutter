@@ -1,12 +1,14 @@
 import "package:flutter/material.dart";
-import "package:flutter_svg/flutter_svg.dart";
 
+import "../../services/login_manager.dart";
 import "./widgets/welcome_page.dart";
 import "./widgets/login_page.dart";
 import "./widgets/otp_page.dart";
 
 class Welcome extends StatelessWidget {
   final String logo = "assets/logo.png";
+  final LoginManager loginManager = LoginManager();
+  final Map<String, String> user = {};
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +44,13 @@ class Welcome extends StatelessWidget {
                     builder = (BuildContext _) => WelcomePage();
                     break;
                   case "welcome/login":
-                    builder = (BuildContext _) => LoginPage();
+                    builder = (BuildContext _) =>
+                        LoginPage(loginManager: loginManager);
                     break;
                   case "welcome/otp":
-                    builder = (BuildContext _) => OtpPage(buttonCallback: () {
+                    builder = (BuildContext _) =>
+                        OtpPage(buttonCallback: (String otp) async {
+                          // loginManager.processOtp(otp); disabled for testing
                           Navigator.of(context).pushNamed("/home");
                         });
                     break;

@@ -1,16 +1,15 @@
 import "dart:async";
 import "package:http/http.dart" as http;
 import "dart:convert";
-
-import "../models/user_model.dart";
+import "dart:io";
 
 import "../../settings.dart";
 
 class LoginApiProvider {
-  Future<String> initAuthentication(User user) async {
+  Future<String> initAuthentication(String phoneNumber) async {
     final response = await http.post("$baseUrlLogin/init",
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"phone_number": user.phoneNumber}));
+        headers: {HttpHeaders.contentTypeHeader: "application/json"},
+        body: jsonEncode({"phone_number": phoneNumber}));
     if (response.statusCode == 400 || response.statusCode == 500) {
       throw response.statusCode;
     }
@@ -19,9 +18,11 @@ class LoginApiProvider {
 
   Future<String> verifyOtp(String otp, String nonce, String clientid) async {
     final response = await http.post("$baseUrlLogin/verify",
-        headers: {"Content-Type": "application/json"},
+        headers: {HttpHeaders.contentTypeHeader: "application/json"},
         body: jsonEncode({"code": otp, "nonce": nonce, "clientid": clientid}));
-    if (response.statusCode == 400 || response.statusCode == 404 || response.statusCode == 500) {
+    if (response.statusCode == 400 ||
+        response.statusCode == 404 ||
+        response.statusCode == 500) {
       throw response.statusCode;
     }
     return response.body;
@@ -29,7 +30,7 @@ class LoginApiProvider {
 
   Future<String> loginTest(String userId, String clientId) async {
     final response = await http.post("$baseUrlLogin/login",
-        headers: {"Content-Type": "application/json"},
+        headers: {HttpHeaders.contentTypeHeader: "application/json"},
         body: jsonEncode({"userid": userId, "clientid": clientId}));
 
     return response.body;
