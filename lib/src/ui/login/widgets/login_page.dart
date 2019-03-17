@@ -2,10 +2,27 @@ import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
 
 import "../../widgets/text_button.dart";
+import "../../../services/login_manager.dart";
 import "phone_input.dart";
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  final LoginManager loginManager;
+
+  LoginPage({@required this.loginManager});
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final String phoneSvg = "assets/phoneno.svg";
+  final controller = TextEditingController();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +47,16 @@ class LoginPage extends StatelessWidget {
                         .title
                         .copyWith(fontWeight: FontWeight.w400)),
                 Padding(
-                    padding: EdgeInsets.only(top: 20.0), child: PhoneInput()),
+                    padding: EdgeInsets.only(top: 20.0),
+                    child: PhoneInput(controller: controller)),
               ]),
           Spacer(),
           TextButton(
               text: "Continue",
-              onClickCallback: () =>
-                  Navigator.pushNamed(context, 'welcome/otp')),
+              onClickCallback: () {
+                widget.loginManager.loginTest();
+                Navigator.pushNamed(context, 'welcome/otp');
+              }),
         ]));
   }
 }

@@ -1,6 +1,10 @@
 import "package:flutter/material.dart";
 
 class PhoneInput extends StatelessWidget {
+  final TextEditingController controller;
+
+  PhoneInput({@required this.controller});
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -21,6 +25,7 @@ class PhoneInput extends StatelessWidget {
               )),
           Expanded(
               child: TextField(
+                  controller: controller,
                   autocorrect: false,
                   cursorWidth: 2.0,
                   cursorColor: Colors.white,

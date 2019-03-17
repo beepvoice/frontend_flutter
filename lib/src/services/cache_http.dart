@@ -29,13 +29,14 @@ class CacheHttp {
   }
 
   // Returns raw response body
-  Future<String> fetch(String url, {bool update = false}) async {
+  Future<String> fetch(String url,
+      {bool update = false, Map<String, String> headers = const {}}) async {
     if (!this.hasInit) {
       this.hasInit = true;
       await this.init();
     }
     try {
-      final response = await http.get(url);
+      final response = await http.get(url, headers: headers);
       if (response.statusCode < 200 || response.statusCode >= 300) {
         // Unsuccessful response, use cache
         final body = await this.getCache(url);
