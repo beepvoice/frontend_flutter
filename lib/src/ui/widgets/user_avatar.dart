@@ -1,16 +1,42 @@
 import "package:flutter/material.dart";
 
 import "../../models/user_model.dart";
+import "../../blocs/heartbeat_bloc.dart";
 
-class UserAvatar extends StatelessWidget {
+class UserAvatar extends StatefulWidget {
   final User user;
+
+  UserAvatar ({ @required this.user });
+
+  @override
+  State<StatefulWidget> createState() {
+    return _UserAvatarState(user: this.user);
+  }
+}
+
+class _UserAvatarState extends State<UserAvatar> {
+  final User user;
+  final bloc;
+
   final EdgeInsetsGeometry padding;
   final double radius;
 
-  UserAvatar(
-      {@required this.user,
-      this.padding: const EdgeInsets.all(0.0),
-      this.radius: 20.0});
+  _UserAvatarState({
+    @required this.user,
+    this.padding: const EdgeInsets.all(0.0),
+    this.radius: 20.0,
+  }) : bloc = HeartbeatReceiverBloc(user.id);
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +51,21 @@ class UserAvatar extends StatelessWidget {
                 style: Theme.of(context).accentTextTheme.title,
               ),
               radius: radius),
-          /*active
-              ? Container(
-                  width: 12.0,
-                  height: 12.0,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).indicatorColor,
-                      shape: BoxShape.circle))
-              : Container(),*/
+          StreamBuilder (
+            stream: bloc.colours,
+            builder: (context, AsyncSnapshot<Color> snapshot) {
+              Color colour = Color.fromARGB(255, 158, 158, 158);
+              if (snapshot.hasData) {
+                colour = snapshot.data;
+              }
+              return Container(
+                        width: 12.0,
+                        height: 12.0,
+                        decoration: BoxDecoration(
+                            color: colour,
+                            shape: BoxShape.circle));
+            }
+          ),
         ]));
   }
 
