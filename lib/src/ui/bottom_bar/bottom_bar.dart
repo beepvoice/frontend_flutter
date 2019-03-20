@@ -1,5 +1,8 @@
 import "package:flutter/material.dart";
-import 'package:flutter_webrtc/webrtc.dart';
+
+import "../../blocs/bottom_bus_bloc.dart";
+import "widgets/conversation_inactive_view.dart";
+import "widgets/conversation_active_view.dart";
 
 class BottomBar extends StatefulWidget {
   @override
@@ -9,22 +12,13 @@ class BottomBar extends StatefulWidget {
 }
 
 class _BottomBarState extends State<BottomBar> {
-  final double barHeight = 80.0;
-  final _renderer = new RTCVideoRenderer();
-
-  @override
-  void initState() {
-    super.initState();
-    initRenderers();
-  }
+  final double barHeight = 85.0;
+  final bloc = bottomBusBloc;
 
   @override
   void dispose() {
+    bloc.dispose();
     super.dispose();
-  }
-
-  initRenderers() async {
-    await _renderer.initialize();
   }
 
   @override
@@ -35,41 +29,23 @@ class _BottomBarState extends State<BottomBar> {
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(40.0), topRight: Radius.circular(40.0)),
         child: Container(
-            padding: EdgeInsets.all(20.0),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                      margin: EdgeInsets.only(right: 20.0),
-                      width: 22.0,
-                      height: 22.0,
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).indicatorColor,
-                          shape: BoxShape.circle)),
-                  Text("Family Chat",
-                      style: Theme.of(context)
-                          .textTheme
-                          .display1
-                          .copyWith(color: Theme.of(context).accentColor)),
-                  Spacer(),
-                  Container(
-                    child: RTCVideoView(_renderer),
-                    width: 0,
-                    height: 0,
-                  ),
-                  IconButton(
-                      color: Theme.of(context).accentColor,
-                      icon: Icon(Icons.info),
-                      onPressed: () {
-                        print("Pressed");
-                      }),
-                  IconButton(
-                      color: Theme.of(context).accentColor,
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        print("Pressed close");
-                      }),
-                ])));
+            height: barHeight,
+            padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 10.0),
+            child: StreamBuilder(
+                stream: bloc.bus,
+                builder:
+                    (context, AsyncSnapshot<Map<String, String>> snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data["state"] == "no_connection") {
+                      return ConversationInactiveView();
+                    } else if (snapshot.data["state"] == "connection") {
+                      return ConversationActiveView(
+                          conversationName: snapshot.data["title"]);
+                    } else {
+                      return ConversationInactiveView();
+                    }
+                  }
+                  return ConversationInactiveView();
+                })));
   }
 }
