@@ -1,8 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:flutter_webrtc/webrtc.dart';
 
-import "../../../blocs/voice_connection_bloc.dart";
-
 class BottomBar extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -71,8 +69,6 @@ class _BottomBarState extends State<BottomBar> {
                       icon: Icon(Icons.close),
                       onPressed: () {
                         print("Pressed close");
-                        voiceConnection
-                            .join("c-6f2ba396fb53961ff8a6ba9c5d286a25");
                       }),
                 ])));
   }
