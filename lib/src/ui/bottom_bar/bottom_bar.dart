@@ -12,25 +12,29 @@ class BottomBar extends StatefulWidget {
 }
 
 class _BottomBarState extends State<BottomBar> {
-  final double barHeight = 85.0;
   final bloc = bottomBusBloc;
 
   @override
   void dispose() {
-    bloc.dispose();
+    // bloc.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final double bottomPadding = MediaQuery.of(context).padding.bottom;
+
     return Material(
         type: MaterialType.canvas,
         elevation: 10.0,
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(40.0), topRight: Radius.circular(40.0)),
         child: Container(
-            height: barHeight,
-            padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 10.0),
+            padding: EdgeInsets.only(
+                top: 20.0,
+                left: 20.0,
+                right: 20.0,
+                bottom: 30.0 + bottomPadding),
             child: StreamBuilder(
                 stream: bloc.bus,
                 builder:

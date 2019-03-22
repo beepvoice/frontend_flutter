@@ -10,31 +10,32 @@ class ConversationActiveView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.all(20.0),
         child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Container(
-                  width: 22.0,
-                  height: 22.0,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).indicatorColor,
-                      shape: BoxShape.circle)),
-              Text(conversationName,
+          Container(
+              width: 22.0,
+              height: 22.0,
+              decoration: BoxDecoration(
+                  color: Theme.of(context).indicatorColor,
+                  shape: BoxShape.circle)),
+          Container(
+              margin: EdgeInsets.only(left: 10.0),
+              child: Text(conversationName,
                   style: Theme.of(context)
                       .textTheme
                       .display1
-                      .copyWith(color: Theme.of(context).accentColor)),
-              Spacer(),
-              IconButton(
-                  color: Theme.of(context).accentColor,
-                  icon: Icon(Icons.close),
-                  onPressed: () {
-                    // Call method to close connection
-                    bus.publish({"state": "no_connection"});
-                    print("Pressed close");
-                  }),
-            ]));
+                      .copyWith(color: Theme.of(context).accentColor))),
+          Spacer(),
+          IconButton(
+              color: Theme.of(context).accentColor,
+              icon: Icon(Icons.close),
+              onPressed: () {
+                // Call method to close connection
+                bus.publish({"state": "no_connection"});
+                print("Pressed close");
+              }),
+        ]));
   }
 }
