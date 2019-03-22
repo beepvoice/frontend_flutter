@@ -11,9 +11,15 @@ class ConversationInactiveView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-          UserAvatar(user: User("1", "Isaac", "Tay", "+65 91043593")),
-          UserAvatar(user: User("1", "Isaac", "Tay", "+65 91043593")),
-          UserAvatar(user: User("1", "Isaac", "Tay", "+65 91043593"))
+          UserAvatar(
+              padding: EdgeInsets.only(right: 5.0),
+              user: User("1", "Isaac", "Tay", "+65 91043593")),
+          UserAvatar(
+              padding: EdgeInsets.only(right: 5.0),
+              user: User("1", "Isaac", "Tay", "+65 91043593")),
+          UserAvatar(
+              padding: EdgeInsets.only(right: 5.0),
+              user: User("1", "Isaac", "Tay", "+65 91043593"))
         ]));
   }
 }

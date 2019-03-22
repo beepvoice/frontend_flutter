@@ -20,6 +20,16 @@ class _BottomBarState extends State<BottomBar> {
     super.dispose();
   }
 
+  Widget getWidgetForState(Map<String, String> message) {
+    if (message["state"] == "no_connection") {
+      return ConversationInactiveView();
+    } else if (message["state"] == "connection") {
+      return ConversationActiveView(conversationName: message["title"]);
+    } else {
+      return ConversationInactiveView();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final double bottomPadding = MediaQuery.of(context).padding.bottom;
@@ -40,16 +50,11 @@ class _BottomBarState extends State<BottomBar> {
                 builder:
                     (context, AsyncSnapshot<Map<String, String>> snapshot) {
                   if (snapshot.hasData) {
-                    if (snapshot.data["state"] == "no_connection") {
-                      return ConversationInactiveView();
-                    } else if (snapshot.data["state"] == "connection") {
-                      return ConversationActiveView(
-                          conversationName: snapshot.data["title"]);
-                    } else {
-                      return ConversationInactiveView();
-                    }
+                    return getWidgetForState(snapshot.data);
+                  } else {
+                    final message = bloc.lastMessage;
+                    return getWidgetForState(message);
                   }
-                  return ConversationInactiveView();
                 })));
   }
 }
