@@ -7,9 +7,12 @@ import 'package:eventsource/eventsource.dart';
 import "package:rxdart/rxdart.dart";
 
 import "../models/ping_model.dart";
+import "../services/login_manager.dart";
 import "../../settings.dart";
 
 class HeartbeatReceiverBloc {
+  LoginManager loginManager = new LoginManager();
+
   String userId;
   DateTime lastSeen;
   String status;
@@ -22,7 +25,9 @@ class HeartbeatReceiverBloc {
     lastSeen = DateTime.fromMillisecondsSinceEpoch(0);
     status = "";
 
-    EventSource.connect("$baseUrlHeartbeat/subscribe/$userId").then((es) {
+    final token = loginManager.getToken();
+
+    EventSource.connect("$baseUrlHeartbeat/subscribe/$userId?token=$token").then((es) {
       es.listen((Event event) {
         Ping ping = Ping.fromJson(jsonDecode(event.data));
         lastSeen = DateTime.fromMillisecondsSinceEpoch(ping.timestamp);
