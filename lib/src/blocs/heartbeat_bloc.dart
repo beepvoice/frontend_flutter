@@ -25,29 +25,29 @@ class HeartbeatReceiverBloc {
     lastSeen = DateTime.fromMillisecondsSinceEpoch(0);
     status = "";
 
-    final token = loginManager.getToken();
+    loginManager.getToken().then((token) {
+      EventSource.connect("$baseUrlHeartbeat/subscribe/$userId?token=$token").then((es) {
+        es.listen((Event event) {
+          Ping ping = Ping.fromJson(jsonDecode(event.data));
+          lastSeen = DateTime.fromMillisecondsSinceEpoch(ping.timestamp);
+          status = ping.status;
+        });
 
-    EventSource.connect("$baseUrlHeartbeat/subscribe/$userId?token=$token").then((es) {
-      es.listen((Event event) {
-        Ping ping = Ping.fromJson(jsonDecode(event.data));
-        lastSeen = DateTime.fromMillisecondsSinceEpoch(ping.timestamp);
-        status = ping.status;
-      });
-
-      final oneMinute = Duration(minutes: 1);
-      final timeoutDuration = Duration(minutes: 30);
-      new Timer.periodic(oneMinute, (Timer t) {
-        if (status == "on_call") {
-          _coloursFetcher.sink.add(Color.fromARGB(255, 244, 67, 54));
-        } else {
-          final now = new DateTime.now();
-          final difference = now.difference(this.lastSeen);
-          if (difference > timeoutDuration) {
-            _coloursFetcher.sink.add(Color.fromARGB(255, 158, 158, 158));
+        final oneMinute = Duration(minutes: 1);
+        final timeoutDuration = Duration(minutes: 30);
+        new Timer.periodic(oneMinute, (Timer t) {
+          if (status == "on_call") {
+            _coloursFetcher.sink.add(Color.fromARGB(255, 244, 67, 54));
           } else {
-            _coloursFetcher.sink.add(Color.fromARGB(255, 76, 175, 80));
+            final now = new DateTime.now();
+            final difference = now.difference(this.lastSeen);
+            if (difference > timeoutDuration) {
+              _coloursFetcher.sink.add(Color.fromARGB(255, 158, 158, 158));
+            } else {
+              _coloursFetcher.sink.add(Color.fromARGB(255, 76, 175, 80));
+            }
           }
-        }
+        });
       });
     });
   }
