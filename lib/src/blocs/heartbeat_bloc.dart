@@ -17,12 +17,12 @@ class HeartbeatReceiverBloc {
   final _coloursFetcher = PublishSubject<Color>();
   Observable<Color> get colours => _coloursFetcher.stream;
 
-  HeartbeatReceiverBloc(String userid) {
+  HeartbeatReceiverBloc(String userId) {
     this.userId = userId;
     lastSeen = DateTime.fromMillisecondsSinceEpoch(0);
     status = "";
 
-    EventSource.connect("$baseUrlHeartbeat/").then((es) {
+    EventSource.connect("$baseUrlHeartbeat/subscribe/$userId").then((es) {
       es.listen((Event event) {
         Ping ping = Ping.fromJson(jsonDecode(event.data));
         lastSeen = DateTime.fromMillisecondsSinceEpoch(ping.timestamp);
