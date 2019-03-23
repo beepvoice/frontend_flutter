@@ -3,7 +3,6 @@ import "package:rxdart/rxdart.dart";
 import "../resources/contact_api_provider.dart";
 import "../models/user_model.dart";
 
-// TODO: SHOULD BE A INHERITED SCOPED BLOC Widget
 class ContactBloc {
   final _provider = ContactApiProvider();
   final _contactsFetcher = PublishSubject<List<User>>();

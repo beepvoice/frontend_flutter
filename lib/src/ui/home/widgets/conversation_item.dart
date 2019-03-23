@@ -4,6 +4,7 @@ import "../../../models/user_model.dart";
 import "../../../models/conversation_model.dart";
 import "../../../blocs/conversation_bloc.dart";
 import "../../../blocs/bottom_bus_bloc.dart";
+import "../../../services/conversation_manager.dart";
 
 import "../../widgets/user_avatar.dart";
 
@@ -21,6 +22,7 @@ class _ConversationItemState extends State<ConversationItem> {
   final bloc;
   final Conversation conversation;
   final bus = bottomBusBloc;
+  final conversationManager = ConversationManager();
 
   _ConversationItemState({@required this.conversation})
       : bloc = ConversationMembersBloc(conversation.id);
@@ -41,8 +43,11 @@ class _ConversationItemState extends State<ConversationItem> {
   Widget build(BuildContext context) {
     return ListTile(
       isThreeLine: true,
-      onTap: () =>
-          bus.publish({"state": "connection", "title": conversation.title}),
+      onTap: () async {
+        await conversationManager.join(conversation.id);
+        await bus.publish({"state": "connection", "title": conversation.title});
+        print("Press on ${conversation.id} triggered");
+      },
       contentPadding:
           EdgeInsets.only(top: 0.0, left: 20.0, right: 20.0, bottom: 0.0),
       title: Text(conversation.title, style: Theme.of(context).textTheme.title),

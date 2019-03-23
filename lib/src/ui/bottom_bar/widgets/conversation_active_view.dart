@@ -1,14 +1,35 @@
 import "package:flutter/material.dart";
 
 import "../../widgets/user_avatar.dart";
+import "../../../resources/conversation_api_provider.dart";
 import "../../../models/user_model.dart";
+import "../../../models/conversation_model.dart";
 import "../../../blocs/bottom_bus_bloc.dart";
+import "../../../services/conversation_manager.dart";
 
-class ConversationActiveView extends StatelessWidget {
-  final String conversationName;
+class ConversationActiveView extends StatefulWidget {
+  final String conversationId;
+
+  ConversationActiveView({@required this.conversationId});
+
+  @override
+  State<StatefulWidget> createState() {
+    return _ConversationActiveViewState();
+  }
+}
+
+class _ConversationActiveViewState extends State<ConversationActiveView> {
   final bus = bottomBusBloc;
+  final conversationApiProvider = ConversationApiProvider();
+  final conversationManager = ConversationManager();
+  Conversation conversation;
 
-  ConversationActiveView({@required this.conversationName});
+  @override
+  initState() async {
+    super.initState();
+    conversation =
+        await conversationApiProvider.fetchConversation(widget.conversationId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +47,7 @@ class ConversationActiveView extends StatelessWidget {
                     shape: BoxShape.circle)),
             Container(
                 margin: EdgeInsets.only(left: 10.0),
-                child: Text(conversationName,
+                child: Text(conversation.title,
                     style: Theme.of(context)
                         .textTheme
                         .display1
@@ -41,9 +62,10 @@ class ConversationActiveView extends StatelessWidget {
             IconButton(
                 color: Theme.of(context).accentColor,
                 icon: Icon(Icons.close),
-                onPressed: () {
+                onPressed: () async {
                   // Call method to close connection
-                  bus.publish({"state": "no_connection"});
+                  await conversationManager.exit();
+                  await bus.publish({"state": "no_connection"});
                   print("Pressed close");
                 }),
           ]),

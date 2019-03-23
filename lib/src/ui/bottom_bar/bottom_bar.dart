@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 import "../../blocs/bottom_bus_bloc.dart";
+import "../../services/conversation_manager.dart";
 import "widgets/conversation_inactive_view.dart";
 import "widgets/conversation_active_view.dart";
 
@@ -13,10 +14,16 @@ class BottomBar extends StatefulWidget {
 
 class _BottomBarState extends State<BottomBar> {
   final bloc = bottomBusBloc;
+  final conversationManager = ConversationManager();
+
+  @override
+  void initState() async {
+    super.initState();
+    await bloc.getCurrentState();
+  }
 
   @override
   void dispose() {
-    // bloc.dispose();
     super.dispose();
   }
 
@@ -24,7 +31,7 @@ class _BottomBarState extends State<BottomBar> {
     if (message["state"] == "no_connection") {
       return ConversationInactiveView();
     } else if (message["state"] == "connection") {
-      return ConversationActiveView(conversationName: message["title"]);
+      return ConversationActiveView(conversationId: message["conversationId"]);
     } else {
       return ConversationInactiveView();
     }
@@ -52,7 +59,7 @@ class _BottomBarState extends State<BottomBar> {
                   if (snapshot.hasData) {
                     return getWidgetForState(snapshot.data);
                   } else {
-                    final message = bloc.lastMessage;
+                    final message = bloc.currentState;
                     return getWidgetForState(message);
                   }
                 })));
