@@ -26,7 +26,9 @@ class HeartbeatReceiverBloc {
     status = "";
 
     loginManager.getToken().then((token) {
-      EventSource.connect("$baseUrlHeartbeat/subscribe/$userId?token=$token").then((es) {
+      EventSource.connect("$baseUrlHeartbeat/subscribe/$userId",
+              authToken: token)
+          .then((es) {
         es.listen((Event event) {
           Ping ping = Ping.fromJson(jsonDecode(event.data));
           lastSeen = DateTime.fromMillisecondsSinceEpoch(ping.timestamp);
