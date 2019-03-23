@@ -3,7 +3,7 @@ import "package:flutter/material.dart";
 import "./widgets/top_bar.dart";
 import "./widgets/conversation_list.dart";
 import "./widgets/contact_list.dart";
-import "./widgets/bottom_bar.dart";
+import "../bottom_bar/bottom_bar.dart";
 
 class Home extends StatefulWidget {
   @override

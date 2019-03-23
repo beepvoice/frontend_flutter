@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "../../../models/user_model.dart";
 import "../../../models/conversation_model.dart";
 import "../../../blocs/conversation_bloc.dart";
+import "../../../blocs/bottom_bus_bloc.dart";
 
 import "../../widgets/user_avatar.dart";
 
@@ -19,6 +20,7 @@ class ConversationItem extends StatefulWidget {
 class _ConversationItemState extends State<ConversationItem> {
   final bloc;
   final Conversation conversation;
+  final bus = bottomBusBloc;
 
   _ConversationItemState({@required this.conversation})
       : bloc = ConversationMembersBloc(conversation.id);
@@ -39,7 +41,8 @@ class _ConversationItemState extends State<ConversationItem> {
   Widget build(BuildContext context) {
     return ListTile(
       isThreeLine: true,
-      onTap: () => {},
+      onTap: () =>
+          bus.publish({"state": "connection", "title": conversation.title}),
       contentPadding:
           EdgeInsets.only(top: 0.0, left: 20.0, right: 20.0, bottom: 0.0),
       title: Text(conversation.title, style: Theme.of(context).textTheme.title),

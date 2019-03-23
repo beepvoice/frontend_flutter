@@ -1,19 +1,18 @@
 import "package:rxdart/rxdart.dart";
 
-import "../resources/repository.dart";
+import "../resources/conversation_api_provider.dart";
 import "../models/user_model.dart";
 import "../models/conversation_model.dart";
 
 class ConversationsBloc {
-  final _repository = Repository();
+  final _provider = ConversationApiProvider();
   final _conversationsFetcher = PublishSubject<List<Conversation>>();
 
   Observable<List<Conversation>> get conversations =>
       _conversationsFetcher.stream;
 
   fetchConversations() async {
-    List<Conversation> conversationList =
-        await _repository.fetchConversations();
+    List<Conversation> conversationList = await _provider.fetchConversations();
     _conversationsFetcher.sink.add(conversationList);
   }
 
@@ -24,7 +23,7 @@ class ConversationsBloc {
 
 class ConversationMembersBloc {
   final String conversationId;
-  final _repository = Repository();
+  final _provider = ConversationApiProvider();
   final _membersFetcher = PublishSubject<List<User>>();
 
   ConversationMembersBloc(this.conversationId);
@@ -33,7 +32,7 @@ class ConversationMembersBloc {
 
   fetchMembers() async {
     List<User> memberList =
-        await _repository.fetchConversationMembers(conversationId);
+        await _provider.fetchConversationMembers(conversationId);
     _membersFetcher.sink.add(memberList);
   }
 

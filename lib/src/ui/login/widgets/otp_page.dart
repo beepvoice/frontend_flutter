@@ -5,13 +5,20 @@ import "package:flutter_svg/flutter_svg.dart";
 import "../../widgets/text_button.dart";
 
 // Callback types
-typedef void ButtonCallback();
+typedef void ButtonCallback(String otp);
 
-class OtpPage extends StatelessWidget {
-  final String phoneSvg = "assets/authenticate.svg";
+class OtpPage extends StatefulWidget {
   final ButtonCallback buttonCallback;
 
   OtpPage({@required this.buttonCallback});
+
+  @override
+  _OtpPageState createState() => _OtpPageState();
+}
+
+class _OtpPageState extends State<OtpPage> {
+  final String phoneSvg = "assets/authenticate.svg";
+  final controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +46,7 @@ class OtpPage extends StatelessWidget {
                     padding: EdgeInsets.only(top: 20.0),
                     child: Center(
                         child: PinCodeTextField(
+                            controller: controller,
                             highlight: true,
                             highlightColor: Colors.white,
                             /*hideCharacter: true,*/
@@ -52,7 +60,9 @@ class OtpPage extends StatelessWidget {
                                 Theme.of(context).accentTextTheme.display3))),
               ]),
           Spacer(),
-          TextButton(text: "Done", onClickCallback: () => buttonCallback()),
+          TextButton(
+              text: "Done",
+              onClickCallback: () => widget.buttonCallback(controller.text)),
         ]));
   }
 }
