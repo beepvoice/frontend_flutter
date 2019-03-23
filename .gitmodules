@@ -1,0 +1,3 @@
+[submodule "utility_packages/dart-eventsource"]
+	path = utility_packages/dart-eventsource
+	url = git@makerforce.io:beep/dart-eventsource.git
