@@ -15,16 +15,16 @@ class BottomBar extends StatefulWidget {
 class _BottomBarState extends State<BottomBar> {
   final bloc = bottomBusBloc;
   final conversationManager = ConversationManager();
+  Map<String, String> initialState;
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
-    await bloc.getCurrentState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+    bloc.getCurrentState().then((state) {
+      setState(() {
+        initialState = state;
+      });
+    });
   }
 
   Widget getWidgetForState(Map<String, String> message) {
@@ -40,6 +40,10 @@ class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     final double bottomPadding = MediaQuery.of(context).padding.bottom;
+
+    if (initialState == null) {
+      return Container();
+    }
 
     return Material(
         type: MaterialType.canvas,
@@ -59,8 +63,7 @@ class _BottomBarState extends State<BottomBar> {
                   if (snapshot.hasData) {
                     return getWidgetForState(snapshot.data);
                   } else {
-                    final message = bloc.currentState;
-                    return getWidgetForState(message);
+                    return getWidgetForState(initialState);
                   }
                 })));
   }

@@ -3,7 +3,6 @@ import "../services/conversation_manager.dart";
 
 class BottomBusBloc {
   final _bottomBarBus = PublishSubject<Map<String, String>>();
-  Map<String, String> _currentState;
   final conversationManager = ConversationManager();
 
   BottomBusBloc() {
@@ -11,13 +10,12 @@ class BottomBusBloc {
   }
 
   Observable<Map<String, String>> get bus => _bottomBarBus.stream;
-  Map<String, String> get currentState => _currentState;
 
   publish(Map<String, String> message) async {
     _bottomBarBus.sink.add(message);
   }
 
-  void getCurrentState() async {
+  Future<Map<String, String>> getCurrentState() async {
     final conversationId = await conversationManager.get();
     Map<String, String> response = {};
     if (conversationId == "") {
@@ -26,7 +24,7 @@ class BottomBusBloc {
       response = {"state": "connection", "conversationId": conversationId};
     }
 
-    this._currentState = response;
+    return response;
   }
 
   dispose() {

@@ -22,17 +22,26 @@ class _ConversationActiveViewState extends State<ConversationActiveView> {
   final bus = bottomBusBloc;
   final conversationApiProvider = ConversationApiProvider();
   final conversationManager = ConversationManager();
-  Conversation conversation;
+  Conversation _conversation;
 
   @override
-  initState() async {
+  initState() {
     super.initState();
-    conversation =
-        await conversationApiProvider.fetchConversation(widget.conversationId);
+    conversationApiProvider
+        .fetchConversation(widget.conversationId)
+        .then((conversation) {
+      setState(() {
+        _conversation = conversation;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_conversation == null) {
+      return Container();
+    }
+
     return Container(
         child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
       Row(
@@ -47,7 +56,7 @@ class _ConversationActiveViewState extends State<ConversationActiveView> {
                     shape: BoxShape.circle)),
             Container(
                 margin: EdgeInsets.only(left: 10.0),
-                child: Text(conversation.title,
+                child: Text(_conversation.title,
                     style: Theme.of(context)
                         .textTheme
                         .display1
