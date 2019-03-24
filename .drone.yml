@@ -1,0 +1,31 @@
+kind: pipeline
+name: test
+clone:
+  depth: 1
+steps:
+  - name: nop
+    image: alpine:3.9
+    commands:
+      - echo nop
+---
+kind: pipeline
+name: android
+clone:
+  depth: 1
+steps:
+  - name: build
+    image: alpine:3.9
+    commands:
+      - echo nop
+  - name: deploy
+    image: alpine:3.9
+    commands:
+      - echo nop
+    when:
+      branch:
+        - master
+  - name: slack
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: slack_webhook_beep
