@@ -26,6 +26,7 @@ class HeartbeatReceiverBloc {
     status = "";
 
     loginManager.getToken().then((token) {
+      print(token);
       EventSource.connect("$baseUrlHeartbeat/subscribe/$userId?token=$token")
           .then((es) {
         es.listen((Event event) {

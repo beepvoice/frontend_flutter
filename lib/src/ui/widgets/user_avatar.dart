@@ -7,13 +7,11 @@ class UserAvatar extends StatefulWidget {
   final User user;
   final EdgeInsetsGeometry padding;
   final double radius;
-  final bloc;
 
   UserAvatar(
       {@required this.user,
       this.padding: const EdgeInsets.all(0.0),
-      this.radius: 20.0})
-      : bloc = HeartbeatReceiverBloc(user.id);
+      this.radius: 20.0});
 
   @override
   State<StatefulWidget> createState() {
@@ -22,9 +20,17 @@ class UserAvatar extends StatefulWidget {
 }
 
 class _UserAvatarState extends State<UserAvatar> {
+  HeartbeatReceiverBloc bloc;
+
+  @override
+  void initState() {
+    super.initState();
+    bloc = HeartbeatReceiverBloc(widget.user.id);
+  }
+
   @override
   void dispose() {
-    widget.bloc.dispose();
+    bloc.dispose();
     super.dispose();
   }
 
@@ -42,7 +48,7 @@ class _UserAvatarState extends State<UserAvatar> {
               ),
               radius: widget.radius),
           StreamBuilder(
-              stream: widget.bloc.colours,
+              stream: bloc.colours,
               builder: (context, AsyncSnapshot<Color> snapshot) {
                 Color colour = Color.fromARGB(255, 158, 158, 158);
                 if (snapshot.hasData) {
