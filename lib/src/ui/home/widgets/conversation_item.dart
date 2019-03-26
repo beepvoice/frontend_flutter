@@ -44,9 +44,10 @@ class _ConversationItemState extends State<ConversationItem> {
     return ListTile(
       isThreeLine: true,
       onTap: () async {
-        await conversationManager.join(conversation.id);
-        await bus.publish({"state": "connection", "title": conversation.title});
         print("Press on ${conversation.id} triggered");
+        await conversationManager.join(conversation.id);
+        print("Gotten past the join");
+        await bus.publish({"state": "connection", "title": conversation.title});
       },
       contentPadding:
           EdgeInsets.only(top: 0.0, left: 20.0, right: 20.0, bottom: 0.0),

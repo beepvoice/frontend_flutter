@@ -16,13 +16,15 @@ import Flutter
         switch call.method {
         case "join":
             print("Join executed")
+            result(String(""))
             return
         case "exit":
             print("exit executed")
+            result(String(""))
             return
         case "get":
-            print("exit executed")
-            return result(String(""))
+            print("get executed")
+            result(String("c-d73b6afa2fe3685faad28eba36d8cd0a"))
         default:
             result(FlutterMethodNotImplemented)
             return

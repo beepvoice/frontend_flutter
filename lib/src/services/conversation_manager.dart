@@ -29,7 +29,7 @@ class ConversationManager {
   Future<String> get() async {
     try {
       final String conversationId = await channel.invokeMethod('get');
-      return conversationId;
+      return "";
     } on PlatformException catch (e) {
       print(e);
       return "";
