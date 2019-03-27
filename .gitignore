@@ -118,3 +118,6 @@ assets/
 
 # Generated files fom json_serializable
 *.g.dart
+
+# Carthage
+ios/Carthage
