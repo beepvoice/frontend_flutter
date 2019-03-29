@@ -1,0 +1,195 @@
+//
+//  RTCWrapper.swift
+//  Runner
+//
+//  Created by Sudharshan on 3/26/19.
+//  Copyright © 2019 The Chromium Authors. All rights reserved.
+//
+
+import Foundation
+import WebRTC
+
+public enum RTCWrapperState {
+    case disconnected
+    case connecting
+    case connected
+}
+
+class PeerConnectionWrapper: NSObject{
+    // State
+    var state: RTCWrapperState = .disconnected
+    
+    // WebRTC initialization
+    var connectionFactory: RTCPeerConnectionFactory?
+    var peerConnection: RTCPeerConnection?
+    var remoteIceCandidates: [RTCIceCandidate] = []
+    
+    // Constant configuration defaults
+    let iceServers: [RTCIceServer] = [RTCIceServer(urlStrings: ["stun:stun.l.google.com:19302"])]
+    let connectionConstraint = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: ["DtlsSrtpKeyAgreement": "true"])
+    let channelConstraint = RTCMediaConstraints(mandatoryConstraints: ["OfferToReceiveAudio" : "true"], optionalConstraints: nil)
+    
+    // Streams
+    var localMediaStream: RTCMediaStream!
+    var localAudioTrack: RTCAudioTrack!
+    var remoteAudioTrack: RTCAudioTrack!
+    
+    public override init() {
+        super.init()
+    }
+    
+    public convenience init(connectionFactory: RTCPeerConnectionFactory) {
+        self.init()
+        self.connectionFactory = connectionFactory
+        initialisePeerConnection()
+    }
+    
+    public func connect() {
+        if let peerConnection = self.peerConnection {
+            self.state = .connecting
+            let localStream = self.localStream()
+            peerConnection.add(localStream)
+        }
+    }
+    
+    public func disconnect() {
+        if let peerConnection = self.peerConnection {
+            peerConnection.close()
+            if let stream = peerConnection.localStreams.first {
+                peerConnection.remove(stream)
+            }
+        }
+    }
+    
+    public func createOffer() {
+        if let peerConnection = self.peerConnection {
+            
+            peerConnection.offer(for: self.channelConstraint, completionHandler: { [weak self]  (sdp, error) in
+                // Exit if this object doesn't exist anymore cause it is a weak link
+                guard self != nil else { return }
+                
+                if let error = error {
+                    // Throw an error or smth
+                } else {
+                    // Use the sdp generated
+                }
+            })
+        }
+    }
+    
+    public func handleAnswer(withRemoteSDP remoteSdp: String) {
+        if let peerConnection = self.peerConnection {
+            let sessionDescription = RTCSessionDescription.init(type: .answer, sdp: remoteSdp)
+            
+            peerConnection.setRemoteDescription(sessionDescription, completionHandler: { [weak self] (error) in
+                // Exit if this object doesn't exist anymore cause it is a weak link
+                guard let this = self else { return }
+                
+                if let error = error {
+                    // Throw an error
+                } else {
+                    // handle the remote sdp
+                    this.state = .connected
+                }
+            })
+        }
+    }
+    
+    public func createAnswerForOffer(withRemoteSDP remoteSdp: String) {
+        if let peerConnection = self.peerConnection {
+            let sessionDescription = RTCSessionDescription.init(type: .answer, sdp: remoteSdp)
+            peerConnection.setRemoteDescription(sessionDescription, completionHandler: { [weak self] (error) in
+                // Exit if this object doesn't exist anymore cause it is a weak link
+                guard let this = self else { return }
+                
+                if let error = error {
+                    // Throw an error
+                } else {
+                    // handle the remote sdp
+                    
+                    // create answer
+                    peerConnection.answer(for: this.channelConstraint, completionHandler:
+                        { (sdp, error) in
+                            if let error = error {
+                                // Throw an error
+                            } else {
+                                // handle generated local sdp
+                                this.state = .connected
+                            }
+                    })
+                }
+            })
+        }
+    }
+    
+    public func addIceCandidate(iceCandidate: RTCIceCandidate) {
+        // Set ice candidate after setting remote description
+        if self.peerConnection?.remoteDescription != nil {
+            self.peerConnection?.add(iceCandidate)
+        } else {
+            self.remoteIceCandidates.append(iceCandidate)
+        }
+    }
+}
+
+private extension PeerConnectionWrapper {
+    /*
+    func initialisePeerConnectionFactory () {
+        RTCPeerConnectionFactory.initialize()
+        self.connectionFactory = RTCPeerConnectionFactory()
+    }*/
+    
+    func initialisePeerConnection () {
+        let configuration = RTCConfiguration()
+        configuration.iceServers = self.iceServers;
+        self.peerConnection = self.connectionFactory?.peerConnection(with: configuration, constraints: self.connectionConstraint, delegate: self)
+    }
+    
+    func localStream() -> RTCMediaStream {
+        let factory = self.connectionFactory!
+        let localStream = factory.mediaStream(withStreamId: "RTCmS")
+        
+        let audioTrack = factory.audioTrack(withTrackId: "RTCaS0")
+        localStream.addAudioTrack(audioTrack)
+        
+        return localStream
+    }
+}
+
+extension PeerConnectionWrapper: RTCPeerConnectionDelegate {
+    func peerConnectionShouldNegotiate(_ peerConnection: RTCPeerConnection) {
+        <#code#>
+    }
+    
+    func peerConnection(_ peerConnection: RTCPeerConnection, didChange stateChanged: RTCSignalingState) {
+        <#code#>
+    }
+    
+    func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
+        <#code#>
+    }
+    
+    func peerConnection(_ peerConnection: RTCPeerConnection, didRemove stream: RTCMediaStream) {
+        <#code#>
+    }
+    
+    func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {
+        <#code#>
+    }
+    
+    func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceGatheringState) {
+        <#code#>
+    }
+    
+    func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
+        <#code#>
+    }
+    
+    func peerConnection(_ peerConnection: RTCPeerConnection, didRemove candidates: [RTCIceCandidate]) {
+        <#code#>
+    }
+    
+    func peerConnection(_ peerConnection: RTCPeerConnection, didOpen dataChannel: RTCDataChannel) {
+        <#code#>
+    }
+}
