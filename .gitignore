@@ -113,8 +113,5 @@ unlinked_spec.ds
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
-# Assets
-assets/
-
 # Generated files fom json_serializable
 *.g.dart
