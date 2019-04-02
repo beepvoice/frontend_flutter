@@ -5,6 +5,7 @@ import "dart:ui";
 
 import 'package:eventsource/eventsource.dart';
 import "package:rxdart/rxdart.dart";
+import "package:http/http.dart" as http;
 
 import "../models/ping_model.dart";
 import "../services/login_manager.dart";
@@ -18,16 +19,19 @@ class HeartbeatReceiverBloc {
   String status;
 
   final _coloursFetcher = PublishSubject<Color>();
+
+  final http.Client client;
   Observable<Color> get colours => _coloursFetcher.stream;
 
-  HeartbeatReceiverBloc(String userId) {
+  HeartbeatReceiverBloc(String userId) : client = http.Client() {
     this.userId = userId;
     lastSeen = DateTime.fromMillisecondsSinceEpoch(0);
     status = "";
 
     loginManager.getToken().then((token) {
       print(token);
-      EventSource.connect("$baseUrlHeartbeat/subscribe/$userId?token=$token")
+      EventSource.connect("$baseUrlHeartbeat/subscribe/$userId?token=$token",
+              client: client)
           .then((es) {
         es.listen((Event event) {
           Ping ping = Ping.fromJson(jsonDecode(event.data));
@@ -50,11 +54,14 @@ class HeartbeatReceiverBloc {
             }
           }
         });
-      });
+      }).catchError((e) => print(
+              e)); // Add actual error handling logic for stopped connections
     });
   }
 
   dispose() {
+    print("Destroying bloc");
     _coloursFetcher.close();
+    client.close();
   }
 }
