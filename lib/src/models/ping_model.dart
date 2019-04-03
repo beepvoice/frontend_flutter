@@ -4,10 +4,10 @@ part "ping_model.g.dart";
 
 @JsonSerializable()
 class Ping {
-  final int timestamp;
+  final int time;
   final String status;
 
-  Ping(this.timestamp, this.status);
+  Ping(this.time, this.status);
 
   factory Ping.fromJson(Map<String, dynamic> json) => _$PingFromJson(json);
   Map<String, dynamic> toJson() => _$PingToJson(this);

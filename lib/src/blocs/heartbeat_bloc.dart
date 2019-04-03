@@ -29,18 +29,19 @@ class HeartbeatReceiverBloc {
     status = "";
 
     loginManager.getToken().then((token) {
-      print(token);
       EventSource.connect("$baseUrlHeartbeat/subscribe/$userId?token=$token",
               client: client)
           .then((es) {
         es.listen((Event event) {
-          print(event.data);
+          // Guard against empty packets
+          if (event.data == null) {
+            return;
+          }
+
           Ping ping = Ping.fromJson(jsonDecode(event.data));
-          print(ping.timestamp);
-          // lastSeen = DateTime.fromMillisecondsSinceEpoch(ping.timestamp);
-          // status = ping.status;
+          lastSeen = DateTime.fromMillisecondsSinceEpoch(ping.time * 1000);
+          status = ping.status;
         });
-        print("GOT SEND");
         final oneMinute = Duration(minutes: 1);
         final timeoutDuration = Duration(minutes: 30);
         new Timer.periodic(oneMinute, (Timer t) {
@@ -62,7 +63,6 @@ class HeartbeatReceiverBloc {
   }
 
   dispose() {
-    print("Destroying bloc");
     _coloursFetcher.close();
     client.close();
   }

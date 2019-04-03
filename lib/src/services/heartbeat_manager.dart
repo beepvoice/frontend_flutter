@@ -14,7 +14,6 @@ class HeartbeatSendManager {
     const oneMinute = const Duration(minutes: 1);
     new Timer.periodic(oneMinute, (Timer t) {
       heartbeatApiProvider.ping(status: this.status);
-      print("SEND");
     });
   }
 
