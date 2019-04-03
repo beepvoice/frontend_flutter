@@ -9,10 +9,13 @@ class HeartbeatSendManager {
   String status;
 
   HeartbeatSendManager() {
-    status = "";
+    status = "a";
     heartbeatApiProvider = HeartbeatApiProvider();
     const oneMinute = const Duration(minutes: 1);
-    new Timer.periodic(oneMinute, (Timer t) => heartbeatApiProvider.ping(status:this.status));
+    new Timer.periodic(oneMinute, (Timer t) {
+      heartbeatApiProvider.ping(status: this.status);
+      print("SEND");
+    });
   }
 
   void setStatus(String status) {

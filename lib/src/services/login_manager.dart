@@ -2,7 +2,6 @@ import "dart:async";
 import "../resources/login_api_provider.dart";
 import "../models/user_model.dart";
 import "../resources/user_api_provider.dart";
-import "../../settings.dart";
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,9 +40,9 @@ class LoginManager {
     }
   }
 
-  Future<String> loginTest() async {
+  Future<String> loginTest(String userId) async {
     try {
-      final jwt = await loginApiProvider.loginTest(globalUserId, "1");
+      final jwt = await loginApiProvider.loginTest(userId, "1");
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString("token", jwt);
       return jwt;

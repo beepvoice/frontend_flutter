@@ -34,11 +34,13 @@ class HeartbeatReceiverBloc {
               client: client)
           .then((es) {
         es.listen((Event event) {
+          print(event.data);
           Ping ping = Ping.fromJson(jsonDecode(event.data));
-          lastSeen = DateTime.fromMillisecondsSinceEpoch(ping.timestamp);
-          status = ping.status;
+          print(ping.timestamp);
+          // lastSeen = DateTime.fromMillisecondsSinceEpoch(ping.timestamp);
+          // status = ping.status;
         });
-
+        print("GOT SEND");
         final oneMinute = Duration(minutes: 1);
         final timeoutDuration = Duration(minutes: 30);
         new Timer.periodic(oneMinute, (Timer t) {

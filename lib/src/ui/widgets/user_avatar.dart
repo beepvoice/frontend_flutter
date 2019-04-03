@@ -24,6 +24,7 @@ class _UserAvatarState extends State<UserAvatar> {
 
   @override
   void initState() {
+    print(widget.user.id);
     super.initState();
     bloc = HeartbeatReceiverBloc(widget.user.id);
   }
@@ -36,14 +37,18 @@ class _UserAvatarState extends State<UserAvatar> {
 
   @override
   Widget build(BuildContext context) {
+    String firstName =
+        (widget.user.firstName.isEmpty) ? '' : widget.user.firstName[0];
+    String lastName =
+        (widget.user.lastName.isEmpty) ? '' : widget.user.lastName[0];
+
     return Padding(
         padding: widget.padding,
         child: Stack(alignment: Alignment.bottomRight, children: <Widget>[
           CircleAvatar(
               backgroundColor: _stringToColor(widget.user.lastName),
               child: Text(
-                widget.user.firstName[0].toUpperCase() +
-                    widget.user.lastName[0].toUpperCase(),
+                firstName.toUpperCase() + lastName.toUpperCase(),
                 style: Theme.of(context).accentTextTheme.title,
               ),
               radius: widget.radius),
