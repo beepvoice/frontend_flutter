@@ -54,16 +54,20 @@ class _UserAvatarState extends State<UserAvatar> {
               radius: widget.radius),
           StreamBuilder(
               stream: bloc.colours,
-              builder: (context, AsyncSnapshot<Color> snapshot) {
-                Color colour = Color.fromARGB(255, 158, 158, 158);
+              builder: (context, AsyncSnapshot<String> snapshot) {
+                String state;
                 if (snapshot.hasData) {
-                  colour = snapshot.data;
+                  state = snapshot.data;
+                  if (state == "online") {
+                    return Container(
+                        width: 12.0,
+                        height: 12.0,
+                        decoration: BoxDecoration(
+                            color: Colors.green[400], shape: BoxShape.circle));
+                  }
                 }
-                return Container(
-                    width: 12.0,
-                    height: 12.0,
-                    decoration:
-                        BoxDecoration(color: colour, shape: BoxShape.circle));
+
+                return Container();
               }),
         ]));
   }

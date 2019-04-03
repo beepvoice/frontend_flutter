@@ -18,10 +18,10 @@ class HeartbeatReceiverBloc {
   DateTime lastSeen;
   String status;
 
-  final _coloursFetcher = PublishSubject<Color>();
+  final _coloursFetcher = PublishSubject<String>();
 
   final http.Client client;
-  Observable<Color> get colours => _coloursFetcher.stream;
+  Observable<String> get colours => _coloursFetcher.stream;
 
   HeartbeatReceiverBloc(String userId) : client = http.Client() {
     this.userId = userId;
@@ -46,14 +46,14 @@ class HeartbeatReceiverBloc {
         final timeoutDuration = Duration(minutes: 30);
         new Timer.periodic(oneMinute, (Timer t) {
           if (status == "on_call") {
-            _coloursFetcher.sink.add(Color.fromARGB(255, 244, 67, 54));
+            _coloursFetcher.sink.add("busy");
           } else {
             final now = new DateTime.now();
             final difference = now.difference(this.lastSeen);
             if (difference > timeoutDuration) {
-              _coloursFetcher.sink.add(Color.fromARGB(255, 158, 158, 158));
+              _coloursFetcher.sink.add("online");
             } else {
-              _coloursFetcher.sink.add(Color.fromARGB(255, 76, 175, 80));
+              _coloursFetcher.sink.add("offline");
             }
           }
         });
