@@ -54,7 +54,8 @@ class _LoginPageState extends State<LoginPage> {
           TextButton(
               text: "Continue",
               onClickCallback: () {
-                widget.loginManager.loginTest();
+                print(controller.text);
+                widget.loginManager.loginTest(controller.text);
                 Navigator.pushNamed(context, 'welcome/otp');
               }),
         ]));

@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 import "../../blocs/bottom_bus_bloc.dart";
+import "../../services/heartbeat_manager.dart";
 import "../../services/conversation_manager.dart";
 import "widgets/conversation_inactive_view.dart";
 import "widgets/conversation_active_view.dart";
@@ -16,6 +17,7 @@ class _BottomBarState extends State<BottomBar> {
   final bloc = bottomBusBloc;
   final conversationManager = ConversationManager();
   Map<String, String> initialState;
+  final heartbeatSendManager = HeartbeatSendManager();
 
   @override
   void initState() {
