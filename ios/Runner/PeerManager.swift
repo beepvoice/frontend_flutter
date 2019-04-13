@@ -12,7 +12,6 @@ import WebRTC
 class PeerManager: NSObject {
     // WebRTC initialization
     var connectionFactory: RTCPeerConnectionFactory?
-    let signalingApiProvider: SignalingApiProvider
     
     // List of users
     var peerList: [PeerConnectionWrapper] = []
