@@ -9,9 +9,15 @@
 import Foundation
 
 class SignalingApiProvider: NSObject {
+    var authToken: String
     
     public override init() {
         super.init()
+    }
+    
+    public convenience init(authToken: String) {
+        self.init()
+        self.authToken = authToken
     }
     
     public func getUserDevices(userId: String) -> [String] {
