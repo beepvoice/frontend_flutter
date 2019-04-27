@@ -12,7 +12,7 @@ import Flutter
     
     conversationChannel.setMethodCallHandler({
         (call: FlutterMethodCall, result: FlutterResult) -> Void in
-        
+    
         switch call.method {
         case "join":
             print("Join executed")

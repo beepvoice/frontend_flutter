@@ -23,6 +23,7 @@ class SignalingApiProvider: NSObject {
     public func getUserDevices(userId: String) -> [String] {
         let url: URL = URL(string: "http://staging.beepvoice.app/user/\(userId)/devices")!
         var request = URLRequest(url: url)
+        request.addValue("Bearer \(authToken)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "GET"
         
         let response: AutoreleasingUnsafeMutablePointer<URLResponse?>
@@ -47,6 +48,7 @@ class SignalingApiProvider: NSObject {
     public func getConversationUsers(conversationId: String) -> [String] {
         let url: URL = URL(string: "http://staging.beepvoice.app/user/conversation/\(conversationId)/member")!
         var request = URLRequest(url: url)
+        request.addValue("Bearer \(authToken)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "GET"
         
         let response: AutoreleasingUnsafeMutablePointer<URLResponse?>
@@ -71,6 +73,7 @@ class SignalingApiProvider: NSObject {
     public func postDataToUser(userId: String, deviceId: String) {
         let url: URL = URL(string: "http://staging.beepvoice.app/user/\(userId)/device/\(deviceId)")!
         var request = URLRequest(url: url)
+        request.addValue("Bearer \(authToken)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "POST"
         
         let response: AutoreleasingUnsafeMutablePointer<URLResponse?>
