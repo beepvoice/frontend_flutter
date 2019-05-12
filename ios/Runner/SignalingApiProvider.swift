@@ -10,7 +10,7 @@ import Foundation
 import WebRTC
 
 class SignalingApiProvider: NSObject {
-    var authToken: String
+    var authToken: String?
     
     public override init() {
         super.init()
@@ -22,18 +22,16 @@ class SignalingApiProvider: NSObject {
     }
     
     public func getUserDevices(userId: String) -> [String]? {
-        let url: URL = URL(string: "http://staging.beepvoice.app/user/\(userId)/devices")!
+        let url: URL = URL(string: "http://localhost/signal/user/\(userId)/devices")!
         var deviceList: [String] = []
         var request = URLRequest(url: url)
-        request.addValue("Bearer \(authToken)", forHTTPHeaderField: "Authorization")
+        request.addValue("Bearer \(authToken ?? "0")", forHTTPHeaderField: "Authorization")
         request.httpMethod = "GET"
         
-        let response: AutoreleasingUnsafeMutablePointer<URLResponse?>
+        var response: URLResponse?
         
         do {
-            let dataVal = try NSURLConnection.sendSynchronousRequest(request, returning: response)
-            
-            print(response)
+            let dataVal = try NSURLConnection.sendSynchronousRequest(request, returning: &response)
             do {
                 if let jsonResult = try JSONSerialization.jsonObject(with: dataVal, options: []) as? [String] {
                     print("Synchronous\(jsonResult)")
@@ -58,18 +56,16 @@ class SignalingApiProvider: NSObject {
     }
     
     public func getConversationUsers(conversationId: String) -> [String]? {
-        let url: URL = URL(string: "http://staging.beepvoice.app/user/conversation/\(conversationId)/member")!
+        let url: URL = URL(string: "http://localhost/core/user/conversation/\(conversationId)/member")!
         var userList: [String] = []
         var request = URLRequest(url: url)
-        request.addValue("Bearer \(authToken)", forHTTPHeaderField: "Authorization")
+        request.addValue("Bearer \(authToken ?? "0")", forHTTPHeaderField: "Authorization")
         request.httpMethod = "GET"
         
-        let response: AutoreleasingUnsafeMutablePointer<URLResponse?>
+        var response: URLResponse?
         
         do {
-            let dataVal = try NSURLConnection.sendSynchronousRequest(request, returning: response)
-            
-            print(response)
+            let dataVal = try NSURLConnection.sendSynchronousRequest(request, returning: &response)
             do {
                 if let jsonResult = try JSONSerialization.jsonObject(with: dataVal, options: []) as? [Any] {
                     print("Synchronous\(jsonResult)")
@@ -99,7 +95,7 @@ class SignalingApiProvider: NSObject {
     
     // CHECK FOR WHEN DEVICE IS UNAVAILABLE
     public func postDataToUser(userId: String, deviceId: String, data: String, event: String) {
-        let url: URL = URL(string: "http://staging.beepvoice.app/user/\(userId)/device/\(deviceId)")!
+        let url: URL = URL(string: "http://localhost/signal/user/\(userId)/device/\(deviceId)")!
         
         // prepare json data
         let json: [String: Any] = ["event": event, "data": data]
@@ -107,15 +103,14 @@ class SignalingApiProvider: NSObject {
         let jsonData = try? JSONSerialization.data(withJSONObject: json)
         
         var request = URLRequest(url: url)
-        request.addValue("Bearer \(authToken)", forHTTPHeaderField: "Authorization")
+        request.addValue("Bearer \(authToken ?? "0")", forHTTPHeaderField: "Authorization")
         request.httpMethod = "POST"
         request.httpBody = jsonData
         
-        let response: AutoreleasingUnsafeMutablePointer<URLResponse?>
+        var response: URLResponse?
         
         do {
-            let _ = try NSURLConnection.sendSynchronousRequest(request, returning: response)
-            print(response)
+            let _ = try NSURLConnection.sendSynchronousRequest(request, returning: &response)
         } catch let error as NSError {
             print(error.localizedDescription)
         }

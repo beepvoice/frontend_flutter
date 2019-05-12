@@ -3,6 +3,19 @@ import "package:flutter/services.dart";
 
 class ConversationManager {
   static const channel = const MethodChannel('beepvoice.app/conversation');
+  static bool isInit = false;
+
+  static init(String authToken) async {
+    if (isInit == false) {
+      try {
+        await channel.invokeMethod('init', authToken);
+        isInit = true;
+      } on PlatformException catch (e) {
+        print(e);
+      }
+    }
+    print("init");
+  }
 
   Future<int> join(String conversationId) async {
     try {

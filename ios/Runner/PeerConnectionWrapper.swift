@@ -99,6 +99,7 @@ class PeerConnectionWrapper: NSObject{
                     print(error)
                 } else {
                     // handle the remote sdp
+                    this.handleRemoteDescriptionSet()
                     this.state = .ready
                 }
             })
@@ -117,7 +118,7 @@ class PeerConnectionWrapper: NSObject{
                     print(error)
                 } else {
                     // handle the remote sdp
-                    
+                    this.handleRemoteDescriptionSet()
                     // create answer
                     peerConnection.answer(for: this.channelConstraint, completionHandler:
                         { (sdp, error) in
@@ -158,6 +159,13 @@ private extension PeerConnectionWrapper {
         self.peerConnection = self.connectionFactory?.peerConnection(with: configuration, constraints: self.connectionConstraint, delegate: self)
     }
     
+    func handleRemoteDescriptionSet() {
+        for iceCandidate in self.remoteIceCandidates {
+            self.peerConnection?.add(iceCandidate)
+        }
+        self.remoteIceCandidates = []
+    }
+    
     func localStream() -> RTCMediaStream {
         let factory = self.connectionFactory!
         let localStream = factory.mediaStream(withStreamId: "RTCmS")
@@ -171,27 +179,27 @@ private extension PeerConnectionWrapper {
 
 extension PeerConnectionWrapper: RTCPeerConnectionDelegate {
     func peerConnectionShouldNegotiate(_ peerConnection: RTCPeerConnection) {
-        <#code#>
+
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange stateChanged: RTCSignalingState) {
-        <#code#>
+
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
-        <#code#>
+        print("adding new stream from remote")
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove stream: RTCMediaStream) {
-        <#code#>
+
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {
-        <#code#>
+
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceGatheringState) {
-        <#code#>
+
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
@@ -200,10 +208,10 @@ extension PeerConnectionWrapper: RTCPeerConnectionDelegate {
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove candidates: [RTCIceCandidate]) {
-        <#code#>
+
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didOpen dataChannel: RTCDataChannel) {
-        <#code#>
+    
     }
 }

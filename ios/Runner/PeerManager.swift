@@ -13,7 +13,7 @@ class PeerManager: NSObject {
     // WebRTC initialization
     var connectionFactory: RTCPeerConnectionFactory?
     var signalingApiProvider: SignalingApiProvider?
-    var eventSource: EventSource = EventSource(url: "https://staging.beepvoice.app/signal")
+    var eventSource: EventSource = EventSource(url: "http://localhost/signal/subscribe")
     
     // List of users
     var peerList: [String: PeerConnectionWrapper] = [:]
@@ -22,7 +22,13 @@ class PeerManager: NSObject {
     
     public override init() {
         super.init()
-        initialisePeerConnectionFactory()
+        RTCPeerConnectionFactory.initialize()
+        self.connectionFactory = RTCPeerConnectionFactory()
+    }
+    
+    // MUST CALL THIS BEFORE SIGNSLLING WORKS
+    public func initializeToken(authToken: String) {
+        self.signalingApiProvider = SignalingApiProvider(authToken: authToken)
     }
     
     public func join(conversationId: String) {
@@ -68,16 +74,12 @@ class PeerManager: NSObject {
 }
 
 private extension PeerManager {
-    func initialisePeerConnectionFactory() {
-        RTCPeerConnectionFactory.initialize()
-        self.connectionFactory = RTCPeerConnectionFactory()
-    }
-    
     func initialiseEventSource() {
         eventSource.addEventListener("offer") { (id, event, data) in
             
             guard let id = id, let data = data else {
                 // Incorrect packet type error
+                return
             }
             
             // Handling offers, if in list accept
@@ -104,6 +106,7 @@ private extension PeerManager {
             
             guard let id = id, let data = data else {
                 // Incorrect packet type error
+                return
             }
             
             // Handling answers, if in list accept

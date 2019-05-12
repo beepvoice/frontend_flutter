@@ -15,6 +15,11 @@ import Flutter
         (call: FlutterMethodCall, result: FlutterResult) -> Void in
     
         switch call.method {
+        case "init":
+            if let authToken: String = call.arguments as? String {
+                peerManager.initializeToken(authToken: authToken)
+                print("Initialized")
+            }
         case "join":
             if let conversationId: String = call.arguments as? String {
                 peerManager.join(conversationId: conversationId)
