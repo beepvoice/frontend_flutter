@@ -9,22 +9,30 @@ import Flutter
     ) -> Bool {
     let controller: FlutterViewController = window?.rootViewController as! FlutterViewController
     let conversationChannel = FlutterMethodChannel(name: "beepvoice.app/conversation", binaryMessenger: controller)
+    let peerManager = PeerManager()
     
     conversationChannel.setMethodCallHandler({
         (call: FlutterMethodCall, result: FlutterResult) -> Void in
     
         switch call.method {
         case "join":
-            print("Join executed")
-            result(String(""))
+            if let conversationId: String = call.arguments as? String {
+                peerManager.join(conversationId: conversationId)
+                print("Join executed")
+            }
             return
         case "exit":
-            print("exit executed")
-            result(String(""))
+            peerManager.exit()
+            print("Exit executed")
             return
         case "get":
+            if let activeConversation = peerManager.get() {
+                result(activeConversation)
+            } else {
+                result("")
+            }
             print("get executed")
-            result(String("c-d73b6afa2fe3685faad28eba36d8cd0a"))
+            return
         default:
             result(FlutterMethodNotImplemented)
             return
