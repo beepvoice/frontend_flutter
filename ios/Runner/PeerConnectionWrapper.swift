@@ -11,16 +11,19 @@ import WebRTC
 
 public enum RTCWrapperState {
     case disconnected
-    case connecting
+    case ready
     case connected
 }
 
 class PeerConnectionWrapper: NSObject{
     // State
     var state: RTCWrapperState = .disconnected
+    var remoteUserId: String?
+    var remoteDeviceId: String?
     
     // WebRTC initialization
     var connectionFactory: RTCPeerConnectionFactory?
+    var signalingApiProvider: SignalingApiProvider?
     var peerConnection: RTCPeerConnection?
     var remoteIceCandidates: [RTCIceCandidate] = []
     
@@ -38,15 +41,19 @@ class PeerConnectionWrapper: NSObject{
         super.init()
     }
     
-    public convenience init(connectionFactory: RTCPeerConnectionFactory) {
+    public convenience init(connectionFactory: RTCPeerConnectionFactory, signalingApiProvider: SignalingApiProvider, remoteUserId: String, remoteDeviceId: String) {
         self.init()
         self.connectionFactory = connectionFactory
+        self.signalingApiProvider = signalingApiProvider
+        self.remoteUserId = remoteUserId
+        self.remoteDeviceId = remoteDeviceId
+        
         initialisePeerConnection()
     }
     
     public func connect() {
         if let peerConnection = self.peerConnection {
-            self.state = .connecting
+            self.state = .connected
             let localStream = self.localStream()
             peerConnection.add(localStream)
         }
@@ -58,10 +65,11 @@ class PeerConnectionWrapper: NSObject{
             if let stream = peerConnection.localStreams.first {
                 peerConnection.remove(stream)
             }
+            self.state = .disconnected
         }
     }
     
-    public func createOffer() {
+    public func createOffer(userId: String, deviceId: String) {
         if let peerConnection = self.peerConnection {
             
             peerConnection.offer(for: self.channelConstraint, completionHandler: { [weak self]  (sdp, error) in
@@ -69,15 +77,16 @@ class PeerConnectionWrapper: NSObject{
                 guard self != nil else { return }
                 
                 if let error = error {
-                    // Throw an error or smth
+                    print(error)
                 } else {
                     // Use the sdp generated
+                    self?.signalingApiProvider?.postDataToUser(userId: userId, deviceId: deviceId, data: sdp!.sdp, event: "offer")
                 }
             })
         }
     }
     
-    public func handleAnswer(withRemoteSDP remoteSdp: String) {
+    public func handleAnswer(remoteSdp: String) {
         if let peerConnection = self.peerConnection {
             let sessionDescription = RTCSessionDescription.init(type: .answer, sdp: remoteSdp)
             
@@ -87,15 +96,16 @@ class PeerConnectionWrapper: NSObject{
                 
                 if let error = error {
                     // Throw an error
+                    print(error)
                 } else {
                     // handle the remote sdp
-                    this.state = .connected
+                    this.state = .ready
                 }
             })
         }
     }
     
-    public func createAnswerForOffer(withRemoteSDP remoteSdp: String) {
+    public func createAnswerForOffer(userId: String, deviceId: String, remoteSdp: String) {
         if let peerConnection = self.peerConnection {
             let sessionDescription = RTCSessionDescription.init(type: .answer, sdp: remoteSdp)
             peerConnection.setRemoteDescription(sessionDescription, completionHandler: { [weak self] (error) in
@@ -104,6 +114,7 @@ class PeerConnectionWrapper: NSObject{
                 
                 if let error = error {
                     // Throw an error
+                    print(error)
                 } else {
                     // handle the remote sdp
                     
@@ -112,9 +123,11 @@ class PeerConnectionWrapper: NSObject{
                         { (sdp, error) in
                             if let error = error {
                                 // Throw an error
+                                print(error)
                             } else {
                                 // handle generated local sdp
-                                this.state = .connected
+                                self?.signalingApiProvider?.postDataToUser(userId: userId, deviceId: deviceId, data: sdp!.sdp, event: "answer")
+                                this.state = .ready
                             }
                     })
                 }
@@ -182,7 +195,8 @@ extension PeerConnectionWrapper: RTCPeerConnectionDelegate {
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
-        <#code#>
+        let candidateString = "\(candidate.sdp)-\(candidate.sdpMLineIndex)-\(candidate.sdpMid ?? "")"
+        self.signalingApiProvider?.postDataToUser(userId: remoteUserId!, deviceId: remoteDeviceId!, data: candidateString, event: "ice-candidate")
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove candidates: [RTCIceCandidate]) {
