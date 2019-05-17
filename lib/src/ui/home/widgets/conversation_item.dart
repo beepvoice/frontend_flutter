@@ -68,6 +68,7 @@ class _ConversationItemState extends State<ConversationItem> {
             StreamBuilder(
                 stream: bloc.members,
                 builder: (context, AsyncSnapshot<List<User>> snapshot) {
+                  print(snapshot.data);
                   if (snapshot.hasData) {
                     return membersBuilder(snapshot.data);
                   } else if (snapshot.hasError) {
@@ -86,7 +87,9 @@ class _ConversationItemState extends State<ConversationItem> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: data
             .map((user) => UserAvatar(
-                padding: EdgeInsets.only(top: 10.0, left: 5.0), user: user))
+                radius: 15.0,
+                padding: EdgeInsets.only(top: 10.0, left: 5.0),
+                user: user))
             .toList());
   }
 }

@@ -6,6 +6,8 @@ import "./widgets/contact_list.dart";
 import "../bottom_bar/bottom_bar.dart";
 
 class Home extends StatefulWidget {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -37,13 +39,14 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: widget._scaffoldKey,
         body: Column(children: <Widget>[
           TopBar(title: titleList[_pageNumber], pageNumber: _pageNumber),
           Expanded(
               child: PageView(controller: controller, children: <Widget>[
             ConversationList(),
             ContactList(),
-          ]))
+          ])),
         ]),
         bottomSheet: BottomBar());
   }
