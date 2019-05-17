@@ -49,7 +49,10 @@ class _UserAvatarState extends State<UserAvatar> {
               backgroundColor: _stringToColor(widget.user.lastName),
               child: Text(
                 firstName.toUpperCase() + lastName.toUpperCase(),
-                style: Theme.of(context).accentTextTheme.title,
+                style: Theme.of(context)
+                    .accentTextTheme
+                    .title
+                    .copyWith(fontSize: widget.radius / 1.2),
               ),
               radius: widget.radius),
           StreamBuilder(
