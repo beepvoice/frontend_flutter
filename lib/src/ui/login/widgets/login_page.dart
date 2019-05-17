@@ -55,10 +55,12 @@ class _LoginPageState extends State<LoginPage> {
           TextButton(
               text: "Continue",
               onClickCallback: () async {
-                print(controller.text);
                 final authToken =
                     await widget.loginManager.loginTest(controller.text);
-                ConversationManager.init(authToken);
+
+                // Waiting for initialization
+                await ConversationManager.init(authToken);
+
                 Navigator.pushNamed(context, 'welcome/otp');
               }),
         ]));

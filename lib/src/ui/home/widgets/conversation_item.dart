@@ -41,6 +41,7 @@ class _ConversationItemState extends State<ConversationItem> {
 
   @override
   Widget build(BuildContext context) {
+    print("BUILDING");
     return ListTile(
       isThreeLine: true,
       onTap: () async {

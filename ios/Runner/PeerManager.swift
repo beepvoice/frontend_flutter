@@ -13,7 +13,7 @@ class PeerManager: NSObject {
     // WebRTC initialization
     var connectionFactory: RTCPeerConnectionFactory?
     var signalingApiProvider: SignalingApiProvider?
-    var eventSource: EventSource = EventSource(url: "http://localhost/signal/subscribe")
+    var eventSource: EventSource?
     
     // List of users
     var peerList: [String: PeerConnectionWrapper] = [:]
@@ -26,9 +26,10 @@ class PeerManager: NSObject {
         self.connectionFactory = RTCPeerConnectionFactory()
     }
     
-    // MUST CALL THIS BEFORE SIGNSLLING WORKS
+    // MUST CALL THIS BEFORE SIGNALLING WORKS
     public func initializeToken(authToken: String) {
         self.signalingApiProvider = SignalingApiProvider(authToken: authToken)
+        self.eventSource = EventSource(url: "http://localhost/signal/subscribe?token=\(authToken)")
     }
     
     public func join(conversationId: String) {
@@ -75,7 +76,7 @@ class PeerManager: NSObject {
 
 private extension PeerManager {
     func initialiseEventSource() {
-        eventSource.addEventListener("offer") { (id, event, data) in
+        eventSource?.addEventListener("offer") { (id, event, data) in
             
             guard let id = id, let data = data else {
                 // Incorrect packet type error
@@ -102,7 +103,7 @@ private extension PeerManager {
             }
         }
         
-        eventSource.addEventListener("answer") { (id, event, data) in
+        eventSource?.addEventListener("answer") { (id, event, data) in
             
             guard let id = id, let data = data else {
                 // Incorrect packet type error
@@ -117,7 +118,7 @@ private extension PeerManager {
             }
         }
         
-        eventSource.addEventListener("ice-candidate") { (id, event, data) in
+        eventSource?.addEventListener("ice-candidate") { (id, event, data) in
             
             guard let id = id, let data = data else {
                 // Incorrect packet type error

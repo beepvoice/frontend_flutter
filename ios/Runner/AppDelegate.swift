@@ -18,17 +18,18 @@ import Flutter
         case "init":
             if let authToken: String = call.arguments as? String {
                 peerManager.initializeToken(authToken: authToken)
-                print("Initialized")
             }
+            result(0)
+            return
         case "join":
             if let conversationId: String = call.arguments as? String {
                 peerManager.join(conversationId: conversationId)
-                print("Join executed")
             }
+            result(0)
             return
         case "exit":
             peerManager.exit()
-            print("Exit executed")
+            result(0)
             return
         case "get":
             if let activeConversation = peerManager.get() {
@@ -36,7 +37,6 @@ import Flutter
             } else {
                 result("")
             }
-            print("get executed")
             return
         default:
             result(FlutterMethodNotImplemented)
