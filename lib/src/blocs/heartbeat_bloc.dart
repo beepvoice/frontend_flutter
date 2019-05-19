@@ -1,7 +1,6 @@
 import "dart:async";
 import "dart:convert";
 import "dart:core";
-import "dart:ui";
 
 import 'package:eventsource/eventsource.dart';
 import "package:rxdart/rxdart.dart";
@@ -57,8 +56,8 @@ class HeartbeatReceiverBloc {
             }
           }
         });
-      }).catchError((e) => print(
-              e)); // Add actual error handling logic for stopped connections
+      }).catchError((e) =>
+              {}); // Add actual error handling logic for stopped connections
     });
   }
 

@@ -24,7 +24,6 @@ class _UserAvatarState extends State<UserAvatar> {
 
   @override
   void initState() {
-    print(widget.user.id);
     super.initState();
     bloc = HeartbeatReceiverBloc(widget.user.id);
   }

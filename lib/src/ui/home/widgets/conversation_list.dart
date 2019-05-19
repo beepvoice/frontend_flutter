@@ -29,16 +29,18 @@ class _ConversationListState extends State<ConversationList> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: bloc.conversations,
-        builder: (context, AsyncSnapshot<List<Conversation>> snapshot) {
-          if (snapshot.hasData) {
-            return buildList(snapshot.data);
-          } else if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
-          }
-          return Center(child: CircularProgressIndicator());
-        });
+    return Padding(
+        padding: EdgeInsets.only(top: 10.0),
+        child: StreamBuilder(
+            stream: bloc.conversations,
+            builder: (context, AsyncSnapshot<List<Conversation>> snapshot) {
+              if (snapshot.hasData) {
+                return buildList(snapshot.data);
+              } else if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              }
+              return Center(child: CircularProgressIndicator());
+            }));
   }
 
   Widget buildList(List<Conversation> data) {

@@ -4,8 +4,7 @@ import "../../widgets/user_avatar.dart";
 import "../../../resources/conversation_api_provider.dart";
 import "../../../models/user_model.dart";
 import "../../../models/conversation_model.dart";
-import "../../../blocs/bottom_bus_bloc.dart";
-import "../../../services/conversation_manager.dart";
+import "../../../blocs/message_bloc.dart";
 
 class ConversationActiveView extends StatefulWidget {
   final String conversationId;
@@ -19,14 +18,19 @@ class ConversationActiveView extends StatefulWidget {
 }
 
 class _ConversationActiveViewState extends State<ConversationActiveView> {
-  final bus = bottomBusBloc;
+  final bus = messageBloc;
   final conversationApiProvider = ConversationApiProvider();
-  final conversationManager = ConversationManager();
   Conversation _conversation;
+  List<Widget> _users;
 
   @override
   initState() {
     super.initState();
+    _getConversation();
+    _getConversationMembers();
+  }
+
+  _getConversation() {
     conversationApiProvider
         .fetchConversation(widget.conversationId)
         .then((conversation) {
@@ -36,10 +40,23 @@ class _ConversationActiveViewState extends State<ConversationActiveView> {
     });
   }
 
+  _getConversationMembers() {
+    conversationApiProvider
+        .fetchConversationMembers(widget.conversationId)
+        .then((users) {
+      setState(() {
+        _users = users
+            .map((user) =>
+                UserAvatar(padding: EdgeInsets.only(right: 5.0), user: user))
+            .toList();
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (_conversation == null) {
-      return Container();
+    if ((_conversation == null) || (_users == null)) {
+      return SizedBox(height: 20, width: 20);
     }
 
     return Container(
@@ -73,25 +90,14 @@ class _ConversationActiveViewState extends State<ConversationActiveView> {
                 icon: Icon(Icons.close),
                 onPressed: () async {
                   // Call method to close connection
-                  await conversationManager.exit();
-                  await bus.publish({"state": "no_connection"});
+                  await bus.publish({"state": "disconnect"});
                   print("Pressed close");
                 }),
           ]),
       Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            UserAvatar(
-                padding: EdgeInsets.only(right: 5.0),
-                user: User("1", "Isaac", "Tay", "+65 91043593")),
-            UserAvatar(
-                padding: EdgeInsets.only(right: 5.0),
-                user: User("1", "Isaac", "Tay", "+65 91043593")),
-            UserAvatar(
-                padding: EdgeInsets.only(right: 5.0),
-                user: User("1", "Rui", "Juidfsdf", "+65 91043593"))
-          ]),
+          children: _users),
     ]));
   }
 }
