@@ -65,10 +65,12 @@ class _UserAvatarState extends State<UserAvatar> {
                         width: 12.0,
                         height: 12.0,
                         decoration: BoxDecoration(
-                            color: Colors.green[400], shape: BoxShape.circle));
+                            color: Colors.green[400],
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                width: 1.5, color: const Color(0xFFFFFFFF))));
                   }
                 }
-
                 return Container();
               }),
         ]));

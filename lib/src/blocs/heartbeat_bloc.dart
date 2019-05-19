@@ -41,15 +41,15 @@ class HeartbeatReceiverBloc {
           lastSeen = DateTime.fromMillisecondsSinceEpoch(ping.time * 1000);
           status = ping.status;
         });
-        final oneMinute = Duration(minutes: 1);
-        final timeoutDuration = Duration(minutes: 30);
-        new Timer.periodic(oneMinute, (Timer t) {
+        final checkDuration = Duration(seconds: 20);
+        final timeoutDuration = Duration(minutes: 1);
+        new Timer.periodic(checkDuration, (Timer t) {
           if (status == "on_call") {
             _coloursFetcher.sink.add("busy");
           } else {
             final now = new DateTime.now();
             final difference = now.difference(this.lastSeen);
-            if (difference > timeoutDuration) {
+            if (difference < timeoutDuration) {
               _coloursFetcher.sink.add("online");
             } else {
               _coloursFetcher.sink.add("offline");

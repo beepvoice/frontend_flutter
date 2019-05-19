@@ -44,6 +44,7 @@ class _ConversationActiveViewState extends State<ConversationActiveView> {
     conversationApiProvider
         .fetchConversationMembers(widget.conversationId)
         .then((users) {
+      print(users[0].id);
       setState(() {
         _users = users
             .map((user) =>

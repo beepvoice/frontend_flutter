@@ -17,7 +17,6 @@ class ConversationManager {
   }
 
   Future<int> join(String conversationId) async {
-    print("JOIN called");
     try {
       await channel.invokeMethod('join', conversationId);
     } on PlatformException catch (e) {

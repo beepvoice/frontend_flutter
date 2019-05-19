@@ -23,12 +23,16 @@ class _HomeState extends State<Home> {
 
   int _pageNumber = 0;
 
+  PersistentBottomSheetController bottomBarController;
+
   @override
   initState() {
     super.initState();
     controller.addListener(_updatePageNumber);
 
-    messageBloc.bus.listen((Map<String, String> data) => _processMessage(data));
+    messageBloc.bus.listen(
+        (Map<String, String> data) async => await _processMessage(data));
+    _setupBottomState();
   }
 
   @override
@@ -43,33 +47,38 @@ class _HomeState extends State<Home> {
     });
   }
 
-  _processMessage(Map<String, String> data) {
+  _processMessage(Map<String, String> data) async {
     if (data["state"] == "disconnect") {
       // Disconnect and change state
-      _scaffoldKey.currentState.showBottomSheet<void>(
+      await conversationManager.exit();
+      bottomBarController.close();
+      bottomBarController = _scaffoldKey.currentState.showBottomSheet<void>(
           (BuildContext context) => BottomBar(conversationId: ""));
     } else if (data["state"] == "connect") {
       // Connect and change state
-      _scaffoldKey.currentState.showBottomSheet<void>((BuildContext context) =>
-          BottomBar(conversationId: data["conversationId"]));
+      await conversationManager.join(data["conversationId"]);
+      bottomBarController.close();
+      bottomBarController = _scaffoldKey.currentState.showBottomSheet<void>(
+          (BuildContext context) =>
+              BottomBar(conversationId: data["conversationId"]));
     } else {
       // show default
-      _scaffoldKey.currentState.showBottomSheet<void>(
+      await conversationManager.exit();
+      bottomBarController.close();
+      bottomBarController = _scaffoldKey.currentState.showBottomSheet<void>(
           (BuildContext context) => BottomBar(conversationId: ""));
     }
   }
 
-  Future<void> executeAfterBuild() async {
-    final conversationId = await conversationManager.get();
-
-    _scaffoldKey.currentState.showBottomSheet<void>(
-        (BuildContext context) => BottomBar(conversationId: conversationId));
+  _setupBottomState() {
+    conversationManager.get().then((conversationId) {
+      bottomBarController = _scaffoldKey.currentState.showBottomSheet<void>(
+          (BuildContext context) => BottomBar(conversationId: conversationId));
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    executeAfterBuild();
-
     return Scaffold(
       key: _scaffoldKey,
       body: Column(children: <Widget>[
