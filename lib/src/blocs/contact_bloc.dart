@@ -12,9 +12,12 @@ class ContactBloc {
   fetchContacts() async {
     List<User> contactList = await _provider.fetchContacts();
     _contactsFetcher.sink.add(contactList);
+    return contactList;
   }
 
   dispose() {
     _contactsFetcher.close();
   }
 }
+
+final contactBloc = ContactBloc();

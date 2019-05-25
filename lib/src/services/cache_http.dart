@@ -32,11 +32,12 @@ class CacheHttp {
   Future<String> fetch(String url,
       {bool update = false, Map<String, String> headers = const {}}) async {
     if (!this.hasInit) {
-      this.hasInit = true;
       await this.init();
+      this.hasInit = true;
     }
     try {
       final response = await http.get(url, headers: headers);
+
       if (response.statusCode < 200 || response.statusCode >= 300) {
         // Unsuccessful response, use cache
         final body = await this.getCache(url);
@@ -54,6 +55,9 @@ class CacheHttp {
   }
 
   Future<String> getCache(String url) async {
+    if (!this.hasInit) {
+      print("UNINIT");
+    }
     List<Map> cached = await this
         .db
         .rawQuery("SELECT resource FROM cache WHERE url = ?", [url]);

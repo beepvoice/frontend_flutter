@@ -13,18 +13,10 @@ class ConversationList extends StatefulWidget {
 }
 
 class _ConversationListState extends State<ConversationList> {
-  final bloc = ConversationsBloc();
-
   @override
   initState() {
     super.initState();
-    bloc.fetchConversations();
-  }
-
-  @override
-  dispose() {
-    bloc.dispose();
-    super.dispose();
+    conversationsBloc.fetchConversations();
   }
 
   @override
@@ -32,7 +24,7 @@ class _ConversationListState extends State<ConversationList> {
     return Padding(
         padding: EdgeInsets.only(top: 10.0),
         child: StreamBuilder(
-            stream: bloc.conversations,
+            stream: conversationsBloc.conversations,
             builder: (context, AsyncSnapshot<List<Conversation>> snapshot) {
               if (snapshot.hasData) {
                 return buildList(snapshot.data);

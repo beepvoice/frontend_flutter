@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "dart:async";
 
 import "../../models/user_model.dart";
 import "../../blocs/heartbeat_bloc.dart";
@@ -20,18 +21,18 @@ class UserAvatar extends StatefulWidget {
 }
 
 class _UserAvatarState extends State<UserAvatar> {
-  HeartbeatReceiverBloc bloc;
+  String lastStatus = "";
 
   @override
-  void initState() {
+  initState() {
     super.initState();
-    bloc = HeartbeatReceiverBloc(widget.user.id);
+    lastStatus = heartbeatReceiverBloc.getLastStatus(widget.user.id);
+    initializeStream();
   }
 
-  @override
-  void dispose() {
-    bloc.dispose();
-    super.dispose();
+  initializeStream() async {
+    return Future.delayed(
+        const Duration(milliseconds: 1), () => heartbeatReceiverBloc.flush());
   }
 
   @override
@@ -55,12 +56,17 @@ class _UserAvatarState extends State<UserAvatar> {
               ),
               radius: widget.radius),
           StreamBuilder(
-              stream: bloc.colours,
-              builder: (context, AsyncSnapshot<String> snapshot) {
-                String state;
+              stream: heartbeatReceiverBloc.stream,
+              builder: (context, AsyncSnapshot<Map<String, String>> snapshot) {
+                Map<String, String> state;
                 if (snapshot.hasData) {
                   state = snapshot.data;
-                  if (state == "online") {
+
+                  if (state["user"] == widget.user.id) {
+                    this.lastStatus = state["status"];
+                  }
+
+                  if (lastStatus == "online") {
                     return Container(
                         width: 12.0,
                         height: 12.0,
@@ -71,6 +77,7 @@ class _UserAvatarState extends State<UserAvatar> {
                                 width: 1.5, color: const Color(0xFFFFFFFF))));
                   }
                 }
+
                 return Container();
               }),
         ]));

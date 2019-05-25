@@ -13,24 +13,16 @@ class ContactList extends StatefulWidget {
 }
 
 class _ContactListState extends State<ContactList> {
-  final bloc = ContactBloc();
-
   @override
   void initState() {
     super.initState();
-    bloc.fetchContacts();
-  }
-
-  @override
-  void dispose() {
-    bloc.dispose();
-    super.dispose();
+    contactBloc.fetchContacts();
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: bloc.contacts,
+        stream: contactBloc.contacts,
         builder: (context, AsyncSnapshot<List<User>> snapshot) {
           if (snapshot.hasData) {
             return buildList(snapshot);

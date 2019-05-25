@@ -60,6 +60,7 @@ class _LoginPageState extends State<LoginPage> {
 
                 // Waiting for initialization
                 await ConversationManager.init(authToken);
+                print(authToken);
 
                 Navigator.pushNamed(context, 'welcome/otp');
               }),

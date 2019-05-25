@@ -188,6 +188,7 @@ extension PeerConnectionWrapper: RTCPeerConnectionDelegate {
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
         print("adding new stream from remote")
+        self.remoteAudioTrack = stream.audioTracks[0]
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove stream: RTCMediaStream) {

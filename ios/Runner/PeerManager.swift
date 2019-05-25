@@ -77,7 +77,7 @@ class PeerManager: NSObject {
 private extension PeerManager {
     func initialiseEventSource() {
         eventSource?.addEventListener("offer") { (id, event, data) in
-            
+            print(data!)
             guard let id = id, let data = data else {
                 // Incorrect packet type error
                 return

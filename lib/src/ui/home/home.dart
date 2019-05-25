@@ -7,6 +7,7 @@ import "../bottom_bar/bottom_bar.dart";
 import "../../services/heartbeat_manager.dart";
 import "../../services/conversation_manager.dart";
 import "../../blocs/message_bloc.dart";
+import "../../blocs/heartbeat_bloc.dart";
 
 class Home extends StatefulWidget {
   @override

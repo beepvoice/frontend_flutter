@@ -34,7 +34,6 @@ class SignalingApiProvider: NSObject {
             let dataVal = try NSURLConnection.sendSynchronousRequest(request, returning: &response)
             do {
                 if let jsonResult = try JSONSerialization.jsonObject(with: dataVal, options: []) as? [String] {
-                    print("Synchronous\(jsonResult)")
                     // convert this to an array of strings
                     for device in jsonResult {
                         deviceList.append(device)
@@ -68,7 +67,6 @@ class SignalingApiProvider: NSObject {
             let dataVal = try NSURLConnection.sendSynchronousRequest(request, returning: &response)
             do {
                 if let jsonResult = try JSONSerialization.jsonObject(with: dataVal, options: []) as? [Any] {
-                    print("Synchronous\(jsonResult)")
                     // Need code to convert this to an array of strings
                     for user in jsonResult {
                         if let userObject = user as? [String: String] {
@@ -99,6 +97,7 @@ class SignalingApiProvider: NSObject {
         
         // prepare json data
         let json: [String: Any] = ["event": event, "data": data]
+        print(json)
         
         let jsonData = try? JSONSerialization.data(withJSONObject: json)
         
