@@ -11,8 +11,8 @@ import WebRTC
 
 public enum RTCWrapperState {
     case disconnected
-    case ready
     case connected
+    case connecting
 }
 
 class PeerConnectionWrapper: NSObject{
@@ -53,7 +53,7 @@ class PeerConnectionWrapper: NSObject{
     
     public func connect() {
         if let peerConnection = self.peerConnection {
-            self.state = .connected
+            self.state = .connecting
             let localStream = self.localStream()
             peerConnection.add(localStream)
         }
@@ -80,6 +80,7 @@ class PeerConnectionWrapper: NSObject{
                     print(error)
                 } else {
                     // Use the sdp generated
+                    self?.handleLocalSdpSet(sdp: sdp)
                     self?.signalingApiProvider?.postDataToUser(userId: userId, deviceId: deviceId, data: sdp!.sdp, event: "offer")
                 }
             })
@@ -100,7 +101,7 @@ class PeerConnectionWrapper: NSObject{
                 } else {
                     // handle the remote sdp
                     this.handleRemoteDescriptionSet()
-                    this.state = .ready
+                    this.state = .connected
                 }
             })
         }
@@ -108,7 +109,7 @@ class PeerConnectionWrapper: NSObject{
     
     public func createAnswerForOffer(userId: String, deviceId: String, remoteSdp: String) {
         if let peerConnection = self.peerConnection {
-            let sessionDescription = RTCSessionDescription.init(type: .answer, sdp: remoteSdp)
+            let sessionDescription = RTCSessionDescription.init(type: .offer, sdp: remoteSdp)
             peerConnection.setRemoteDescription(sessionDescription, completionHandler: { [weak self] (error) in
                 // Exit if this object doesn't exist anymore cause it is a weak link
                 guard let this = self else { return }
@@ -119,6 +120,7 @@ class PeerConnectionWrapper: NSObject{
                 } else {
                     // handle the remote sdp
                     this.handleRemoteDescriptionSet()
+                    
                     // create answer
                     peerConnection.answer(for: this.channelConstraint, completionHandler:
                         { (sdp, error) in
@@ -127,8 +129,9 @@ class PeerConnectionWrapper: NSObject{
                                 print(error)
                             } else {
                                 // handle generated local sdp
+                                self?.handleLocalSdpSet(sdp: sdp)
                                 self?.signalingApiProvider?.postDataToUser(userId: userId, deviceId: deviceId, data: sdp!.sdp, event: "answer")
-                                this.state = .ready
+                                this.state = .connected
                             }
                     })
                 }
@@ -157,6 +160,17 @@ private extension PeerConnectionWrapper {
         let configuration = RTCConfiguration()
         configuration.iceServers = self.iceServers;
         self.peerConnection = self.connectionFactory?.peerConnection(with: configuration, constraints: self.connectionConstraint, delegate: self)
+    }
+    
+    func handleLocalSdpSet(sdp: RTCSessionDescription?) {
+        guard let sdp = sdp else{
+            return
+        }
+        
+        self.peerConnection?.setLocalDescription(sdp, completionHandler: {[weak self] (error) in
+            guard let _ = self, let error = error else { return }
+            print(error)
+        })
     }
     
     func handleRemoteDescriptionSet() {
@@ -204,7 +218,7 @@ extension PeerConnectionWrapper: RTCPeerConnectionDelegate {
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
-        let candidateString = "\(candidate.sdp)-\(candidate.sdpMLineIndex)-\(candidate.sdpMid ?? "")"
+        let candidateString = "\(candidate.sdp)::\(candidate.sdpMLineIndex)::\(candidate.sdpMid ?? "")"
         self.signalingApiProvider?.postDataToUser(userId: remoteUserId!, deviceId: remoteDeviceId!, data: candidateString, event: "ice-candidate")
     }
     

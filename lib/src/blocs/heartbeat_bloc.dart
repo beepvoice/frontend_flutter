@@ -7,7 +7,6 @@ import "package:rxdart/rxdart.dart";
 import "package:http/http.dart" as http;
 
 import "../models/ping_model.dart";
-import "../models/user_model.dart";
 import "../services/login_manager.dart";
 import "../resources/contact_api_provider.dart";
 import "../../settings.dart";

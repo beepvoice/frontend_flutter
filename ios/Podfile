@@ -43,6 +43,8 @@ target 'Runner' do
   # Custom Pods
   source 'https://github.com/CocoaPods/Specs.git'
   pod 'GoogleWebRTC'
+  pod 'Just'
+  pod 'PercentEncoder'
   
   # Flutter Pods
   generated_xcode_build_settings = parse_KV_file('./Flutter/Generated.xcconfig')

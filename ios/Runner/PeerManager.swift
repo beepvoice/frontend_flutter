@@ -8,6 +8,7 @@
 
 import Foundation
 import WebRTC
+import PercentEncoder
 
 class PeerManager: NSObject {
     // WebRTC initialization
@@ -30,6 +31,7 @@ class PeerManager: NSObject {
     public func initializeToken(authToken: String) {
         self.signalingApiProvider = SignalingApiProvider(authToken: authToken)
         self.eventSource = EventSource(url: "http://localhost/signal/subscribe?token=\(authToken)")
+        initialiseEventSource()
     }
     
     public func join(conversationId: String) {
@@ -42,8 +44,6 @@ class PeerManager: NSObject {
         }
         
         for user in userList {
-            whitePeerList.append(user)
-            
             let deviceOpList = signalingApiProvider?.getUserDevices(userId: user)
             
             guard let deviceList = deviceOpList else {
@@ -53,7 +53,10 @@ class PeerManager: NSObject {
             
             for device in deviceList {
                 let connection: PeerConnectionWrapper = PeerConnectionWrapper(connectionFactory: self.connectionFactory!, signalingApiProvider: self.signalingApiProvider!, remoteUserId: user, remoteDeviceId: device)
-                self.peerList["\(user)-\(device)"] = connection
+                self.peerList["\(user):\(device)"] = connection
+                whitePeerList.append("\(user):\(device)")
+                
+                connection.connect()
                 connection.createOffer(userId: user, deviceId: device)
             }
         }
@@ -77,7 +80,6 @@ class PeerManager: NSObject {
 private extension PeerManager {
     func initialiseEventSource() {
         eventSource?.addEventListener("offer") { (id, event, data) in
-            print(data!)
             guard let id = id, let data = data else {
                 // Incorrect packet type error
                 return
@@ -86,7 +88,7 @@ private extension PeerManager {
             // Handling offers, if in list accept
             if self.whitePeerList.contains(id) {
                 // Split id into user and device
-                let idArr = id.components(separatedBy: "-")
+                let idArr = id.components(separatedBy: ":")
                 
                 // Check id format
                 if idArr.count != 2 {
@@ -94,12 +96,16 @@ private extension PeerManager {
                     return
                 }
                 
+                // Formatting data
+                let decoded_data = PercentEncoding.decodeURI.evaluate(string: data)
+                
+                print("OFFER!")
+                
                 let connection: PeerConnectionWrapper = PeerConnectionWrapper(connectionFactory: self.connectionFactory!, signalingApiProvider: self.signalingApiProvider!, remoteUserId: idArr[0], remoteDeviceId: idArr[1])
                 self.peerList[id] = connection
                 
-                
-                connection.createAnswerForOffer(userId: idArr[0], deviceId: idArr[1], remoteSdp: data)
                 connection.connect()
+                connection.createAnswerForOffer(userId: idArr[0], deviceId: idArr[1], remoteSdp: decoded_data)
             }
         }
         
@@ -112,9 +118,13 @@ private extension PeerManager {
             
             // Handling answers, if in list accept
             if self.whitePeerList.contains(id) {
+                // Formatting data
+                let decoded_data = PercentEncoding.decodeURI.evaluate(string: data)
+                
+                print("ANSWER")
+                
                 let connection: PeerConnectionWrapper = self.peerList[id]!
-                connection.handleAnswer(remoteSdp: data)
-                connection.connect()
+                connection.handleAnswer(remoteSdp: decoded_data)
             }
         }
         
@@ -129,7 +139,12 @@ private extension PeerManager {
             if self.whitePeerList.contains(id) {
                 let connection: PeerConnectionWrapper = self.peerList[id]!
                 
-                let dataArr = data.components(separatedBy: "-")
+                // Formatting data
+                let decoded_data = PercentEncoding.decodeURI.evaluate(string: data)
+                
+                print("ICE!")
+                
+                let dataArr = decoded_data.components(separatedBy: "::")
                 
                 // Check dataArr size of 3
                 if dataArr.count != 3 {
@@ -143,7 +158,7 @@ private extension PeerManager {
                     return
                 }
                 
-                let iceCandidate = RTCIceCandidate(sdp: dataArr[0], sdpMLineIndex: sdpMLineIndex, sdpMid: dataArr[1])
+                let iceCandidate = RTCIceCandidate(sdp: dataArr[0], sdpMLineIndex: sdpMLineIndex, sdpMid: dataArr[2])
                 connection.addIceCandidate(iceCandidate: iceCandidate)
             }
         }
