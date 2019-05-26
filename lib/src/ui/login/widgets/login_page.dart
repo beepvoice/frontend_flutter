@@ -3,7 +3,6 @@ import "package:flutter_svg/flutter_svg.dart";
 
 import "../../widgets/text_button.dart";
 import "../../../services/login_manager.dart";
-import "../../../services/conversation_manager.dart";
 import "phone_input.dart";
 
 class LoginPage extends StatefulWidget {
@@ -55,13 +54,9 @@ class _LoginPageState extends State<LoginPage> {
           TextButton(
               text: "Continue",
               onClickCallback: () async {
-                final authToken =
-                    await widget.loginManager.loginTest(controller.text);
-
-                // Waiting for initialization
-                await ConversationManager.init(authToken);
-                print(authToken);
-
+                print(await widget.loginManager.getToken());
+                await widget.loginManager
+                    .initAuthentication("+65${controller.text}");
                 Navigator.pushNamed(context, 'welcome/otp');
               }),
         ]));

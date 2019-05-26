@@ -47,8 +47,18 @@ class _OtpPageState extends State<OtpPage> {
                     child: Center(
                         child: PinCodeTextField(
                             controller: controller,
+                            maxLength: 6,
                             highlight: true,
+                            autofocus: true,
                             highlightColor: Colors.white,
+                            onTextChanged: (text) {},
+                            onDone: (text) {
+                              widget.buttonCallback(text);
+                            },
+                            pinBoxHeight:
+                                (MediaQuery.of(context).size.width / 6) - 15,
+                            pinBoxWidth:
+                                (MediaQuery.of(context).size.width / 6) - 15,
                             /*hideCharacter: true,*/
                             pinBoxDecoration: (Color color) {
                               return BoxDecoration(

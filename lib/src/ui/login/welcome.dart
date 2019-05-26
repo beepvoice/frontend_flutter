@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 import "../../services/login_manager.dart";
+import "../../services/conversation_manager.dart";
 import "./widgets/welcome_page.dart";
 import "./widgets/login_page.dart";
 import "./widgets/otp_page.dart";
@@ -50,7 +51,9 @@ class Welcome extends StatelessWidget {
                   case "welcome/otp":
                     builder = (BuildContext _) =>
                         OtpPage(buttonCallback: (String otp) async {
-                          // loginManager.processOtp(otp); disabled for testing
+                          final authToken = await loginManager.processOtp(otp);
+
+                          await ConversationManager.init(authToken);
                           Navigator.of(context).pushReplacementNamed("/home");
                         });
                     break;
