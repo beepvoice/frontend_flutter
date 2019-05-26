@@ -35,7 +35,6 @@ class ConversationApiProvider {
 
   Future<List<Conversation>> fetchConversations() async {
     final jwt = await loginManager.getToken();
-    print("jwt: ${jwt}");
     try {
       final responseBody =
           await this.cache.fetch("$baseUrlCore/user/conversation", headers: {

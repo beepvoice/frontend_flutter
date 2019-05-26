@@ -51,7 +51,7 @@ class Welcome extends StatelessWidget {
                     builder = (BuildContext _) =>
                         OtpPage(buttonCallback: (String otp) async {
                           // loginManager.processOtp(otp); disabled for testing
-                          Navigator.of(context).pushNamed("/home");
+                          Navigator.of(context).pushReplacementNamed("/home");
                         });
                     break;
                   default:

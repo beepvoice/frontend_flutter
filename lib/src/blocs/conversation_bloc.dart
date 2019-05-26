@@ -21,6 +21,7 @@ class ConversationsBloc {
   }
 }
 
+// Should be a scoped widget
 class ConversationMembersBloc {
   final String conversationId;
   final _provider = ConversationApiProvider();
@@ -40,3 +41,5 @@ class ConversationMembersBloc {
     _membersFetcher.close();
   }
 }
+
+final conversationsBloc = ConversationsBloc();

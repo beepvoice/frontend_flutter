@@ -11,7 +11,6 @@ class HeartbeatApiProvider {
 
   Future<void> ping({String status = ""}) async {
     final jwt = await loginManager.getToken();
-    print("GOT JWT: $jwt");
     await http.post("$baseUrlHeartbeat/ping",
         headers: {HttpHeaders.authorizationHeader: "Bearer $jwt"},
         body: jsonEncode({"status": status}));
