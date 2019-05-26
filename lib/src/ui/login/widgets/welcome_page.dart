@@ -5,12 +5,21 @@ import "../../widgets/text_button.dart";
 
 class WelcomePage extends StatelessWidget {
   final String welcomeSvg = "assets/welcome.svg";
+  final String logo = "assets/logo.png";
 
   @override
   Widget build(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(left: 15.0, right: 15.0),
         child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+            Image.asset(logo,
+                semanticLabel: "Beep logo", width: 30.0, height: 50.0),
+            Padding(
+                padding: EdgeInsets.only(left: 10.0),
+                child: Text("Beep",
+                    style: Theme.of(context).accentTextTheme.display3)),
+          ]),
           Spacer(),
           SvgPicture.asset(welcomeSvg,
               width: MediaQuery.of(context).size.width - 40.0),
@@ -25,7 +34,10 @@ class WelcomePage extends StatelessWidget {
               text: "Login",
               onClickCallback: () =>
                   Navigator.pushNamed(context, "welcome/login")),
-          TextButton(text: "Sign Up", onClickCallback: () => print("hello")),
+          TextButton(
+              text: "Sign Up",
+              onClickCallback: () =>
+                  Navigator.pushNamed(context, "welcome/register")),
         ]));
   }
 }

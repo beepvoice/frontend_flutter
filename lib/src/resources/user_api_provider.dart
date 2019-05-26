@@ -12,14 +12,19 @@ class UserApiProvider {
   CacheHttp cache = CacheHttp();
   LoginManager loginManager = LoginManager();
 
-  Future<User> createUser(User user) async {
+  Future<User> createUser(
+      String firstName, String lastName, String phoneNumber) async {
     final jwt = loginManager.getToken();
     final response = await http.post("$baseUrlCore/user",
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $jwt"
         },
-        body: user.toJson());
+        body: jsonEncode({
+          "first_name": firstName,
+          "last_name": lastName,
+          "phone_number": phoneNumber
+        }));
 
     return User.fromJson(jsonDecode(response.body));
   }
