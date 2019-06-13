@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
 
+import "search_input.dart";
+
 class TopBar extends StatelessWidget {
   final String title;
   final String logo = "assets/logo.png";
