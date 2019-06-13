@@ -5,6 +5,7 @@ import "../../../models/user_model.dart";
 import "../../../blocs/contact_bloc.dart";
 
 import "contact_item.dart";
+import "search_input.dart";
 
 class ContactView extends StatefulWidget {
   @override
@@ -14,10 +15,18 @@ class ContactView extends StatefulWidget {
 }
 
 class _ContactViewState extends State<ContactView> {
+  final searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     contactBloc.fetchContacts();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -71,10 +80,8 @@ class _ContactViewState extends State<ContactView> {
           .toList();
     });
 
-    print(sortedList);
-
-    return ListView(
-        children: sortedList.entries.map<Widget>((entry) {
+    // Create list of children
+    final children = sortedList.entries.map<Widget>((entry) {
       if (entry.value.length == 0) {
         return Container();
       }
@@ -95,6 +102,7 @@ class _ContactViewState extends State<ContactView> {
               ),
             ),
             content: ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
                 padding: EdgeInsets.only(top: 0.0),
                 shrinkWrap: true,
                 itemCount: entry.value.length,
@@ -102,6 +110,14 @@ class _ContactViewState extends State<ContactView> {
                   return ContactItem(user: entry.value[index]);
                 }))
       ]);
-    }).toList());
+    }).toList();
+
+    children.insertAll(0, [
+      Padding(
+          padding: EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
+          child: SearchInput(
+              controller: searchController, hintText: "Search for people")),
+    ]);
+    return ListView(children: children);
   }
 }
