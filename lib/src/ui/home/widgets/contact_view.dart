@@ -5,14 +5,14 @@ import "../../../blocs/contact_bloc.dart";
 
 import "contact_item.dart";
 
-class ContactList extends StatefulWidget {
+class ContactView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _ContactListState();
+    return _ContactViewState();
   }
 }
 
-class _ContactListState extends State<ContactList> {
+class _ContactViewState extends State<ContactView> {
   @override
   void initState() {
     super.initState();

@@ -38,7 +38,7 @@ TextTheme buildTextTheme(TextTheme base) {
           title:
               base.title.copyWith(fontSize: 18.0, fontWeight: FontWeight.w500),
           subtitle: base.subtitle
-              .copyWith(fontSize: 12.0, fontWeight: FontWeight.w300),
+              .copyWith(fontSize: 14.0, fontWeight: FontWeight.w300),
           body2:
               base.body2.copyWith(fontSize: 16.0, fontWeight: FontWeight.w600),
           body1:

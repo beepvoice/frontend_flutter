@@ -57,12 +57,12 @@ class _ConversationItemState extends State<ConversationItem> {
                         Text(conversation.title,
                             style: Theme.of(context).textTheme.title),
                         Spacer(),
-                        Text("1m ago",
+                        Text("12:25 PM",
                             style: Theme.of(context)
                                 .primaryTextTheme
                                 .body1
                                 .copyWith(
-                                    fontWeight: FontWeight.w700,
+                                    fontWeight: FontWeight.w500,
                                     color: Theme.of(context).primaryColorDark)),
                       ]),
                   Padding(

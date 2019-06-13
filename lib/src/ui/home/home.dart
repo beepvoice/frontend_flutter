@@ -1,39 +1,45 @@
 import "package:flutter/material.dart";
+import 'dart:ui' as ui;
 
 import "./widgets/top_bar.dart";
-import "./widgets/conversation_list.dart";
-import "./widgets/contact_list.dart";
+import "./widgets/conversation_view.dart";
+import "./widgets/contact_view.dart";
 import "../bottom_bar/bottom_bar.dart";
 import "../../services/heartbeat_manager.dart";
 import "../../services/conversation_manager.dart";
 import "../../blocs/message_bloc.dart";
-import "../../blocs/heartbeat_bloc.dart";
 
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
-  final List<String> titleList = ["Conversations", "Contacts", "Settings"];
-
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final PageController controller = PageController();
   final heartbeatSendManager = HeartbeatSendManager();
   final conversationManager = ConversationManager();
 
-  int _pageNumber = 0;
+  // Bottom Bar navigation
+  final List<String> titleList = ["Contacts", "Conversations", "Settings"];
+  int _tabNumber = 1;
+  List<IconData> itemsList = [
+    Icons.contacts,
+    Icons.chat,
+    Icons.settings,
+  ];
+  TabController controller;
 
-  PersistentBottomSheetController bottomBarController;
+  // Current conversaton
+  String currentConversationId = "";
 
   @override
   initState() {
     super.initState();
-    controller.addListener(_updatePageNumber);
+    controller = TabController(vsync: this, length: 3);
+    controller.index = 1; // Set default page to conversation page
 
     messageBloc.bus.listen(
         (Map<String, String> data) async => await _processMessage(data));
-    _setupBottomState();
   }
 
   @override
@@ -42,40 +48,26 @@ class _HomeState extends State<Home> {
     super.dispose();
   }
 
-  _updatePageNumber() {
-    setState(() {
-      _pageNumber = controller.page.round();
-    });
-  }
-
   _processMessage(Map<String, String> data) async {
     if (data["state"] == "disconnect") {
       // Disconnect and change state
       await conversationManager.exit();
-      bottomBarController.close();
-      bottomBarController = _scaffoldKey.currentState.showBottomSheet<void>(
-          (BuildContext context) => BottomBar(conversationId: ""));
+      setState(() {
+        currentConversationId = "";
+      });
     } else if (data["state"] == "connect") {
       // Connect and change state
       await conversationManager.join(data["conversationId"]);
-      bottomBarController.close();
-      bottomBarController = _scaffoldKey.currentState.showBottomSheet<void>(
-          (BuildContext context) =>
-              BottomBar(conversationId: data["conversationId"]));
+      setState(() {
+        currentConversationId = data["conversationId"];
+      });
     } else {
       // show default
       await conversationManager.exit();
-      bottomBarController.close();
-      bottomBarController = _scaffoldKey.currentState.showBottomSheet<void>(
-          (BuildContext context) => BottomBar(conversationId: ""));
+      setState(() {
+        currentConversationId = "";
+      });
     }
-  }
-
-  _setupBottomState() {
-    conversationManager.get().then((conversationId) {
-      bottomBarController = _scaffoldKey.currentState.showBottomSheet<void>(
-          (BuildContext context) => BottomBar(conversationId: conversationId));
-    });
   }
 
   @override
@@ -83,12 +75,48 @@ class _HomeState extends State<Home> {
     return Scaffold(
       key: _scaffoldKey,
       body: Column(children: <Widget>[
-        TopBar(title: titleList[_pageNumber], pageNumber: _pageNumber),
+        TopBar(title: titleList[_tabNumber]),
         Expanded(
-            child: PageView(controller: controller, children: <Widget>[
-          ConversationList(),
-          ContactList(),
-        ])),
+            child: TabBarView(
+                physics: NeverScrollableScrollPhysics(),
+                controller: controller,
+                children: <Widget>[
+              ContactView(),
+              ConversationView(),
+              Container(),
+            ])),
+      ]),
+      bottomNavigationBar:
+          Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+        BottomBar(conversationId: currentConversationId),
+        BottomNavigationBar(
+            onTap: (int index) {
+              setState(() {
+                _tabNumber = index;
+                controller.index = _tabNumber;
+              });
+            },
+            items: itemsList.map((data) {
+              return BottomNavigationBarItem(
+                icon: itemsList[_tabNumber] == data
+                    ? ShaderMask(
+                        blendMode: BlendMode.srcIn,
+                        shaderCallback: (Rect bounds) {
+                          return ui.Gradient.linear(
+                            Offset(4.0, 24.0),
+                            Offset(24.0, 4.0),
+                            [
+                              Theme.of(context).primaryColor,
+                              Theme.of(context).primaryColorDark,
+                            ],
+                          );
+                        },
+                        child: Icon(data),
+                      )
+                    : Icon(data, color: Colors.grey),
+                title: Container(),
+              );
+            }).toList())
       ]),
     );
   }
