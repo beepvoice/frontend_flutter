@@ -75,8 +75,10 @@ class _ConversationItemState extends State<ConversationItem> {
                                     "I might have forgotten to close the windows",
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
-                                    style:
-                                        Theme.of(context).textTheme.subtitle)),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle
+                                        .copyWith(color: Color(0xFF455A64)))),
                             StreamBuilder(
                                 stream: bloc.members,
                                 builder: (context,

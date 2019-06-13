@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:sticky_headers/sticky_headers.dart';
 
 import "../../../models/user_model.dart";
 import "../../../blocs/contact_bloc.dart";
@@ -34,12 +35,73 @@ class _ContactViewState extends State<ContactView> {
   }
 
   Widget buildList(AsyncSnapshot<List<User>> snapshot) {
-    return ListView.builder(
-      padding: EdgeInsets.only(top: 0.0),
-      itemCount: snapshot.data.length,
-      itemBuilder: (context, index) {
-        return ContactItem(user: snapshot.data[index]);
-      },
-    );
+    final Map<String, List<User>> sortedList = {
+      "A": null,
+      "B": null,
+      "C": null,
+      "D": null,
+      "E": null,
+      "F": null,
+      "G": null,
+      "H": null,
+      "I": null,
+      "J": null,
+      "K": null,
+      "L": null,
+      "M": null,
+      "N": null,
+      "O": null,
+      "P": null,
+      "Q": null,
+      "R": null,
+      "S": null,
+      "T": null,
+      "U": null,
+      "V": null,
+      "W": null,
+      "X": null,
+      "Y": null,
+      "Z": null
+    };
+
+    // Sort the list into alphabets
+    sortedList.forEach((letter, list) {
+      sortedList[letter] = snapshot.data
+          .where((user) => user.firstName.startsWith(letter))
+          .toList();
+    });
+
+    print(sortedList);
+
+    return ListView(
+        children: sortedList.entries.map<Widget>((entry) {
+      if (entry.value.length == 0) {
+        return Container();
+      }
+
+      return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+        StickyHeader(
+            header: Container(
+              height: 25.0,
+              color: Colors.grey[200],
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                entry.key,
+                style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w700,
+                    color: Theme.of(context).primaryColorDark),
+              ),
+            ),
+            content: ListView.builder(
+                padding: EdgeInsets.only(top: 0.0),
+                shrinkWrap: true,
+                itemCount: entry.value.length,
+                itemBuilder: (context, index) {
+                  return ContactItem(user: entry.value[index]);
+                }))
+      ]);
+    }).toList());
   }
 }
