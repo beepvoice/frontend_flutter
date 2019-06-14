@@ -132,6 +132,6 @@ class _ContactViewState extends State<ContactView> {
                 ])),
           ])),
     ]);
-    return ListView(children: children);
+    return ListView(padding: EdgeInsets.only(top: 10.0), children: children);
   }
 }

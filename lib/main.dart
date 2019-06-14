@@ -1,8 +1,9 @@
 import "package:flutter/services.dart";
 import 'routes.dart';
-import "src/blocs/heartbeat_bloc.dart";
+// import 'package:flutter/rendering.dart';
 
 void main() {
+  // debugPaintSizeEnabled = true;
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   Routes();
 }
