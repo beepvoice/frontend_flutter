@@ -1,11 +1,11 @@
 import "package:flutter/material.dart";
 import 'package:sticky_headers/sticky_headers.dart';
 
-import "../../../models/user_model.dart";
-import "../../../blocs/contact_bloc.dart";
+import "../../models/user_model.dart";
+import "../../blocs/contact_bloc.dart";
 
-import "contact_item.dart";
-import "search_input.dart";
+import "./widgets/contact_item.dart";
+import "../widgets/search_input.dart";
 
 class ContactView extends StatefulWidget {
   @override

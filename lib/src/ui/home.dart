@@ -2,12 +2,12 @@ import "package:flutter/material.dart";
 import 'dart:ui' as ui;
 
 import "./widgets/top_bar.dart";
-import "./widgets/conversation_view.dart";
-import "./widgets/contact_view.dart";
-import "../bottom_bar/bottom_bar.dart";
-import "../../services/heartbeat_manager.dart";
-import "../../services/conversation_manager.dart";
-import "../../blocs/message_bloc.dart";
+import "./conversation_view/conversation_view.dart";
+import "./contact_view/contact_view.dart";
+import "./bottom_bar/bottom_bar.dart";
+import "../services/heartbeat_manager.dart";
+import "../services/conversation_manager.dart";
+import "../blocs/message_bloc.dart";
 
 class Home extends StatefulWidget {
   @override
