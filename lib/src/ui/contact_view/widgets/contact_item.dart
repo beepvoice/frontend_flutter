@@ -17,7 +17,7 @@ class ContactItem extends StatelessWidget {
             children: <Widget>[
               UserAvatar(
                   user: user,
-                  radius: 22.0,
+                  radius: 18.0,
                   padding: EdgeInsets.only(left: 15.0)),
               Padding(
                   padding: EdgeInsets.only(left: 15.0),
@@ -25,7 +25,7 @@ class ContactItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(user.firstName + " " + user.lastName,
-                            style: Theme.of(context).textTheme.display2,
+                            style: Theme.of(context).textTheme.title,
                             overflow: TextOverflow.ellipsis),
                         Padding(
                             padding: EdgeInsets.only(top: 2),

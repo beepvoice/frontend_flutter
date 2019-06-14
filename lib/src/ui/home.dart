@@ -110,9 +110,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             ],
                           );
                         },
-                        child: Icon(data, size: 30.0),
+                        child: Icon(data, size: 25.0),
                       )
-                    : Icon(data, color: Colors.grey),
+                    : Icon(data, color: Colors.grey, size: 20),
                 title: Container(),
               );
             }).toList())

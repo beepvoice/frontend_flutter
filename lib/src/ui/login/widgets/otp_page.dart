@@ -36,12 +36,11 @@ class _OtpPageState extends State<OtpPage> {
                 Text("Almost there.",
                     textAlign: TextAlign.left,
                     style: Theme.of(context).accentTextTheme.display3),
-                Text(
-                    "I've sent an authentication code via SMS to your device, enter it below.",
-                    style: Theme.of(context)
-                        .accentTextTheme
-                        .title
-                        .copyWith(fontWeight: FontWeight.w400)),
+                Padding(
+                    padding: EdgeInsets.only(top: 5.0),
+                    child: Text(
+                        "I've sent an authentication code via SMS to your device, enter it below.",
+                        style: Theme.of(context).accentTextTheme.title)),
                 Padding(
                     padding: EdgeInsets.only(top: 20.0),
                     child: Center(

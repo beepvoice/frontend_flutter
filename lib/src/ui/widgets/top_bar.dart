@@ -32,8 +32,8 @@ class TopBar extends StatelessWidget {
                         child: Text("Edit",
                             style: Theme.of(context)
                                 .accentTextTheme
-                                .display2
-                                .copyWith(fontWeight: FontWeight.w400))),
+                                .title
+                                .copyWith(fontWeight: FontWeight.w300))),
                     Spacer(),
                     Text(titleList[state],
                         style: Theme.of(context).accentTextTheme.display1),

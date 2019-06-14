@@ -41,12 +41,11 @@ class _LoginPageState extends State<LoginPage> {
                 Text("First things first.",
                     textAlign: TextAlign.left,
                     style: Theme.of(context).accentTextTheme.display3),
-                Text(
-                    "Enter your phone number, to connect to your existing Beep account.",
-                    style: Theme.of(context)
-                        .accentTextTheme
-                        .title
-                        .copyWith(fontWeight: FontWeight.w400)),
+                Padding(
+                    padding: EdgeInsets.only(top: 5.0),
+                    child: Text(
+                        "Enter your phone number, to connect to your existing Beep account.",
+                        style: Theme.of(context).accentTextTheme.title)),
                 Padding(
                     padding: EdgeInsets.only(top: 20.0),
                     child: PhoneInput(controller: controller)),

@@ -89,17 +89,15 @@ class _ContactViewState extends State<ContactView> {
       return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
         StickyHeader(
             header: Container(
-              height: 25.0,
+              height: 20.0,
               color: Colors.grey[200],
               padding: EdgeInsets.symmetric(horizontal: 15.0),
               alignment: Alignment.centerLeft,
-              child: Text(
-                entry.key,
-                style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w700,
-                    color: Theme.of(context).primaryColorDark),
-              ),
+              child: Text(entry.key,
+                  style: Theme.of(context)
+                      .primaryTextTheme
+                      .display1
+                      .copyWith(color: Theme.of(context).primaryColorDark)),
             ),
             content: ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
@@ -119,16 +117,15 @@ class _ContactViewState extends State<ContactView> {
             SearchInput(
                 controller: searchController, hintText: "Search for people"),
             Padding(
-                padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
+                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: Row(children: <Widget>[
                   Icon(Icons.people_outline,
-                      color: Theme.of(context).primaryColorDark, size: 40.0),
+                      color: Theme.of(context).primaryColorDark, size: 30.0),
                   Padding(
                       padding: EdgeInsets.only(left: 20.0),
                       child: Text("Invite Friends",
-                          style: Theme.of(context).textTheme.display1.copyWith(
-                              color: Theme.of(context).primaryColorDark,
-                              fontWeight: FontWeight.w400))),
+                          style: Theme.of(context).textTheme.title.copyWith(
+                              color: Theme.of(context).primaryColorDark))),
                 ])),
           ])),
     ]);

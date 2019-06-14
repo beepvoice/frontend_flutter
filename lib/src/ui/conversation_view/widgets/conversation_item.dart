@@ -60,9 +60,8 @@ class _ConversationItemState extends State<ConversationItem> {
                         Text("12:25 PM",
                             style: Theme.of(context)
                                 .primaryTextTheme
-                                .body1
+                                .display2
                                 .copyWith(
-                                    fontWeight: FontWeight.w500,
                                     color: Theme.of(context).primaryColorDark)),
                       ]),
                   Padding(
@@ -101,7 +100,7 @@ class _ConversationItemState extends State<ConversationItem> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: data
             .map((user) => UserAvatar(
-                radius: 18.0,
+                radius: 16.0,
                 padding: EdgeInsets.only(top: 0.0, left: 5.0),
                 user: user))
             .toList());
