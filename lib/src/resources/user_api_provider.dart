@@ -29,6 +29,21 @@ class UserApiProvider {
     return User.fromJson(jsonDecode(response.body));
   }
 
+  Future<User> registerUser(
+      String firstName, String lastName, String phoneNumber) async {
+    final response = await http.post("$baseUrlLogin/register",
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+        },
+        body: jsonEncode({
+          "first_name": firstName,
+          "last_name": lastName,
+          "phone_number": phoneNumber
+        }));
+
+    return User.fromJson(jsonDecode(response.body));
+  }
+
   Future<User> fetchUserByPhone(String phoneNumber) async {
     final jwt = loginManager.getToken();
     try {

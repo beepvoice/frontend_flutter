@@ -84,7 +84,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     final phoneNumber = "+65${phoneController.text}";
 
                     // Creating the new user
-                    await userApiProvider.createUser(
+                    await userApiProvider.registerUser(
                         firstName, lastName, phoneNumber);
                     await widget.loginManager
                         .initAuthentication("+65$phoneNumber");
