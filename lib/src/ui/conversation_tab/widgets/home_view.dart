@@ -1,19 +1,19 @@
 import "package:flutter/material.dart";
 
-import "../../models/conversation_model.dart";
-import "../../blocs/conversation_bloc.dart";
+import "../../../models/conversation_model.dart";
+import "../../../blocs/conversation_bloc.dart";
 
-import "./widgets/conversation_item.dart";
-import "../widgets/search_input.dart";
+import "../widgets/conversation_item.dart";
+import "../../widgets/search_input.dart";
 
-class ConversationView extends StatefulWidget {
+class HomeView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _ConversationViewState();
+    return _HomeViewState();
   }
 }
 
-class _ConversationViewState extends State<ConversationView> {
+class _HomeViewState extends State<HomeView> {
   final searchController = TextEditingController();
 
   @override

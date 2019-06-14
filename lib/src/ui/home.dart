@@ -2,8 +2,8 @@ import "package:flutter/material.dart";
 import 'dart:ui' as ui;
 
 import "./widgets/top_bar.dart";
-import "./conversation_view/conversation_view.dart";
-import "./contact_view/contact_view.dart";
+import "./conversation_tab/conversation_tab.dart";
+import "./contact_tab/contact_tab.dart";
 import "./bottom_bar/bottom_bar.dart";
 import "../services/heartbeat_manager.dart";
 import "../services/conversation_manager.dart";
@@ -80,8 +80,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 physics: NeverScrollableScrollPhysics(),
                 controller: controller,
                 children: <Widget>[
-              ContactView(),
-              ConversationView(),
+              ContactTab(),
+              ConversationTab(),
               Container(),
             ])),
       ]),
