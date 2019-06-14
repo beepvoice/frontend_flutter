@@ -91,7 +91,7 @@ class _ContactViewState extends State<ContactView> {
             header: Container(
               height: 25.0,
               color: Colors.grey[200],
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
               alignment: Alignment.centerLeft,
               child: Text(
                 entry.key,
@@ -114,9 +114,23 @@ class _ContactViewState extends State<ContactView> {
 
     children.insertAll(0, [
       Padding(
-          padding: EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
-          child: SearchInput(
-              controller: searchController, hintText: "Search for people")),
+          padding: EdgeInsets.only(left: 15.0, right: 15.0),
+          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+            SearchInput(
+                controller: searchController, hintText: "Search for people"),
+            Padding(
+                padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
+                child: Row(children: <Widget>[
+                  Icon(Icons.people_outline,
+                      color: Theme.of(context).primaryColorDark, size: 40.0),
+                  Padding(
+                      padding: EdgeInsets.only(left: 20.0),
+                      child: Text("Invite Friends",
+                          style: Theme.of(context).textTheme.display1.copyWith(
+                              color: Theme.of(context).primaryColorDark,
+                              fontWeight: FontWeight.w400))),
+                ])),
+          ])),
     ]);
     return ListView(children: children);
   }

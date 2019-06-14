@@ -18,7 +18,7 @@ class ContactItem extends StatelessWidget {
               UserAvatar(
                   user: user,
                   radius: 22.0,
-                  padding: EdgeInsets.only(left: 20.0)),
+                  padding: EdgeInsets.only(left: 15.0)),
               Padding(
                   padding: EdgeInsets.only(left: 15.0),
                   child: Column(
