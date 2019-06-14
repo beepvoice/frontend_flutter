@@ -49,60 +49,59 @@ class _ConversationItemState extends State<ConversationItem> {
             },
             child: Container(
                 padding: EdgeInsets.only(
-                    top: 5.0, left: 20.0, right: 20.0, bottom: 5.0),
-                child: Column(children: <Widget>[
-                  Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(conversation.title,
-                            style: Theme.of(context).textTheme.title),
-                        Spacer(),
+                    top: 8.0, left: 10.0, right: 10.0, bottom: 8.0),
+                child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      StreamBuilder(
+                          stream: bloc.members,
+                          builder:
+                              (context, AsyncSnapshot<List<User>> snapshot) {
+                            if (snapshot.hasData) {
+                              return avatarBuilder(snapshot.data);
+                            } else if (snapshot.hasError) {
+                              return Text(snapshot.error.toString());
+                            }
+                            return SizedBox(width: 18.0, height: 18.0);
+                          }),
+                      Expanded(
+                          child: Container(
+                              padding: EdgeInsets.only(left: 10.0, right: 5.0),
+                              child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(conversation.title,
+                                        style:
+                                            Theme.of(context).textTheme.title),
+                                    Text("yaddaydaadadyasdhbsjdfhsbjdfhsbdug",
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle
+                                            .copyWith(
+                                                color: Color(0xFF455A64))),
+                                  ]))),
+                      Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                         Text("12:25 PM",
                             style: Theme.of(context)
                                 .primaryTextTheme
                                 .display2
                                 .copyWith(
                                     color: Theme.of(context).primaryColorDark)),
-                      ]),
-                  Padding(
-                      padding: EdgeInsets.only(top: 5.0),
-                      child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Expanded(
-                                child: Text(
-                                    "I might have forgotten to close the windows",
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .subtitle
-                                        .copyWith(color: Color(0xFF455A64)))),
-                            StreamBuilder(
-                                stream: bloc.members,
-                                builder: (context,
-                                    AsyncSnapshot<List<User>> snapshot) {
-                                  if (snapshot.hasData) {
-                                    return membersBuilder(snapshot.data);
-                                  } else if (snapshot.hasError) {
-                                    return Text(snapshot.error.toString());
-                                  }
-                                  return SizedBox(width: 18.0, height: 18.0);
-                                }),
-                          ]))
-                ]))));
+                      ])
+                    ]))));
   }
 
-  Widget membersBuilder(List<User> data) {
-    return Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: data
-            .map((user) => UserAvatar(
-                radius: 16.0,
-                padding: EdgeInsets.only(top: 0.0, left: 5.0),
-                user: user))
-            .toList());
+  Widget avatarBuilder(List<User> data) {
+    if (data.length == 1) {
+      return UserAvatar(radius: 25.0, user: data[0]);
+    } else if (data.length > 1) {
+      final groupUser = new User("0", conversation.title, "", "");
+      return UserAvatar(radius: 25.0, user: groupUser);
+    } else {
+      return Container();
+    }
   }
 }
