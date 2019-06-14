@@ -3,10 +3,11 @@ import "package:flutter/material.dart";
 import "search_input.dart";
 
 class TopBar extends StatelessWidget {
-  final String title;
+  final int state;
   final String logo = "assets/logo.png";
+  final List<String> titleList = ["Contacts", "Conversations", "Settings"];
 
-  TopBar({@required this.title});
+  TopBar({@required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class TopBar extends StatelessWidget {
         type: MaterialType.canvas,
         elevation: 5.0,
         child: Container(
-          padding: EdgeInsets.only(top: statusbarHeight, bottom: 2.0),
+          padding: EdgeInsets.only(top: statusbarHeight, bottom: 0),
           child: Material(
               type: MaterialType.transparency,
               elevation: 0.0,
@@ -34,10 +35,22 @@ class TopBar extends StatelessWidget {
                                 .display2
                                 .copyWith(fontWeight: FontWeight.w400))),
                     Spacer(),
-                    Text(title,
+                    Text(titleList[state],
                         style: Theme.of(context).accentTextTheme.display1),
                     Spacer(),
-                    IconButton(icon: Icon(Icons.add_comment), onPressed: () {})
+                    (state == 1)
+                        ? IconButton(
+                            icon: Icon(Icons.add_comment), onPressed: () {})
+                        : Container(),
+                    (state == 0)
+                        ? IconButton(icon: Icon(Icons.add), onPressed: () {})
+                        : Container(),
+                    (state == 2)
+                        ? Opacity(
+                            opacity: 0.0,
+                            child: IconButton(
+                                icon: Icon(Icons.edit), onPressed: () {}))
+                        : Container(),
                   ],
                 ),
               ])),

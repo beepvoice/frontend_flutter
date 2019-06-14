@@ -20,7 +20,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   final conversationManager = ConversationManager();
 
   // Bottom Bar navigation
-  final List<String> titleList = ["Contacts", "Conversations", "Settings"];
   int _tabNumber = 1;
   List<IconData> itemsList = [
     Icons.contacts,
@@ -75,7 +74,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return Scaffold(
       key: _scaffoldKey,
       body: Column(children: <Widget>[
-        TopBar(title: titleList[_tabNumber]),
+        TopBar(state: _tabNumber),
         Expanded(
             child: TabBarView(
                 physics: NeverScrollableScrollPhysics(),

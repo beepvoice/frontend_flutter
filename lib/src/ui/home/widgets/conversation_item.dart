@@ -41,7 +41,7 @@ class _ConversationItemState extends State<ConversationItem> {
   Widget build(BuildContext context) {
     return Material(
         type: MaterialType.transparency,
-        elevation: 0,
+        elevation: 1,
         child: InkWell(
             onTap: () async {
               await bus.publish(
