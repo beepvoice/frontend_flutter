@@ -30,8 +30,8 @@ class UserApiProvider {
   }
 
   Future<User> registerUser(
-      String firstName, String lastName, String phoneNumber) async {
-    final response = await http.post("$baseUrlLogin/register",
+      String firstName, String lastName, String phoneNumber, String otp, String nonce) async {
+    final response = await http.post("$baseUrlLogin/register/$otp/$nonce",
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
         },
