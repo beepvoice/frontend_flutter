@@ -47,8 +47,8 @@ class _ConversationActiveViewState extends State<ConversationActiveView> {
       print(users[0].id);
       setState(() {
         _users = users
-            .map((user) =>
-                UserAvatar(padding: EdgeInsets.only(right: 5.0), user: user))
+            .map((user) => UserAvatar(
+                radius: 18.0, padding: EdgeInsets.only(right: 5.0), user: user))
             .toList();
       });
     });
@@ -67,8 +67,8 @@ class _ConversationActiveViewState extends State<ConversationActiveView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-                width: 22.0,
-                height: 22.0,
+                width: 15.0,
+                height: 15.0,
                 decoration: BoxDecoration(
                     color: Theme.of(context).indicatorColor,
                     shape: BoxShape.circle)),
