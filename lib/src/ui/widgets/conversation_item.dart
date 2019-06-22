@@ -1,11 +1,11 @@
 import "package:flutter/material.dart";
 
-import "../../../models/user_model.dart";
-import "../../../models/conversation_model.dart";
-import "../../../blocs/conversation_bloc.dart";
-import "../../../blocs/message_bloc.dart";
+import "../../models/user_model.dart";
+import "../../models/conversation_model.dart";
+import "../../blocs/conversation_bloc.dart";
+import "../../blocs/message_bloc.dart";
 
-import "../../widgets/user_avatar.dart";
+import "../widgets/user_avatar.dart";
 
 class ConversationItem extends StatefulWidget {
   final Conversation conversation;

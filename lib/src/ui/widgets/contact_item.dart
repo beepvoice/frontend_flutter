@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 
-import "../../../models/user_model.dart";
-import "../../widgets/user_avatar.dart";
+import "../../models/user_model.dart";
+import "../widgets/user_avatar.dart";
 
 class ContactItem extends StatelessWidget {
   final User user;

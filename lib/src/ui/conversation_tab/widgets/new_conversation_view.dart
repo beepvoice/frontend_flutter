@@ -8,14 +8,14 @@ import "../../widgets/contact_item.dart";
 import "../../widgets/top_bar.dart";
 import "../../widgets/search_input.dart";
 
-class HomeView extends StatefulWidget {
+class NewConversationView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _HomeViewState();
+    return _NewConversationViewState();
   }
 }
 
-class _HomeViewState extends State<HomeView> {
+class _NewConversationViewState extends State<NewConversationView> {
   final searchController = TextEditingController();
 
   @override
@@ -33,20 +33,20 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
-      TopBar(title: "Contacts", children: <Widget>[
+      TopBar(title: "New Conversation", children: <Widget>[
+        IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
+        Spacer(),
         Padding(
-            padding: EdgeInsets.only(left: 13.0),
-            child: Text("Edit",
+            padding: EdgeInsets.only(right: 13.0),
+            child: Text("Next",
                 style: Theme.of(context)
                     .accentTextTheme
                     .title
                     .copyWith(fontWeight: FontWeight.w300))),
-        Spacer(),
-        IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              Navigator.pushNamed(context, "contact/new");
-            }),
       ]),
       Expanded(
           child: StreamBuilder(
@@ -138,11 +138,11 @@ class _HomeViewState extends State<HomeView> {
             Padding(
                 padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: Row(children: <Widget>[
-                  Icon(Icons.person_add,
+                  Icon(Icons.group_add,
                       color: Theme.of(context).primaryColorDark, size: 30.0),
                   Padding(
                       padding: EdgeInsets.only(left: 20.0),
-                      child: Text("Invite Friends",
+                      child: Text("New Group",
                           style: Theme.of(context).textTheme.title.copyWith(
                               color: Theme.of(context).primaryColorDark))),
                 ])),

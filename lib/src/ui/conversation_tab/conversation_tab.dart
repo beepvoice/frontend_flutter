@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
+
 import "./widgets/home_view.dart";
+import "./widgets/new_conversation_view.dart";
 
 class ConversationTab extends StatefulWidget {
   @override
@@ -20,7 +22,7 @@ class _ConversationTabState extends State<ConversationTab> {
             builder = (BuildContext _) => HomeView();
             break;
           case "conversation/new":
-            builder = (BuildContext _) => Center(child: Text("SOON"));
+            builder = (BuildContext _) => NewConversationView();
             break;
           default:
             throw Exception("Invalid route: ${settings.name}");

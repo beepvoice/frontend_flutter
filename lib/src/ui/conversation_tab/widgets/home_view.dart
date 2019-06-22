@@ -3,7 +3,7 @@ import "package:flutter/material.dart";
 import "../../../models/conversation_model.dart";
 import "../../../blocs/conversation_bloc.dart";
 
-import "../widgets/conversation_item.dart";
+import "../../widgets/conversation_item.dart";
 import "../../widgets/top_bar.dart";
 import "../../widgets/search_input.dart";
 
