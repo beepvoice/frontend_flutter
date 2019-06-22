@@ -7,6 +7,7 @@ import "../../../blocs/contact_bloc.dart";
 import "../../widgets/contact_item.dart";
 import "../../widgets/top_bar.dart";
 import "../../widgets/search_input.dart";
+import "../../widgets/small_text_button.dart";
 
 class HomeView extends StatefulWidget {
   @override
@@ -34,13 +35,11 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
       TopBar(title: "Contacts", children: <Widget>[
-        Padding(
-            padding: EdgeInsets.only(left: 13.0),
-            child: Text("Edit",
-                style: Theme.of(context)
-                    .accentTextTheme
-                    .title
-                    .copyWith(fontWeight: FontWeight.w300))),
+        SmallTextButton(
+            text: "Edit",
+            onClickCallback: () {
+              print("hello");
+            }),
         Spacer(),
         IconButton(
             icon: Icon(Icons.add),

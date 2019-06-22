@@ -7,6 +7,7 @@ import "../../../blocs/contact_bloc.dart";
 import "../../widgets/contact_item.dart";
 import "../../widgets/top_bar.dart";
 import "../../widgets/search_input.dart";
+import "../../widgets/small_text_button.dart";
 
 class NewConversationView extends StatefulWidget {
   @override
@@ -40,13 +41,7 @@ class _NewConversationViewState extends State<NewConversationView> {
               Navigator.pop(context);
             }),
         Spacer(),
-        Padding(
-            padding: EdgeInsets.only(right: 13.0),
-            child: Text("Next",
-                style: Theme.of(context)
-                    .accentTextTheme
-                    .title
-                    .copyWith(fontWeight: FontWeight.w300))),
+        SmallTextButton(text: "Next", onClickCallback: () {})
       ]),
       Expanded(
           child: StreamBuilder(
