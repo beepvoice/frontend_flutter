@@ -41,7 +41,6 @@ class _NewConversationViewState extends State<NewConversationView> {
               Navigator.pop(context);
             }),
         Spacer(),
-        SmallTextButton(text: "Next", onClickCallback: () {})
       ]),
       Expanded(
           child: StreamBuilder(
@@ -130,17 +129,22 @@ class _NewConversationViewState extends State<NewConversationView> {
           child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
             SearchInput(
                 controller: searchController, hintText: "Search for people"),
-            Padding(
-                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                child: Row(children: <Widget>[
-                  Icon(Icons.group_add,
-                      color: Theme.of(context).primaryColorDark, size: 30.0),
-                  Padding(
-                      padding: EdgeInsets.only(left: 20.0),
-                      child: Text("New Group",
-                          style: Theme.of(context).textTheme.title.copyWith(
-                              color: Theme.of(context).primaryColorDark))),
-                ])),
+            GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, "conversation/group/new");
+                },
+                child: Padding(
+                    padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                    child: Row(children: <Widget>[
+                      Icon(Icons.group_add,
+                          color: Theme.of(context).primaryColorDark,
+                          size: 30.0),
+                      Padding(
+                          padding: EdgeInsets.only(left: 20.0),
+                          child: Text("New Group",
+                              style: Theme.of(context).textTheme.title.copyWith(
+                                  color: Theme.of(context).primaryColorDark))),
+                    ]))),
           ])),
     ]);
 

@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 
 import "./widgets/home_view.dart";
 import "./widgets/new_conversation_view.dart";
+import "./widgets/new_group_view.dart";
 
 class ConversationTab extends StatefulWidget {
   @override
@@ -23,6 +24,9 @@ class _ConversationTabState extends State<ConversationTab> {
             break;
           case "conversation/new":
             builder = (BuildContext _) => NewConversationView();
+            break;
+          case "conversation/group/new":
+            builder = (BuildContext _) => NewGroupView();
             break;
           default:
             throw Exception("Invalid route: ${settings.name}");
