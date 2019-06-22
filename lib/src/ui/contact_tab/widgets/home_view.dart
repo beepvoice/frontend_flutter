@@ -5,6 +5,7 @@ import "../../../models/user_model.dart";
 import "../../../blocs/contact_bloc.dart";
 
 import "../widgets/contact_item.dart";
+import "../../widgets/top_bar.dart";
 import "../../widgets/search_input.dart";
 
 class HomeView extends StatefulWidget {
@@ -31,16 +32,51 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: contactBloc.contacts,
-        builder: (context, AsyncSnapshot<List<User>> snapshot) {
-          if (snapshot.hasData) {
-            return buildList(snapshot);
-          } else if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
-          }
-          return Center(child: CircularProgressIndicator());
-        });
+    return Column(children: <Widget>[
+      TopBar(title: "Contacts", children: <Widget>[
+        Padding(
+            padding: EdgeInsets.only(left: 13.0),
+            child: Text("Edit",
+                style: Theme.of(context)
+                    .accentTextTheme
+                    .title
+                    .copyWith(fontWeight: FontWeight.w300))),
+        Spacer(),
+        IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              Navigator.pushNamed(context, "contact/new");
+            }),
+      ]),
+      Padding(
+          padding: EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
+          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+            SearchInput(
+                controller: searchController, hintText: "Search for people"),
+            Padding(
+                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                child: Row(children: <Widget>[
+                  Icon(Icons.people_outline,
+                      color: Theme.of(context).primaryColorDark, size: 30.0),
+                  Padding(
+                      padding: EdgeInsets.only(left: 20.0),
+                      child: Text("Invite Friends",
+                          style: Theme.of(context).textTheme.title.copyWith(
+                              color: Theme.of(context).primaryColorDark))),
+                ])),
+          ])),
+      Expanded(
+          child: StreamBuilder(
+              stream: contactBloc.contacts,
+              builder: (context, AsyncSnapshot<List<User>> snapshot) {
+                if (snapshot.hasData) {
+                  return buildList(snapshot);
+                } else if (snapshot.hasError) {
+                  return Text(snapshot.error.toString());
+                }
+                return Center(child: CircularProgressIndicator());
+              }))
+    ]);
   }
 
   Widget buildList(AsyncSnapshot<List<User>> snapshot) {
@@ -89,7 +125,7 @@ class _HomeViewState extends State<HomeView> {
       return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
         StickyHeader(
             header: Container(
-              height: 20.0,
+              height: 21.0,
               color: Colors.grey[200],
               padding: EdgeInsets.symmetric(horizontal: 15.0),
               alignment: Alignment.centerLeft,
@@ -110,25 +146,6 @@ class _HomeViewState extends State<HomeView> {
       ]);
     }).toList();
 
-    children.insertAll(0, [
-      Padding(
-          padding: EdgeInsets.only(left: 15.0, right: 15.0),
-          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-            SearchInput(
-                controller: searchController, hintText: "Search for people"),
-            Padding(
-                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                child: Row(children: <Widget>[
-                  Icon(Icons.people_outline,
-                      color: Theme.of(context).primaryColorDark, size: 30.0),
-                  Padding(
-                      padding: EdgeInsets.only(left: 20.0),
-                      child: Text("Invite Friends",
-                          style: Theme.of(context).textTheme.title.copyWith(
-                              color: Theme.of(context).primaryColorDark))),
-                ])),
-          ])),
-    ]);
-    return ListView(padding: EdgeInsets.only(top: 10.0), children: children);
+    return ListView(padding: EdgeInsets.only(top: 0.0), children: children);
   }
 }

@@ -19,4 +19,4 @@ class MessageBloc {
 }
 
 // global instance for access throughout the app
-final messageBloc = MessageBloc();
+final messageChannel = MessageBloc();

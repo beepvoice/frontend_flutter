@@ -20,7 +20,6 @@ class ConversationItem extends StatefulWidget {
 class _ConversationItemState extends State<ConversationItem> {
   final bloc;
   final Conversation conversation;
-  final bus = messageBloc;
 
   _ConversationItemState({@required this.conversation})
       : bloc = ConversationMembersBloc(conversation.id);
@@ -44,8 +43,11 @@ class _ConversationItemState extends State<ConversationItem> {
         elevation: 1,
         child: InkWell(
             onTap: () async {
-              await bus.publish(
-                  {"state": "connect", "conversationId": conversation.id});
+              await messageChannel.publish({
+                "target": "home",
+                "state": "connect",
+                "conversationId": conversation.id
+              });
             },
             child: Container(
                 padding: EdgeInsets.only(

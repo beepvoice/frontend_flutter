@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-
 import "./widgets/home_view.dart";
 
 class ConversationTab extends StatefulWidget {
