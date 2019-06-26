@@ -19,6 +19,8 @@ class NewGroupView extends StatefulWidget {
 class _NewGroupViewState extends State<NewGroupView> {
   final searchController = TextEditingController();
 
+  List<User> selectedUsers = [];
+
   @override
   void initState() {
     super.initState();
@@ -41,7 +43,12 @@ class _NewGroupViewState extends State<NewGroupView> {
               Navigator.pop(context);
             }),
         Spacer(),
-        SmallTextButton(text: "Next", onClickCallback: () {})
+        SmallTextButton(
+            text: "Next",
+            onClickCallback: () {
+              Navigator.pushNamed(context, "conversation/new/groupinfo",
+                  arguments: selectedUsers);
+            })
       ]),
       Expanded(
           child: StreamBuilder(
@@ -122,7 +129,9 @@ class _NewGroupViewState extends State<NewGroupView> {
                   return ContactItem(
                       user: entry.value[index],
                       selectable: true,
-                      onClickCallback: (state) {});
+                      onClickCallback: (state) {
+                        selectedUsers.add(entry.value[index]);
+                      });
                 }))
       ]);
     }).toList();

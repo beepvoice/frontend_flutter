@@ -131,11 +131,12 @@ class _NewConversationViewState extends State<NewConversationView> {
                 controller: searchController, hintText: "Search for people"),
             GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, "conversation/group/new");
+                  Navigator.pushNamed(context, "conversation/new/group");
                 },
                 child: Padding(
                     padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                    child: Row(children: <Widget>[
+                    child:
+                        Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
                       Icon(Icons.group_add,
                           color: Theme.of(context).primaryColorDark,
                           size: 30.0),
