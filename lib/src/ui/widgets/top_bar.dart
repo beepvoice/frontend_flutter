@@ -1,13 +1,13 @@
 import "package:flutter/material.dart";
-
 import "search_input.dart";
 
 class TopBar extends StatelessWidget {
   final String logo = "assets/logo.png";
+  final SearchInput search;
   final List<Widget> children;
   final String title;
 
-  TopBar({@required this.children, @required this.title});
+  TopBar({@required this.children, @required this.title, this.search});
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +22,21 @@ class TopBar extends StatelessWidget {
             type: MaterialType.transparency,
             elevation: 0.0,
             color: Colors.transparent,
-            child: Stack(alignment: Alignment.center, children: [
-              Text(title, style: Theme.of(context).accentTextTheme.display1),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: children,
-              )
+            child: Column(children: <Widget>[
+              Stack(alignment: Alignment.center, children: [
+                Text(title, style: Theme.of(context).accentTextTheme.display1),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: children,
+                )
+              ]),
+              (search != null)
+                  ? Padding(
+                      padding: EdgeInsets.only(
+                          left: 10.0, right: 10.0, bottom: 10.0),
+                      child: search)
+                  : Container(),
             ]),
           ),
           decoration: BoxDecoration(

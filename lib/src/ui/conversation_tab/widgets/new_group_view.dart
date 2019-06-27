@@ -8,6 +8,7 @@ import "../../widgets/contact_item.dart";
 import "../../widgets/top_bar.dart";
 import "../../widgets/search_input.dart";
 import "../../widgets/small_text_button.dart";
+import "../../widgets/user_chip.dart";
 
 class NewGroupView extends StatefulWidget {
   @override
@@ -36,20 +37,25 @@ class _NewGroupViewState extends State<NewGroupView> {
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
-      TopBar(title: "New Group", children: <Widget>[
-        IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            }),
-        Spacer(),
-        SmallTextButton(
-            text: "Next",
-            onClickCallback: () {
-              Navigator.pushNamed(context, "conversation/new/groupinfo",
-                  arguments: selectedUsers);
-            })
-      ]),
+      TopBar(
+        title: "New Group",
+        children: <Widget>[
+          IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+          Spacer(),
+          SmallTextButton(
+              text: "Next",
+              onClickCallback: () {
+                Navigator.pushNamed(context, "conversation/new/groupinfo",
+                    arguments: selectedUsers);
+              })
+        ],
+        search: SearchInput(
+            controller: searchController, hintText: "Search for people"),
+      ),
       Expanded(
           child: StreamBuilder(
               stream: contactBloc.contacts,
@@ -129,8 +135,14 @@ class _NewGroupViewState extends State<NewGroupView> {
                   return ContactItem(
                       user: entry.value[index],
                       selectable: true,
-                      onClickCallback: (state) {
-                        selectedUsers.add(entry.value[index]);
+                      onClickCallback: (selected) {
+                        setState(() {
+                          if (selected) {
+                            selectedUsers.add(entry.value[index]);
+                          } else {
+                            selectedUsers.remove(entry.value[index]);
+                          }
+                        });
                       });
                 }))
       ]);
@@ -139,12 +151,13 @@ class _NewGroupViewState extends State<NewGroupView> {
     children.insertAll(0, [
       Padding(
           padding: EdgeInsets.only(left: 15.0, right: 15.0),
-          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-            SearchInput(
-                controller: searchController, hintText: "Search for people"),
-          ])),
+          child: Wrap(
+            spacing: 5.0,
+            runSpacing: 0.0,
+            children:
+                selectedUsers.map((user) => UserChip(user: user)).toList(),
+          ))
     ]);
-
-    return ListView(padding: EdgeInsets.only(top: 10.0), children: children);
+    return ListView(padding: EdgeInsets.only(top: 0.0), children: children);
   }
 }

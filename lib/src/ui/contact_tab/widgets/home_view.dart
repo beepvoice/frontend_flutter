@@ -8,6 +8,7 @@ import "../../widgets/contact_item.dart";
 import "../../widgets/top_bar.dart";
 import "../../widgets/search_input.dart";
 import "../../widgets/small_text_button.dart";
+import "../../widgets/list_button.dart";
 
 class HomeView extends StatefulWidget {
   @override
@@ -34,19 +35,23 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
-      TopBar(title: "Contacts", children: <Widget>[
-        SmallTextButton(
-            text: "Edit",
-            onClickCallback: () {
-              print("hello");
-            }),
-        Spacer(),
-        IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              Navigator.pushNamed(context, "contact/new");
-            }),
-      ]),
+      TopBar(
+          title: "Contacts",
+          search: SearchInput(
+              controller: searchController, hintText: "Search for people"),
+          children: <Widget>[
+            SmallTextButton(
+                text: "Edit",
+                onClickCallback: () {
+                  print("hello");
+                }),
+            Spacer(),
+            IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  Navigator.pushNamed(context, "contact/new");
+                }),
+          ]),
       Expanded(
           child: StreamBuilder(
               stream: contactBloc.contacts,
@@ -129,25 +134,12 @@ class _HomeViewState extends State<HomeView> {
     }).toList();
 
     children.insertAll(0, [
-      Padding(
-          padding: EdgeInsets.only(left: 15.0, right: 15.0),
-          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-            SearchInput(
-                controller: searchController, hintText: "Search for people"),
-            Padding(
-                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                child: Row(children: <Widget>[
-                  Icon(Icons.person_add,
-                      color: Theme.of(context).primaryColorDark, size: 30.0),
-                  Padding(
-                      padding: EdgeInsets.only(left: 20.0),
-                      child: Text("Invite Friends",
-                          style: Theme.of(context).textTheme.title.copyWith(
-                              color: Theme.of(context).primaryColorDark))),
-                ])),
-          ])),
+      ListButton(
+          icon: Icons.people_outline,
+          text: "Invite Friends",
+          onClickCallback: () {}),
     ]);
 
-    return ListView(padding: EdgeInsets.only(top: 10.0), children: children);
+    return ListView(padding: EdgeInsets.only(top: 0.0), children: children);
   }
 }

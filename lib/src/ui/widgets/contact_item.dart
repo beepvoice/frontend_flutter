@@ -46,7 +46,13 @@ class _ContactItemState extends State<ContactItem> {
                           ? Checkbox(
                               value: selected,
                               activeColor: Theme.of(context).primaryColorDark,
-                              onChanged: (state) {})
+                              onChanged: (state) {
+                                setState(() {
+                                  selected = !selected;
+                                });
+
+                                widget.onClickCallback(selected);
+                              })
                           : Container(),
                       UserAvatar(
                           user: widget.user,

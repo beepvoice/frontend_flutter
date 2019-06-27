@@ -16,16 +16,15 @@ class SearchInput extends StatelessWidget {
                 children: <Widget>[
                   Padding(
                       padding: EdgeInsets.only(right: 5.0),
-                      child: Icon(Icons.search, color: Colors.grey[500])),
+                      child: Icon(Icons.search, color: Colors.white)),
                   Flexible(
                       child: TextField(
                           controller: controller,
                           autocorrect: false,
-                          cursorWidth: 2.0,
-                          cursorColor: Colors.grey[500],
+                          cursorWidth: 3.0,
+                          cursorColor: Colors.white,
                           style: Theme.of(context).textTheme.subtitle.copyWith(
-                              color: Colors.grey[500],
-                              fontWeight: FontWeight.w300),
+                              color: Colors.white, fontWeight: FontWeight.w300),
                           decoration: InputDecoration(
                               border: InputBorder.none,
                               filled: false,
@@ -33,10 +32,10 @@ class SearchInput extends StatelessWidget {
                               hintStyle: Theme.of(context)
                                   .textTheme
                                   .subtitle
-                                  .copyWith(color: Colors.grey[500])))),
+                                  .copyWith(color: Colors.white)))),
                 ])),
         decoration: BoxDecoration(
-          color: Colors.grey[200],
+          color: Colors.black.withOpacity(0.05),
           borderRadius: BorderRadius.all(Radius.circular(10.00)),
         ));
   }
