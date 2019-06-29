@@ -49,18 +49,9 @@ class _NewGroupInfoViewState extends State<NewGroupInfoView> {
           padding: EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
           child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: <
               Widget>[
-            Container(
-                height: 100.0,
-                width: 100.0,
-                decoration: (_image == null)
-                    ? (BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.all(Radius.circular(50.0))))
-                    : BoxDecoration(
-                        image: DecorationImage(
-                        image: FileImage(_image),
-                        fit: BoxFit.cover,
-                      ))),
+            (_image != null)
+                ? CircleAvatar(radius: 50, backgroundImage: FileImage(_image))
+                : CircleAvatar(radius: 50, backgroundColor: Colors.grey[300]),
             Flexible(
                 child:
                     Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
@@ -117,7 +108,7 @@ class _NewGroupInfoViewState extends State<NewGroupInfoView> {
               text: "Add a group photo",
               onClickCallback: () async {
                 var image =
-                    await ImagePicker.pickImage(source: ImageSource.camera);
+                    await ImagePicker.pickImage(source: ImageSource.gallery);
 
                 setState(() {
                   _image = image;
