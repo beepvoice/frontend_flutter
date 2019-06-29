@@ -46,9 +46,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSPhotoLibraryAddUsageDescription</key>
+	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Profile/Group picture</string>
-	<key> Privacy - Camera Usage Description</key>
+	<key>NSCameraUsageDescription</key>
 	<string>Selfie for profile/group picture</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>$(PRODUCT_NAME) Microphone Usage!</string>

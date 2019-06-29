@@ -17,7 +17,7 @@ dependencies:
   sqflite: ^1.1.0
   eventsource: ^0.2.1
   sticky_headers: ^0.1.7
-  image_picker: ^0.6.0+10
+  image_picker_modern: ^0.4.12+2
 
 dev_dependencies:
   flutter_test:

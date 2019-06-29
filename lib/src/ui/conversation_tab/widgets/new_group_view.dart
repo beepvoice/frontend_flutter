@@ -49,8 +49,12 @@ class _NewGroupViewState extends State<NewGroupView> {
           SmallTextButton(
               text: "Next",
               onClickCallback: () {
-                Navigator.pushNamed(context, "conversation/new/groupinfo",
-                    arguments: selectedUsers);
+                if (selectedUsers.length <= 1) {
+                  return;
+                } else {
+                  Navigator.pushNamed(context, "conversation/new/groupinfo",
+                      arguments: selectedUsers);
+                }
               })
         ],
         search: SearchInput(
