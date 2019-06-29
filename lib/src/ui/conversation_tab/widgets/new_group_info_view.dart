@@ -4,6 +4,8 @@ import "dart:io";
 
 import "../../../models/user_model.dart";
 
+import "../../../resources/conversation_api_provider.dart";
+
 import "../../widgets/contact_item.dart";
 import "../../widgets/top_bar.dart";
 import "../../widgets/small_text_button.dart";
@@ -23,6 +25,7 @@ class NewGroupInfoView extends StatefulWidget {
 class _NewGroupInfoViewState extends State<NewGroupInfoView> {
   final descriptionController = TextEditingController();
   final nameController = TextEditingController();
+  final conversationApiProvider = ConversationApiProvider();
 
   File _image;
 
@@ -43,7 +46,16 @@ class _NewGroupInfoViewState extends State<NewGroupInfoView> {
               Navigator.pop(context);
             }),
         Spacer(),
-        SmallTextButton(text: "Create", onClickCallback: () {})
+        SmallTextButton(
+            text: "Create",
+            onClickCallback: () async {
+              final conversation = await conversationApiProvider
+                  .createConversation(nameController.text);
+
+              widget.users.forEach((user) async => await conversationApiProvider
+                  .createConversationMember(conversation.id, user.id));
+              Navigator.pushNamed(context, "conversation/home");
+            })
       ]),
       Padding(
           padding: EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
