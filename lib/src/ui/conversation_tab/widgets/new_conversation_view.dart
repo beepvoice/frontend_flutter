@@ -7,17 +7,16 @@ import "../../../blocs/contact_bloc.dart";
 import "../../widgets/contact_item.dart";
 import "../../widgets/top_bar.dart";
 import "../../widgets/search_input.dart";
-import "../../widgets/small_text_button.dart";
 import "../../widgets/list_button.dart";
 
-class HomeView extends StatefulWidget {
+class NewConversationView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _HomeViewState();
+    return _NewConversationViewState();
   }
 }
 
-class _HomeViewState extends State<HomeView> {
+class _NewConversationViewState extends State<NewConversationView> {
   final searchController = TextEditingController();
 
   @override
@@ -36,21 +35,16 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
       TopBar(
-          title: "Contacts",
+          title: "New Conversation",
           search: SearchInput(
               controller: searchController, hintText: "Search for people"),
           children: <Widget>[
-            SmallTextButton(
-                text: "Edit",
-                onClickCallback: () {
-                  print("hello");
+            IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
                 }),
             Spacer(),
-            IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () {
-                  Navigator.pushNamed(context, "contact/new");
-                }),
           ]),
       Expanded(
           child: StreamBuilder(
@@ -135,9 +129,11 @@ class _HomeViewState extends State<HomeView> {
 
     children.insertAll(0, [
       ListButton(
-          icon: Icons.people_outline,
-          text: "Invite Friends",
-          onClickCallback: () {}),
+          icon: Icons.group_add,
+          text: "New Group",
+          onClickCallback: () {
+            Navigator.pushNamed(context, "conversation/new/group");
+          }),
     ]);
 
     return ListView(padding: EdgeInsets.only(top: 0.0), children: children);

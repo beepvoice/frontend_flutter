@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 import "./widgets/home_view.dart";
+import "../../blocs/message_bloc.dart";
 
 class ContactTab extends StatefulWidget {
   @override
@@ -10,17 +11,25 @@ class ContactTab extends StatefulWidget {
 }
 
 class _ContactTabState extends State<ContactTab> {
+  final GlobalKey<NavigatorState> navigatorKey =
+      new GlobalKey<NavigatorState>();
+
+  @override
+  initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Navigator(
-      initialRoute: "conversation/home",
+      initialRoute: "contact/home",
       onGenerateRoute: (RouteSettings settings) {
         WidgetBuilder builder;
         switch (settings.name) {
-          case "conversation/home":
+          case "contact/home":
             builder = (BuildContext _) => HomeView();
             break;
-          case "conversation/new":
+          case "contact/new":
             builder = (BuildContext _) => Center(child: Text("SOON"));
             break;
           default:

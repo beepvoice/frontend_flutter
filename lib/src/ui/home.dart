@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import 'dart:ui' as ui;
 
-import "./widgets/top_bar.dart";
 import "./conversation_tab/conversation_tab.dart";
 import "./contact_tab/contact_tab.dart";
 import "./bottom_bar/bottom_bar.dart";
@@ -37,7 +36,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     controller = TabController(vsync: this, length: 3);
     controller.index = 1; // Set default page to conversation page
 
-    messageBloc.bus.listen(
+    messageChannel.bus.listen(
         (Map<String, String> data) async => await _processMessage(data));
   }
 
@@ -48,24 +47,26 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   _processMessage(Map<String, String> data) async {
-    if (data["state"] == "disconnect") {
-      // Disconnect and change state
-      await conversationManager.exit();
-      setState(() {
-        currentConversationId = "";
-      });
-    } else if (data["state"] == "connect") {
-      // Connect and change state
-      await conversationManager.join(data["conversationId"]);
-      setState(() {
-        currentConversationId = data["conversationId"];
-      });
-    } else {
-      // show default
-      await conversationManager.exit();
-      setState(() {
-        currentConversationId = "";
-      });
+    if (data["target"] == "home") {
+      if (data["state"] == "disconnect") {
+        // Disconnect and change state
+        await conversationManager.exit();
+        setState(() {
+          currentConversationId = "";
+        });
+      } else if (data["state"] == "connect") {
+        // Connect and change state
+        await conversationManager.join(data["conversationId"]);
+        setState(() {
+          currentConversationId = data["conversationId"];
+        });
+      } else {
+        // show default
+        await conversationManager.exit();
+        setState(() {
+          currentConversationId = "";
+        });
+      }
     }
   }
 
@@ -73,18 +74,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      body: Column(children: <Widget>[
-        TopBar(state: _tabNumber),
-        Expanded(
-            child: TabBarView(
-                physics: NeverScrollableScrollPhysics(),
-                controller: controller,
-                children: <Widget>[
-              ContactTab(),
-              ConversationTab(),
-              Container(),
-            ])),
-      ]),
+      body: TabBarView(
+          physics: NeverScrollableScrollPhysics(),
+          controller: controller,
+          children: <Widget>[
+            ContactTab(),
+            ConversationTab(),
+            Container(),
+          ]),
       bottomNavigationBar:
           Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
         BottomBar(conversationId: currentConversationId),

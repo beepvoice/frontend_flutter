@@ -1,11 +1,11 @@
 import "package:flutter/material.dart";
 
-import "../../../models/user_model.dart";
-import "../../../models/conversation_model.dart";
-import "../../../blocs/conversation_bloc.dart";
-import "../../../blocs/message_bloc.dart";
+import "../../models/user_model.dart";
+import "../../models/conversation_model.dart";
+import "../../blocs/conversation_bloc.dart";
+import "../../blocs/message_bloc.dart";
 
-import "../../widgets/user_avatar.dart";
+import "../widgets/user_avatar.dart";
 
 class ConversationItem extends StatefulWidget {
   final Conversation conversation;
@@ -20,7 +20,6 @@ class ConversationItem extends StatefulWidget {
 class _ConversationItemState extends State<ConversationItem> {
   final bloc;
   final Conversation conversation;
-  final bus = messageBloc;
 
   _ConversationItemState({@required this.conversation})
       : bloc = ConversationMembersBloc(conversation.id);
@@ -44,8 +43,11 @@ class _ConversationItemState extends State<ConversationItem> {
         elevation: 1,
         child: InkWell(
             onTap: () async {
-              await bus.publish(
-                  {"state": "connect", "conversationId": conversation.id});
+              await messageChannel.publish({
+                "target": "home",
+                "state": "connect",
+                "conversationId": conversation.id
+              });
             },
             child: Container(
                 padding: EdgeInsets.only(

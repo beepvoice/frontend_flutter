@@ -3,8 +3,10 @@ import "package:flutter/material.dart";
 import "../../../models/conversation_model.dart";
 import "../../../blocs/conversation_bloc.dart";
 
-import "../widgets/conversation_item.dart";
+import "../../widgets/conversation_item.dart";
+import "../../widgets/top_bar.dart";
 import "../../widgets/search_input.dart";
+import "../../widgets/small_text_button.dart";
 
 class HomeView extends StatefulWidget {
   @override
@@ -30,22 +32,38 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(padding: EdgeInsets.only(top: 10.0), children: <Widget>[
-      Padding(
-          padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 10.0),
-          child: SearchInput(
-              controller: searchController,
-              hintText: "Search for messages or users")),
-      StreamBuilder(
-          stream: conversationsBloc.conversations,
-          builder: (context, AsyncSnapshot<List<Conversation>> snapshot) {
-            if (snapshot.hasData) {
-              return buildList(snapshot.data);
-            } else if (snapshot.hasError) {
-              return Text(snapshot.error.toString());
-            }
-            return Center(child: CircularProgressIndicator());
-          })
+    return Column(children: <Widget>[
+      TopBar(
+          title: "Conversations",
+          search: SearchInput(
+              controller: searchController, hintText: "Search for people"),
+          children: <Widget>[
+            SmallTextButton(
+                text: "Edit",
+                onClickCallback: () {
+                  print("hello");
+                }),
+            Spacer(),
+            IconButton(
+                icon: Icon(Icons.add_comment),
+                onPressed: () {
+                  Navigator.pushNamed(context, "conversation/new");
+                }),
+          ]),
+      Expanded(
+          child:
+              ListView(padding: EdgeInsets.only(top: 10.0), children: <Widget>[
+        StreamBuilder(
+            stream: conversationsBloc.conversations,
+            builder: (context, AsyncSnapshot<List<Conversation>> snapshot) {
+              if (snapshot.hasData) {
+                return buildList(snapshot.data);
+              } else if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              }
+              return Center(child: CircularProgressIndicator());
+            })
+      ]))
     ]);
   }
 

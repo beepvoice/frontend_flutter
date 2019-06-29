@@ -8,17 +8,19 @@ import "../../widgets/contact_item.dart";
 import "../../widgets/top_bar.dart";
 import "../../widgets/search_input.dart";
 import "../../widgets/small_text_button.dart";
-import "../../widgets/list_button.dart";
+import "../../widgets/user_chip.dart";
 
-class HomeView extends StatefulWidget {
+class NewGroupView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _HomeViewState();
+    return _NewGroupViewState();
   }
 }
 
-class _HomeViewState extends State<HomeView> {
+class _NewGroupViewState extends State<NewGroupView> {
   final searchController = TextEditingController();
+
+  List<User> selectedUsers = [];
 
   @override
   void initState() {
@@ -36,22 +38,28 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
       TopBar(
-          title: "Contacts",
-          search: SearchInput(
-              controller: searchController, hintText: "Search for people"),
-          children: <Widget>[
-            SmallTextButton(
-                text: "Edit",
-                onClickCallback: () {
-                  print("hello");
-                }),
-            Spacer(),
-            IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () {
-                  Navigator.pushNamed(context, "contact/new");
-                }),
-          ]),
+        title: "New Group",
+        children: <Widget>[
+          IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+          Spacer(),
+          SmallTextButton(
+              text: "Next",
+              onClickCallback: () {
+                if (selectedUsers.length <= 1) {
+                  return;
+                } else {
+                  Navigator.pushNamed(context, "conversation/new/groupinfo",
+                      arguments: selectedUsers);
+                }
+              })
+        ],
+        search: SearchInput(
+            controller: searchController, hintText: "Search for people"),
+      ),
       Expanded(
           child: StreamBuilder(
               stream: contactBloc.contacts,
@@ -128,18 +136,32 @@ class _HomeViewState extends State<HomeView> {
                 shrinkWrap: true,
                 itemCount: entry.value.length,
                 itemBuilder: (context, index) {
-                  return ContactItem(user: entry.value[index]);
+                  return ContactItem(
+                      user: entry.value[index],
+                      selectable: true,
+                      onClickCallback: (selected) {
+                        setState(() {
+                          if (selected) {
+                            selectedUsers.add(entry.value[index]);
+                          } else {
+                            selectedUsers.remove(entry.value[index]);
+                          }
+                        });
+                      });
                 }))
       ]);
     }).toList();
 
     children.insertAll(0, [
-      ListButton(
-          icon: Icons.people_outline,
-          text: "Invite Friends",
-          onClickCallback: () {}),
+      Padding(
+          padding: EdgeInsets.only(left: 15.0, right: 15.0),
+          child: Wrap(
+            spacing: 5.0,
+            runSpacing: 0.0,
+            children:
+                selectedUsers.map((user) => UserChip(user: user)).toList(),
+          ))
     ]);
-
     return ListView(padding: EdgeInsets.only(top: 0.0), children: children);
   }
 }
