@@ -60,7 +60,7 @@ class UserApiProvider {
   }
 
   Future<User> fetchUserById(String id) async {
-    final jwt = loginManager.getToken();
+    final jwt = await loginManager.getToken();
     try {
       final responseBody =
           await this.cache.fetch("$baseUrlCore/user/id/$id", headers: {
@@ -71,5 +71,21 @@ class UserApiProvider {
     } catch (e) {
       throw e;
     }
+  }
+
+  Future<void> updateUser(String firstName, String lastName) async {
+    final jwt = await loginManager.getToken();
+    final user = await loginManager.getUser();
+    final finalFirstName = firstName != "" ? firstName : user != null ? user.firstName : "";
+    final finalLastName = lastName != "" ? lastName : user != null ? user.lastName : "";
+    await http.patch("$baseUrlCore/user",
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer $jwt"
+        },
+        body: jsonEncode({
+          "first_name": finalFirstName,
+          "last_name": finalLastName,
+        }));
   }
 }

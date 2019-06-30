@@ -49,9 +49,14 @@ class Welcome extends StatelessWidget {
                     builder = (BuildContext _) =>
                         OtpPage(buttonCallback: (String otp) async {
                           final authToken = await loginManager.processOtp(otp);
+                          final user = await loginManager.getUser();
 
                           await ConversationManager.init(authToken);
-                          Navigator.of(context).pushReplacementNamed("/home");
+                          if (user.firstName == "" && user.lastName == "") {
+                              Navigator.pushNamed(context, 'welcome/register');
+                          } else {
+                              Navigator.of(context).pushReplacementNamed("/home");
+                          }
                         });
                     break;
                   default:

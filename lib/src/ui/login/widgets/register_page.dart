@@ -5,7 +5,6 @@ import "../../widgets/text_button.dart";
 import "../../../services/login_manager.dart";
 import "../../../resources/user_api_provider.dart";
 
-import "phone_input.dart";
 import "input.dart";
 
 class RegisterPage extends StatefulWidget {
@@ -20,7 +19,6 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final String phoneSvg = "assets/phoneno.svg";
 
-  final phoneController = TextEditingController();
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
 
@@ -28,7 +26,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   void dispose() {
-    phoneController.dispose();
     firstNameController.dispose();
     lastNameController.dispose();
     super.dispose();
@@ -69,9 +66,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Input(
                           controller: lastNameController,
                           hintText: "Last name")),
-                  Padding(
-                      padding: EdgeInsets.only(top: 10.0),
-                      child: PhoneInput(controller: phoneController)),
                 ])
           ]))),
           Padding(
@@ -81,14 +75,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   onClickCallback: () async {
                     final firstName = firstNameController.text;
                     final lastName = lastNameController.text;
-                    final phoneNumber = "+65${phoneController.text}";
 
                     // Creating the new user
-                    await userApiProvider.registerUser(
-                        firstName, lastName, phoneNumber);
-                    await widget.loginManager
-                        .initAuthentication("+65$phoneNumber");
-                    Navigator.pushNamed(context, 'welcome/otp');
+                    await userApiProvider.updateUser(
+                        firstName, lastName);
+                    Navigator.of(context).pushReplacementNamed("/home");
                   })),
         ]));
   }
