@@ -3,24 +3,31 @@ import "package:flutter_svg/flutter_svg.dart";
 
 import "../../widgets/text_button.dart";
 import "../../../services/login_manager.dart";
-import "phone_input.dart";
+import "../../../resources/user_api_provider.dart";
 
-class LoginPage extends StatefulWidget {
+import "input.dart";
+
+class RegisterPage extends StatefulWidget {
   final LoginManager loginManager;
 
-  LoginPage({@required this.loginManager});
+  RegisterPage({@required this.loginManager});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final String phoneSvg = "assets/phoneno.svg";
-  final controller = TextEditingController();
+
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+
+  final userApiProvider = UserApiProvider();
 
   @override
   void dispose() {
-    controller.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
     super.dispose();
   }
 
@@ -41,18 +48,24 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text("First things first.",
+                  Text("Let's get you going.",
                       textAlign: TextAlign.left,
                       style: Theme.of(context).accentTextTheme.display3),
-                  Text(
-                      "Enter your phone number, to connect to your Beep account.",
+                  Text("Enter your info to create your very own Beep account.",
                       style: Theme.of(context)
                           .accentTextTheme
                           .title
                           .copyWith(fontWeight: FontWeight.w400)),
                   Padding(
                       padding: EdgeInsets.only(top: 20.0),
-                      child: PhoneInput(controller: controller)),
+                      child: Input(
+                          controller: firstNameController,
+                          hintText: "First name")),
+                  Padding(
+                      padding: EdgeInsets.only(top: 10.0),
+                      child: Input(
+                          controller: lastNameController,
+                          hintText: "Last name")),
                 ])
           ]))),
           Padding(
@@ -60,9 +73,13 @@ class _LoginPageState extends State<LoginPage> {
               child: TextButton(
                   text: "Continue",
                   onClickCallback: () async {
-                    await widget.loginManager
-                        .initAuthentication("+65${controller.text}");
-                    Navigator.pushNamed(context, 'welcome/otp');
+                    final firstName = firstNameController.text;
+                    final lastName = lastNameController.text;
+
+                    // Creating the new user
+                    await userApiProvider.updateUser(
+                        firstName, lastName);
+                    Navigator.of(context).pushReplacementNamed("/home");
                   })),
         ]));
   }

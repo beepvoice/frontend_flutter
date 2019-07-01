@@ -12,14 +12,34 @@ class UserApiProvider {
   CacheHttp cache = CacheHttp();
   LoginManager loginManager = LoginManager();
 
-  Future<User> createUser(User user) async {
+  Future<User> createUser(
+      String firstName, String lastName, String phoneNumber) async {
     final jwt = loginManager.getToken();
     final response = await http.post("$baseUrlCore/user",
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $jwt"
         },
-        body: user.toJson());
+        body: jsonEncode({
+          "first_name": firstName,
+          "last_name": lastName,
+          "phone_number": phoneNumber
+        }));
+
+    return User.fromJson(jsonDecode(response.body));
+  }
+
+  Future<User> registerUser(
+      String firstName, String lastName, String phoneNumber, String otp, String nonce) async {
+    final response = await http.post("$baseUrlLogin/register/$otp/$nonce",
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+        },
+        body: jsonEncode({
+          "first_name": firstName,
+          "last_name": lastName,
+          "phone_number": phoneNumber
+        }));
 
     return User.fromJson(jsonDecode(response.body));
   }
@@ -40,7 +60,7 @@ class UserApiProvider {
   }
 
   Future<User> fetchUserById(String id) async {
-    final jwt = loginManager.getToken();
+    final jwt = await loginManager.getToken();
     try {
       final responseBody =
           await this.cache.fetch("$baseUrlCore/user/id/$id", headers: {
@@ -51,5 +71,21 @@ class UserApiProvider {
     } catch (e) {
       throw e;
     }
+  }
+
+  Future<void> updateUser(String firstName, String lastName) async {
+    final jwt = await loginManager.getToken();
+    final user = await loginManager.getUser();
+    final finalFirstName = firstName != "" ? firstName : user != null ? user.firstName : "";
+    final finalLastName = lastName != "" ? lastName : user != null ? user.lastName : "";
+    await http.patch("$baseUrlCore/user",
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer $jwt"
+        },
+        body: jsonEncode({
+          "first_name": finalFirstName,
+          "last_name": finalLastName,
+        }));
   }
 }

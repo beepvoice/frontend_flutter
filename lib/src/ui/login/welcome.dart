@@ -1,9 +1,12 @@
 import "package:flutter/material.dart";
 
 import "../../services/login_manager.dart";
+import "../../services/conversation_manager.dart";
+
 import "./widgets/welcome_page.dart";
 import "./widgets/login_page.dart";
 import "./widgets/otp_page.dart";
+import "./widgets/register_page.dart";
 
 class Welcome extends StatelessWidget {
   final String logo = "assets/logo.png";
@@ -26,14 +29,6 @@ class Welcome extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-              Image.asset(logo,
-                  semanticLabel: "Beep logo", width: 30.0, height: 50.0),
-              Padding(
-                  padding: EdgeInsets.only(left: 10.0),
-                  child: Text("Beep",
-                      style: Theme.of(context).accentTextTheme.display3)),
-            ]),
             Expanded(
                 child: Navigator(
               initialRoute: "welcome/hello",
@@ -43,14 +38,16 @@ class Welcome extends StatelessWidget {
                   case "welcome/hello":
                     builder = (BuildContext _) => WelcomePage();
                     break;
+                  case "welcome/register":
+                    builder = (BuildContext _) =>
+                        RegisterPage(loginManager: loginManager);
+                    break;
                   case "welcome/login":
                     builder = (BuildContext _) =>
                         LoginPage(loginManager: loginManager);
                     break;
                   case "welcome/otp":
-                    builder = (BuildContext _) =>
-                        OtpPage(buttonCallback: (String otp) async {
-                          // loginManager.processOtp(otp); disabled for testing
+                    builder = (BuildContext _) => OtpPage(buttonCallback: () {
                           Navigator.of(context).pushReplacementNamed("/home");
                         });
                     break;
