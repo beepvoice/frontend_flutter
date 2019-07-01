@@ -40,3 +40,5 @@ class ContactApiProvider {
         body: user.toJson);
   }
 }
+
+var contactApiProvider = ContactApiProvider();

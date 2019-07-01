@@ -29,8 +29,8 @@ class UserApiProvider {
     return User.fromJson(jsonDecode(response.body));
   }
 
-  Future<User> registerUser(
-      String firstName, String lastName, String phoneNumber, String otp, String nonce) async {
+  Future<User> registerUser(String firstName, String lastName,
+      String phoneNumber, String otp, String nonce) async {
     final response = await http.post("$baseUrlLogin/register/$otp/$nonce",
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
@@ -76,8 +76,10 @@ class UserApiProvider {
   Future<void> updateUser(String firstName, String lastName) async {
     final jwt = await loginManager.getToken();
     final user = await loginManager.getUser();
-    final finalFirstName = firstName != "" ? firstName : user != null ? user.firstName : "";
-    final finalLastName = lastName != "" ? lastName : user != null ? user.lastName : "";
+    final finalFirstName =
+        firstName != "" ? firstName : user != null ? user.firstName : "";
+    final finalLastName =
+        lastName != "" ? lastName : user != null ? user.lastName : "";
     await http.patch("$baseUrlCore/user",
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
@@ -89,3 +91,5 @@ class UserApiProvider {
         }));
   }
 }
+
+var userApiProvider = UserApiProvider();

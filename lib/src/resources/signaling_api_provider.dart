@@ -32,3 +32,5 @@ class SignalingApiProvider {
     }
   }
 }
+
+var signalingApiProvider = SignalingApiProvider();

@@ -22,8 +22,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
 
-  final userApiProvider = UserApiProvider();
-
   @override
   void dispose() {
     firstNameController.dispose();
@@ -77,8 +75,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     final lastName = lastNameController.text;
 
                     // Creating the new user
-                    await userApiProvider.updateUser(
-                        firstName, lastName);
+                    await userApiProvider.updateUser(firstName, lastName);
                     Navigator.of(context).pushReplacementNamed("/home");
                   })),
         ]));

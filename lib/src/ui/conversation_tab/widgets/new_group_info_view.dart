@@ -25,7 +25,6 @@ class NewGroupInfoView extends StatefulWidget {
 class _NewGroupInfoViewState extends State<NewGroupInfoView> {
   final descriptionController = TextEditingController();
   final nameController = TextEditingController();
-  final conversationApiProvider = ConversationApiProvider();
 
   File _image;
 

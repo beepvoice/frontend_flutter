@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 
 import "../../services/login_manager.dart";
-import "../../services/conversation_manager.dart";
 
 import "./widgets/welcome_page.dart";
 import "./widgets/login_page.dart";

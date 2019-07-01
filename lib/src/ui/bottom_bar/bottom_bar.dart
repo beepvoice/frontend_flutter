@@ -10,8 +10,6 @@ class BottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double bottomPadding = MediaQuery.of(context).padding.bottom;
-
     return Material(
         type: MaterialType.canvas,
         elevation: 10.0,

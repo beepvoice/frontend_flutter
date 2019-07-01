@@ -16,3 +16,5 @@ class HeartbeatApiProvider {
         body: jsonEncode({"status": status}));
   }
 }
+
+var heartbeatApiProvider = HeartbeatApiProvider();

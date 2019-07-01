@@ -93,3 +93,5 @@ class ConversationApiProvider {
     }
   }
 }
+
+var conversationApiProvider = ConversationApiProvider();

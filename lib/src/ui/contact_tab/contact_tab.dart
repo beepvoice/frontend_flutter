@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 
 import "./widgets/home_view.dart";
-import "../../blocs/message_bloc.dart";
 
 class ContactTab extends StatefulWidget {
   @override

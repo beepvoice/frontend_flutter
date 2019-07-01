@@ -13,7 +13,6 @@ import "../../settings.dart";
 
 class HeartbeatReceiverBloc {
   LoginManager loginManager = new LoginManager();
-  ContactApiProvider contactApiProvider = new ContactApiProvider();
 
   final Map<String, DateTime> lastSeen = {};
   final Map<String, String> status = {};

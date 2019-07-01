@@ -36,3 +36,5 @@ class LoginApiProvider {
     return response.body;
   }
 }
+
+var loginApiProvider = LoginApiProvider();

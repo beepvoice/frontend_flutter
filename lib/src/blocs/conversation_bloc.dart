@@ -5,14 +5,14 @@ import "../models/user_model.dart";
 import "../models/conversation_model.dart";
 
 class ConversationsBloc {
-  final _provider = ConversationApiProvider();
   final _conversationsFetcher = PublishSubject<List<Conversation>>();
 
   Observable<List<Conversation>> get conversations =>
       _conversationsFetcher.stream;
 
   fetchConversations() async {
-    List<Conversation> conversationList = await _provider.fetchConversations();
+    List<Conversation> conversationList =
+        await conversationApiProvider.fetchConversations();
     print(conversationList);
     _conversationsFetcher.sink.add(conversationList);
   }

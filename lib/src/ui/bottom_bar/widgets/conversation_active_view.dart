@@ -2,7 +2,6 @@ import "package:flutter/material.dart";
 
 import "../../widgets/user_avatar.dart";
 import "../../../resources/conversation_api_provider.dart";
-import "../../../models/user_model.dart";
 import "../../../models/conversation_model.dart";
 import "../../../blocs/message_bloc.dart";
 
@@ -18,7 +17,6 @@ class ConversationActiveView extends StatefulWidget {
 }
 
 class _ConversationActiveViewState extends State<ConversationActiveView> {
-  final conversationApiProvider = ConversationApiProvider();
   Conversation _conversation;
   List<Widget> _users;
 
