@@ -31,16 +31,17 @@ TextTheme buildTextTheme(TextTheme base) {
               .copyWith(fontSize: 40.0, fontWeight: FontWeight.w600),
           display3: base.display3
               .copyWith(fontSize: 30.0, fontWeight: FontWeight.w700),
-          display2: base.display2
-              .copyWith(fontSize: 18.0, fontWeight: FontWeight.w500),
-          display1: base.display1
-              .copyWith(fontSize: 19.0, fontWeight: FontWeight.w600),
+          display2: base.display2.copyWith(
+              fontSize: 12.0, fontWeight: FontWeight.w500), // Used for time
+          display1: base.display1.copyWith(
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600), // Used for overall title
           title:
-              base.title.copyWith(fontSize: 18.0, fontWeight: FontWeight.w500),
+              base.title.copyWith(fontSize: 16.0, fontWeight: FontWeight.w500),
           subtitle: base.subtitle
-              .copyWith(fontSize: 12.0, fontWeight: FontWeight.w300),
-          body2:
-              base.body2.copyWith(fontSize: 16.0, fontWeight: FontWeight.w600),
+              .copyWith(fontSize: 13.0, fontWeight: FontWeight.w300),
+          body2: base.body2.copyWith(
+              fontSize: 12.0, fontWeight: FontWeight.w600), // Bold normal
           body1:
               base.body1.copyWith(fontSize: 12.0, fontWeight: FontWeight.w400))
       .apply(

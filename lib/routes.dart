@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'src/ui/home/home.dart';
+import 'src/ui/home.dart';
 import "src/ui/login/welcome.dart";
 import "src/services/login_manager.dart";
 import 'themer.dart';

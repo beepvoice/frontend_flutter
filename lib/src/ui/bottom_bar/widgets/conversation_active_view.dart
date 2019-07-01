@@ -18,7 +18,6 @@ class ConversationActiveView extends StatefulWidget {
 }
 
 class _ConversationActiveViewState extends State<ConversationActiveView> {
-  final bus = messageBloc;
   final conversationApiProvider = ConversationApiProvider();
   Conversation _conversation;
   List<Widget> _users;
@@ -47,8 +46,8 @@ class _ConversationActiveViewState extends State<ConversationActiveView> {
       print(users[0].id);
       setState(() {
         _users = users
-            .map((user) =>
-                UserAvatar(padding: EdgeInsets.only(right: 5.0), user: user))
+            .map((user) => UserAvatar(
+                radius: 18.0, padding: EdgeInsets.only(right: 5.0), user: user))
             .toList();
       });
     });
@@ -67,8 +66,8 @@ class _ConversationActiveViewState extends State<ConversationActiveView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-                width: 22.0,
-                height: 22.0,
+                width: 15.0,
+                height: 15.0,
                 decoration: BoxDecoration(
                     color: Theme.of(context).indicatorColor,
                     shape: BoxShape.circle)),
@@ -91,7 +90,8 @@ class _ConversationActiveViewState extends State<ConversationActiveView> {
                 icon: Icon(Icons.close),
                 onPressed: () async {
                   // Call method to close connection
-                  await bus.publish({"state": "disconnect"});
+                  await messageChannel
+                      .publish({"target": "home", "state": "disconnect"});
                   print("Pressed close");
                 }),
           ]),

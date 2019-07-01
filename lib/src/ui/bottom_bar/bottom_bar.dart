@@ -18,8 +18,8 @@ class BottomBar extends StatelessWidget {
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(40.0), topRight: Radius.circular(40.0)),
         child: Container(
-          padding: EdgeInsets.only(
-              top: 20.0, left: 20.0, right: 20.0, bottom: 30.0 + bottomPadding),
+          padding:
+              EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0, bottom: 30.0),
           child: (conversationId == "")
               ? ConversationInactiveView()
               : ConversationActiveView(conversationId: conversationId),

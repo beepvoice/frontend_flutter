@@ -15,7 +15,7 @@ class PhoneInput extends StatelessWidget {
               width: 45,
               child: Center(
                   child: Text("+65",
-                      style: Theme.of(context).textTheme.body2.copyWith(
+                      style: Theme.of(context).textTheme.title.copyWith(
                           color: Theme.of(context).primaryColorDark))),
               decoration: BoxDecoration(
                 color: Colors.white,

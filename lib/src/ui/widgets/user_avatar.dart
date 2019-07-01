@@ -42,19 +42,37 @@ class _UserAvatarState extends State<UserAvatar> {
     String lastName =
         (widget.user.lastName.isEmpty) ? '' : widget.user.lastName[0];
 
+    final colors = _stringToColor(widget.user.lastName);
+
     return Padding(
         padding: widget.padding,
         child: Stack(alignment: Alignment.bottomRight, children: <Widget>[
-          CircleAvatar(
-              backgroundColor: _stringToColor(widget.user.lastName),
-              child: Text(
-                firstName.toUpperCase() + lastName.toUpperCase(),
-                style: Theme.of(context)
-                    .accentTextTheme
-                    .title
-                    .copyWith(fontSize: widget.radius / 1.2),
-              ),
-              radius: widget.radius),
+          Container(
+              height: (widget.radius * 2),
+              width: (widget.radius * 2),
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      stops: [
+                        0,
+                        1
+                      ],
+                      colors: [
+                        colors[0],
+                        colors[1],
+                      ]),
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(widget.radius))),
+              child: Center(
+                child: Text(
+                  firstName.toUpperCase() + lastName.toUpperCase(),
+                  style: Theme.of(context)
+                      .accentTextTheme
+                      .title
+                      .copyWith(fontSize: widget.radius / 1.4),
+                ),
+              )),
           StreamBuilder(
               stream: heartbeatReceiverBloc.stream,
               builder: (context, AsyncSnapshot<Map<String, String>> snapshot) {
@@ -84,7 +102,7 @@ class _UserAvatarState extends State<UserAvatar> {
   }
 
   // Hashing username into a pastel color
-  Color _stringToColor(String str) {
+  List<Color> _stringToColor(String str) {
     int hash = 0;
 
     str.runes.forEach((int rune) {
@@ -93,6 +111,9 @@ class _UserAvatarState extends State<UserAvatar> {
 
     hash = hash % 360;
 
-    return HSLColor.fromAHSL(1.0, hash.toDouble(), 0.8, 0.4).toColor();
+    return [
+      HSLColor.fromAHSL(1.0, hash.toDouble(), 0.8, 0.4).toColor(),
+      HSLColor.fromAHSL(1.0, hash.toDouble(), 0.8, 0.5).toColor()
+    ];
   }
 }

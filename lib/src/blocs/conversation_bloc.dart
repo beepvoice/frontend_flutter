@@ -13,6 +13,7 @@ class ConversationsBloc {
 
   fetchConversations() async {
     List<Conversation> conversationList = await _provider.fetchConversations();
+    print(conversationList);
     _conversationsFetcher.sink.add(conversationList);
   }
 

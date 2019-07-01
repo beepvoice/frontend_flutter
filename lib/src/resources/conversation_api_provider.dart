@@ -65,6 +65,17 @@ class ConversationApiProvider {
     }
   }
 
+  Future<void> createConversationMember(
+      String conversationId, String userId) async {
+    final jwt = await loginManager.getToken();
+    await http.post("$baseUrlCore/user/conversation/$conversationId/member",
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer $jwt"
+        },
+        body: jsonEncode({"id": userId}));
+  }
+
   Future<List<User>> fetchConversationMembers(String id) async {
     final jwt = await loginManager.getToken();
     try {
