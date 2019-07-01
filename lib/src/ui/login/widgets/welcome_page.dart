@@ -34,10 +34,6 @@ class WelcomePage extends StatelessWidget {
               text: "Login",
               onClickCallback: () =>
                   Navigator.pushNamed(context, "welcome/login")),
-          TextButton(
-              text: "Sign Up",
-              onClickCallback: () =>
-                  Navigator.pushNamed(context, "welcome/register")),
         ]));
   }
 }

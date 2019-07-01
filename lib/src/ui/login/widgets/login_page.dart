@@ -45,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
                       textAlign: TextAlign.left,
                       style: Theme.of(context).accentTextTheme.display3),
                   Text(
-                      "Enter your phone number, to connect to your existing Beep account.",
+                      "Enter your phone number, to connect to your Beep account.",
                       style: Theme.of(context)
                           .accentTextTheme
                           .title

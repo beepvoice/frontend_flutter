@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 
 import "../../services/login_manager.dart";
 import "../../services/conversation_manager.dart";
+
 import "./widgets/welcome_page.dart";
 import "./widgets/login_page.dart";
 import "./widgets/otp_page.dart";
@@ -46,17 +47,8 @@ class Welcome extends StatelessWidget {
                         LoginPage(loginManager: loginManager);
                     break;
                   case "welcome/otp":
-                    builder = (BuildContext _) =>
-                        OtpPage(buttonCallback: (String otp) async {
-                          final authToken = await loginManager.processOtp(otp);
-                          final user = await loginManager.getUser();
-
-                          await ConversationManager.init(authToken);
-                          if (user.firstName == "" && user.lastName == "") {
-                              Navigator.pushNamed(context, 'welcome/register');
-                          } else {
-                              Navigator.of(context).pushReplacementNamed("/home");
-                          }
+                    builder = (BuildContext _) => OtpPage(buttonCallback: () {
+                          Navigator.of(context).pushReplacementNamed("/home");
                         });
                     break;
                   default:
