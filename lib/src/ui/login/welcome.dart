@@ -38,16 +38,20 @@ class Welcome extends StatelessWidget {
                     builder = (BuildContext _) => WelcomePage();
                     break;
                   case "welcome/register":
-                    builder = (BuildContext _) =>
-                        RegisterPage(loginManager: loginManager);
+                    builder =
+                        (BuildContext _) => RegisterPage(homeCallback: () {
+                              Navigator.pushNamed(context, 'home');
+                            });
                     break;
                   case "welcome/login":
                     builder = (BuildContext _) =>
                         LoginPage(loginManager: loginManager);
                     break;
                   case "welcome/otp":
-                    builder = (BuildContext _) => OtpPage(buttonCallback: () {
-                          Navigator.of(context).pushReplacementNamed("/home");
+                    builder = (BuildContext _) => OtpPage(
+                        loginManager: loginManager,
+                        homeCallback: () {
+                          Navigator.pushNamed(context, 'home');
                         });
                     break;
                   default:

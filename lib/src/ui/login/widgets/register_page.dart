@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
+import "package:image_picker_modern/image_picker_modern.dart";
 import "package:flutter_svg/flutter_svg.dart";
+import "dart:io";
 
 import "../../widgets/text_button.dart";
 import "../../../services/login_manager.dart";
@@ -7,10 +9,12 @@ import "../../../resources/user_api_provider.dart";
 
 import "input.dart";
 
-class RegisterPage extends StatefulWidget {
-  final LoginManager loginManager;
+typedef void HomeCallback();
 
-  RegisterPage({@required this.loginManager});
+class RegisterPage extends StatefulWidget {
+  final HomeCallback homeCallback;
+
+  RegisterPage({@required this.homeCallback});
 
   @override
   _RegisterPageState createState() => _RegisterPageState();
@@ -21,6 +25,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
+
+  File _image;
 
   @override
   void dispose() {
@@ -46,7 +52,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text("Let's get you going.",
+                  Text("Let's get you up and running.",
                       textAlign: TextAlign.left,
                       style: Theme.of(context).accentTextTheme.display3),
                   Text("Enter your info to create your very own Beep account.",
@@ -54,6 +60,13 @@ class _RegisterPageState extends State<RegisterPage> {
                           .accentTextTheme
                           .title
                           .copyWith(fontWeight: FontWeight.w400)),
+                  Padding(
+                      padding: EdgeInsets.only(top: 20.0),
+                      child: (_image != null)
+                          ? CircleAvatar(
+                              radius: 50, backgroundImage: FileImage(_image))
+                          : CircleAvatar(
+                              radius: 50, backgroundColor: Colors.grey[300])),
                   Padding(
                       padding: EdgeInsets.only(top: 20.0),
                       child: Input(
@@ -67,6 +80,17 @@ class _RegisterPageState extends State<RegisterPage> {
                 ])
           ]))),
           Padding(
+            padding: EdgeInsets.only(top: 10.0),
+            child: TextButton(
+                text: "Set profile picture",
+                onClickCallback: () async {
+                  var image =
+                      await ImagePicker.pickImage(source: ImageSource.gallery);
+
+                  setState(() => _image = image);
+                }),
+          ),
+          Padding(
               padding: EdgeInsets.only(top: 10.0),
               child: TextButton(
                   text: "Continue",
@@ -76,7 +100,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                     // Creating the new user
                     await userApiProvider.updateUser(firstName, lastName);
-                    Navigator.of(context).pushReplacementNamed("/home");
+                    widget.homeCallback();
                   })),
         ]));
   }

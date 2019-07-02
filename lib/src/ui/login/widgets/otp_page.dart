@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import "package:flutter_svg/flutter_svg.dart";
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import "../../../services/conversation_manager.dart";
 import "../../../services/login_manager.dart";
@@ -8,12 +9,13 @@ import "../../../services/login_manager.dart";
 import "../../widgets/text_button.dart";
 
 // Callback types
-typedef void ButtonCallback();
+typedef void HomeCallback();
 
 class OtpPage extends StatefulWidget {
-  final ButtonCallback buttonCallback;
+  final HomeCallback homeCallback;
+  final LoginManager loginManager;
 
-  OtpPage({@required this.buttonCallback});
+  OtpPage({@required this.loginManager, @required this.homeCallback});
 
   @override
   _OtpPageState createState() => _OtpPageState();
@@ -21,8 +23,8 @@ class OtpPage extends StatefulWidget {
 
 class _OtpPageState extends State<OtpPage> {
   final String phoneSvg = "assets/authenticate.svg";
-  final LoginManager loginManager = LoginManager();
   final controller = TextEditingController();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -72,20 +74,27 @@ class _OtpPageState extends State<OtpPage> {
                                 Theme.of(context).accentTextTheme.display3))),
               ]),
           Spacer(),
-          TextButton(
-              text: "Done",
-              onClickCallback: () async {
-                final authToken =
-                    await loginManager.processOtp(controller.text);
-                final user = await loginManager.getUser();
+          (!isLoading)
+              ? TextButton(
+                  text: "Done",
+                  onClickCallback: () async {
+                    setState(() => isLoading = true);
+                    final authToken =
+                        await widget.loginManager.processOtp(controller.text);
+                    final user = await widget.loginManager.getUser();
 
-                await ConversationManager.init(authToken);
-                if (user.firstName == "" && user.lastName == "") {
-                  Navigator.pushNamed(context, 'welcome/register');
-                } else {
-                  widget.buttonCallback();
-                }
-              }),
+                    await ConversationManager.init(authToken);
+                    if (user.firstName == "" && user.lastName == "") {
+                      Navigator.pushNamed(context, 'welcome/register');
+                    } else {
+                      widget.homeCallback();
+                    }
+                  })
+              : Center(
+                  child: SpinKitThreeBounce(
+                  color: Colors.white,
+                  size: 40.0,
+                )),
         ]));
   }
 }

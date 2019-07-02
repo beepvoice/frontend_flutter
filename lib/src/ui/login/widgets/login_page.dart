@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import "../../widgets/text_button.dart";
 import "../../../services/login_manager.dart";
@@ -17,6 +18,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final String phoneSvg = "assets/phoneno.svg";
   final controller = TextEditingController();
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -57,13 +59,21 @@ class _LoginPageState extends State<LoginPage> {
           ]))),
           Padding(
               padding: EdgeInsets.only(top: 10.0),
-              child: TextButton(
-                  text: "Continue",
-                  onClickCallback: () async {
-                    await widget.loginManager
-                        .initAuthentication("+65${controller.text}");
-                    Navigator.pushNamed(context, 'welcome/otp');
-                  })),
+              child: (!isLoading)
+                  ? TextButton(
+                      text: "Continue",
+                      onClickCallback: () async {
+                        setState(() => isLoading = true);
+
+                        await widget.loginManager
+                            .initAuthentication("+65${controller.text}");
+                        Navigator.pushNamed(context, 'welcome/otp');
+                      })
+                  : Center(
+                      child: SpinKitThreeBounce(
+                      color: Colors.white,
+                      size: 40.0,
+                    ))),
         ]));
   }
 }

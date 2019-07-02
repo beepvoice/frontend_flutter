@@ -51,8 +51,7 @@ class LoginManager {
       final userId = payloadMap['userid'];
       // Get user data
       final userApiProvider = UserApiProvider();
-      final user =
-          await userApiProvider.fetchUserById(userId);
+      final user = await userApiProvider.fetchUserById(userId);
       await prefs.setString("user", jsonEncode(user));
       return jwt;
     } catch (e) {
