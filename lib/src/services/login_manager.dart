@@ -1,10 +1,11 @@
 import "dart:async";
 import "dart:convert";
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:unique_identifier/unique_identifier.dart';
+
 import "../models/user_model.dart";
 import "../resources/login_api_provider.dart";
 import "../resources/user_api_provider.dart";
-
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginManager {
   final loginApiProvider = LoginApiProvider();
@@ -29,6 +30,9 @@ class LoginManager {
     try {
       final nonce = await loginApiProvider.initAuthentication(phoneNumber);
       this.nonce = nonce;
+      this.clientid = await UniqueIdentifier.serial;
+
+      print("UID: ${this.clientid}");
     } catch (e) {
       throw e;
     }
@@ -57,6 +61,7 @@ class LoginManager {
       final payload = utf8.decode(base64Url.decode(payloadString));
       final payloadMap = json.decode(payload);
       final userId = payloadMap['userid'];
+      print(userId);
       // Get user data
       final userApiProvider = UserApiProvider();
       final user = await userApiProvider.fetchUserById(userId);

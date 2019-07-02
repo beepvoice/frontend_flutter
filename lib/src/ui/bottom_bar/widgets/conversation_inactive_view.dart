@@ -15,15 +15,15 @@ class ConversationInactiveView extends StatelessWidget {
             UserAvatar(
                 radius: 18,
                 padding: EdgeInsets.only(right: 5.0),
-                user: User("1", "Isaac", "Tay", "+65 91043593")),
+                user: User("1", "Isaac", "Tay", "+65 91043593", "", "", "")),
             UserAvatar(
                 radius: 18,
                 padding: EdgeInsets.only(right: 5.0),
-                user: User("1", "Isaac", "Tay", "+65 91043593")),
+                user: User("1", "Isaac", "Tay", "+65 91043593", "", "", "")),
             UserAvatar(
                 radius: 18,
                 padding: EdgeInsets.only(right: 5.0),
-                user: User("1", "Isaac", "Tay", "+65 91043593"))
+                user: User("1", "Isaac", "Tay", "+65 91043593", "", "", ""))
           ])
     ]));
   }

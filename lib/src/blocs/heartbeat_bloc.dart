@@ -47,23 +47,22 @@ class HeartbeatReceiverBloc {
           Ping ping = Ping.fromJson(jsonDecode(event.data));
           this.lastSeen[user.id] =
               DateTime.fromMillisecondsSinceEpoch(ping.time * 1000);
+          _statusFetcher.sink.add({"user": user.id, "status": "online"});
+          this.status[user.id] = "online";
         });
       }).catchError((e) => {});
     }
 
     // Setting up timers
     final checkDuration = Duration(seconds: 20);
-    final timeoutDuration = Duration(minutes: 1);
+    final timeoutDuration = Duration(minutes: 20);
 
     new Timer.periodic(checkDuration, (Timer t) {
       for (final user in users) {
         final now = new DateTime.now();
         final difference = now.difference(this.lastSeen[user.id]);
 
-        if (difference < timeoutDuration) {
-          _statusFetcher.sink.add({"user": user.id, "status": "online"});
-          this.status[user.id] = "online";
-        } else {
+        if (difference > timeoutDuration) {
           _statusFetcher.sink.add({"user": user.id, "status": "offline"});
           this.status[user.id] = "offline";
         }
