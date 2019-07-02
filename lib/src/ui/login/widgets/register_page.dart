@@ -4,7 +4,6 @@ import "package:flutter_svg/flutter_svg.dart";
 import "dart:io";
 
 import "../../widgets/text_button.dart";
-import "../../../services/login_manager.dart";
 import "../../../resources/user_api_provider.dart";
 
 import "input.dart";

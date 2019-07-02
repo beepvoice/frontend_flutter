@@ -8,37 +8,35 @@ import "../services/cache_http.dart";
 import "../services/login_manager.dart";
 import "../../settings.dart";
 
+import "./picture_api_provider.dart";
+
 class UserApiProvider {
   CacheHttp cache = CacheHttp();
   LoginManager loginManager = LoginManager();
+  PictureApiProvider pictureApiProvider = new PictureApiProvider();
 
   Future<User> createUser(
-      String firstName, String lastName, String phoneNumber) async {
+      String username, String firstName, String lastName, String phoneNumber, String bio, File profilePic) async {
     final jwt = loginManager.getToken();
+
+    // Upload picture
+    var profileURL = "";
+    if (profilePic != null) {
+      profileURL = await pictureApiProvider.uploadPicture(profilePic);
+    }
+
     final response = await http.post("$baseUrlCore/user",
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $jwt"
         },
         body: jsonEncode({
+          "username": username,
           "first_name": firstName,
           "last_name": lastName,
-          "phone_number": phoneNumber
-        }));
-
-    return User.fromJson(jsonDecode(response.body));
-  }
-
-  Future<User> registerUser(String firstName, String lastName,
-      String phoneNumber, String otp, String nonce) async {
-    final response = await http.post("$baseUrlLogin/register/$otp/$nonce",
-        headers: {
-          HttpHeaders.contentTypeHeader: "application/json",
-        },
-        body: jsonEncode({
-          "first_name": firstName,
-          "last_name": lastName,
-          "phone_number": phoneNumber
+          "phone_number": phoneNumber,
+          "bio": bio,
+          "profile_pic": profileURL
         }));
 
     return User.fromJson(jsonDecode(response.body));
@@ -64,6 +62,20 @@ class UserApiProvider {
     try {
       final responseBody =
           await this.cache.fetch("$baseUrlCore/user/id/$id", headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $jwt"
+      });
+      return User.fromJson(jsonDecode(responseBody));
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<User> fetchUserByUsername(String username) async {
+    final jwt = await loginManager.getToken();
+    try {
+      final responseBody =
+          await this.cache.fetch("$baseUrlCore/user/username/$username", headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $jwt"
       });
