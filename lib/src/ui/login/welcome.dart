@@ -40,7 +40,7 @@ class Welcome extends StatelessWidget {
                   case "welcome/register":
                     builder =
                         (BuildContext _) => RegisterPage(homeCallback: () {
-                              Navigator.pushNamed(context, 'home');
+                              Navigator.pushNamed(context, '/home');
                             });
                     break;
                   case "welcome/login":
@@ -51,7 +51,7 @@ class Welcome extends StatelessWidget {
                     builder = (BuildContext _) => OtpPage(
                         loginManager: loginManager,
                         homeCallback: () {
-                          Navigator.pushNamed(context, 'home');
+                          Navigator.pushNamed(context, '/home');
                         });
                     break;
                   default:

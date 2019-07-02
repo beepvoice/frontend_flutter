@@ -21,7 +21,7 @@ class LoginManager {
   Future<User> getUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final userString = prefs.getString("user");
-    return userString != null ? jsonDecode(userString) : null;
+    return userString != null ? User.fromJson(jsonDecode(userString)) : null;
   }
 
   // Throws error status code if it occurs
@@ -41,12 +41,20 @@ class LoginManager {
           await loginApiProvider.verifyOtp(otp, this.nonce, this.clientid);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString("token", jwt);
+
+      print("JWT: $jwt");
+
       // Parse jwt to get userid
       final parts = jwt.split('.');
       if (parts.length != 3) {
         throw Exception('invalid token');
       }
-      final payload = utf8.decode(base64Url.decode(parts[1]));
+
+      String payloadString = parts[1];
+
+      while (((payloadString.length * 6) % 8) != 0) payloadString += "=";
+
+      final payload = utf8.decode(base64Url.decode(payloadString));
       final payloadMap = json.decode(payload);
       final userId = payloadMap['userid'];
       // Get user data
