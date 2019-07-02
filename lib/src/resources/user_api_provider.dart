@@ -8,13 +8,23 @@ import "../services/cache_http.dart";
 import "../services/login_manager.dart";
 import "../../settings.dart";
 
+import "./picture_api_provider.dart";
+
 class UserApiProvider {
   CacheHttp cache = CacheHttp();
   LoginManager loginManager = LoginManager();
+  PictureApiProvider pictureApiProvider = new PictureApiProvider();
 
   Future<User> createUser(
-      String username, String firstName, String lastName, String phoneNumber, String bio, String profilePic) async {
+      String username, String firstName, String lastName, String phoneNumber, String bio, File profilePic) async {
     final jwt = loginManager.getToken();
+
+    // Upload picture
+    var profileURL = "";
+    if (profilePic != null) {
+      profileURL = await pictureApiProvider.uploadPicture(profilePic);
+    }
+
     final response = await http.post("$baseUrlCore/user",
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
@@ -26,7 +36,7 @@ class UserApiProvider {
           "last_name": lastName,
           "phone_number": phoneNumber,
           "bio": bio,
-          "profile_pic": profilePic
+          "profile_pic": profileURL
         }));
 
     return User.fromJson(jsonDecode(response.body));
