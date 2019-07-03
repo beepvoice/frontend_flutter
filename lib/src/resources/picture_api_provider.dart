@@ -17,7 +17,7 @@ class PictureApiProvider {
 
     var token = await loginManager.getToken();
 
-    var uri = Uri.parse(baseUrlPicture);
+    var uri = Uri.parse("$baseUrlPicture/upload");
     var request = new http.MultipartRequest('POST', uri);
     request.headers['Authorization'] = "Bearer $token";
 
