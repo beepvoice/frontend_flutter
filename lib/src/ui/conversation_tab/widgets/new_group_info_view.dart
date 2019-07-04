@@ -49,7 +49,7 @@ class _NewGroupInfoViewState extends State<NewGroupInfoView> {
             text: "Create",
             onClickCallback: () async {
               final conversation = await conversationApiProvider
-                  .createConversation(nameController.text);
+                  .createConversation(nameController.text, profile: _image);
 
               widget.users.forEach((user) async => await conversationApiProvider
                   .createConversationMember(conversation.id, user.id));
@@ -74,42 +74,16 @@ class _NewGroupInfoViewState extends State<NewGroupInfoView> {
                       controller: nameController,
                       autocorrect: false,
                       cursorWidth: 2.0,
-                      cursorColor: Colors.grey[500],
-                      style: Theme.of(context).textTheme.subtitle.copyWith(
-                          color: Colors.grey[500], fontWeight: FontWeight.w300),
+                      cursorColor: Colors.grey[600],
+                      style: Theme.of(context).textTheme.title.copyWith(
+                          color: Colors.grey[600], fontWeight: FontWeight.w300),
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           filled: false,
                           hintText: "Enter group name",
-                          hintStyle: Theme.of(context)
-                              .textTheme
-                              .subtitle
-                              .copyWith(color: Colors.grey[500])))),
-              Container(
-                  margin: EdgeInsets.only(left: 8.0, top: 5.0),
-                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.0),
-                    color: Colors.grey[100],
-                  ),
-                  child: TextField(
-                      controller: descriptionController,
-                      autocorrect: false,
-                      maxLines: 3,
-                      cursorWidth: 2.0,
-                      cursorColor: Colors.grey[500],
-                      style: Theme.of(context).textTheme.subtitle.copyWith(
-                            color: Colors.grey[500],
-                            fontWeight: FontWeight.w300,
-                          ),
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          filled: false,
-                          hintText: "Enter group description",
-                          hintStyle: Theme.of(context)
-                              .textTheme
-                              .subtitle
-                              .copyWith(color: Colors.grey[500])))),
+                          hintStyle: Theme.of(context).textTheme.title.copyWith(
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w300)))),
             ])),
           ])),
       Padding(

@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "dart:async";
+import "dart:io";
 
 import "../../models/user_model.dart";
 import "../../blocs/heartbeat_bloc.dart";
@@ -22,28 +22,31 @@ class UserAvatar extends StatefulWidget {
 
 class _UserAvatarState extends State<UserAvatar> {
   String lastStatus = "";
+  String firstLetter;
+  String lastLetter;
+
+  List<Color> profileColors;
+  File profilePic;
 
   @override
   initState() {
     super.initState();
-    lastStatus = heartbeatReceiverBloc.getLastStatus(widget.user.id);
-    initializeStream();
-  }
 
-  initializeStream() async {
-    return Future.delayed(
-        const Duration(milliseconds: 1), () => heartbeatReceiverBloc.flush());
+    lastStatus = heartbeatReceiverBloc.getLastStatus(widget.user.id);
+
+    if (widget.user.profilePic == "") {
+      firstLetter =
+          (widget.user.firstName.isEmpty) ? '' : widget.user.firstName[0];
+      lastLetter =
+          (widget.user.lastName.isEmpty) ? '' : widget.user.lastName[0];
+      profileColors = _stringToColor(widget.user.lastName);
+    } else {
+      // Get picture
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    String firstName =
-        (widget.user.firstName.isEmpty) ? '' : widget.user.firstName[0];
-    String lastName =
-        (widget.user.lastName.isEmpty) ? '' : widget.user.lastName[0];
-
-    final colors = _stringToColor(widget.user.lastName);
-
     return Padding(
         padding: widget.padding,
         child: Stack(alignment: Alignment.bottomRight, children: <Widget>[
@@ -59,14 +62,14 @@ class _UserAvatarState extends State<UserAvatar> {
                         1
                       ],
                       colors: [
-                        colors[0],
-                        colors[1],
+                        profileColors[0],
+                        profileColors[1],
                       ]),
                   borderRadius:
                       BorderRadius.all(Radius.circular(widget.radius))),
               child: Center(
                 child: Text(
-                  firstName.toUpperCase() + lastName.toUpperCase(),
+                  firstLetter.toUpperCase() + lastLetter.toUpperCase(),
                   style: Theme.of(context)
                       .accentTextTheme
                       .title

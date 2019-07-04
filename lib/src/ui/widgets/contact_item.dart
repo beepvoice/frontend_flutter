@@ -33,9 +33,9 @@ class _ContactItemState extends State<ContactItem> {
                 setState(() {
                   selected = !selected;
                 });
-
-                widget.onClickCallback(selected);
               }
+
+              widget.onClickCallback(selected);
             },
             child: Container(
                 padding: EdgeInsets.only(top: 10.0, bottom: 10.0),

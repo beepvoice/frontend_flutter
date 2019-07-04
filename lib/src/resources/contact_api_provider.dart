@@ -29,7 +29,7 @@ class ContactApiProvider {
     }
   }
 
-  void createContact(User user) async {
+  Future<void> createContact(User user) async {
     final jwt = await loginManager.getToken();
 
     await http.post("$baseUrlCore/user/contact",

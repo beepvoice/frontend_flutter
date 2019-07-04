@@ -31,8 +31,6 @@ class LoginManager {
       final nonce = await loginApiProvider.initAuthentication(phoneNumber);
       this.nonce = nonce;
       this.clientid = await UniqueIdentifier.serial;
-
-      print("UID: ${this.clientid}");
     } catch (e) {
       throw e;
     }
@@ -45,8 +43,6 @@ class LoginManager {
           await loginApiProvider.verifyOtp(otp, this.nonce, this.clientid);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString("token", jwt);
-
-      print("JWT: $jwt");
 
       // Parse jwt to get userid
       final parts = jwt.split('.');
@@ -61,7 +57,7 @@ class LoginManager {
       final payload = utf8.decode(base64Url.decode(payloadString));
       final payloadMap = json.decode(payload);
       final userId = payloadMap['userid'];
-      print(userId);
+
       // Get user data
       final userApiProvider = UserApiProvider();
       final user = await userApiProvider.fetchUserById(userId);

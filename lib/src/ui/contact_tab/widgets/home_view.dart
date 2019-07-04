@@ -1,7 +1,12 @@
 import "package:flutter/material.dart";
 import 'package:sticky_headers/sticky_headers.dart';
+import 'package:contacts_service/contacts_service.dart';
 
 import "../../../models/user_model.dart";
+
+import "../../../resources/contact_api_provider.dart";
+import "../../../resources/user_api_provider.dart";
+
 import "../../../blocs/contact_bloc.dart";
 
 import "../../widgets/contact_item.dart";
@@ -23,7 +28,24 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    contactBloc.fetchContacts();
+    initializeAsync();
+  }
+
+  void initializeAsync() async {
+    Iterable<Contact> contacts = await ContactsService.getContacts();
+
+    for (var contact in contacts) {
+      for (var phone in contact.phones) {
+        try {
+          final user = await userApiProvider.fetchUserByPhone(phone.value);
+          await contactApiProvider.createContact(user);
+        } catch (e) {
+          print("User doesn't exist");
+          continue;
+        }
+      }
+    }
+    await contactBloc.fetchContacts();
   }
 
   @override

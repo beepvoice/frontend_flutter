@@ -74,10 +74,6 @@ class HeartbeatReceiverBloc {
     return status[userId];
   }
 
-  flush() {
-    _statusFetcher.sink.add({"user": "flushing", "status": ""});
-  }
-
   dispose() {
     _statusFetcher.close();
     client.close();

@@ -3,6 +3,7 @@ import 'package:sticky_headers/sticky_headers.dart';
 
 import "../../../models/user_model.dart";
 import "../../../blocs/contact_bloc.dart";
+import "../../../resources/conversation_api_provider.dart";
 
 import "../../widgets/contact_item.dart";
 import "../../widgets/top_bar.dart";
@@ -122,7 +123,15 @@ class _NewConversationViewState extends State<NewConversationView> {
                 shrinkWrap: true,
                 itemCount: entry.value.length,
                 itemBuilder: (context, index) {
-                  return ContactItem(user: entry.value[index]);
+                  return ContactItem(
+                      user: entry.value[index],
+                      onClickCallback: (state) async {
+                        final conversation = await conversationApiProvider
+                            .createConversation("", dm: true);
+                        await conversationApiProvider.createConversationMember(
+                            conversation.id, entry.value[index].id);
+                        Navigator.pushNamed(context, "conversation/home");
+                      });
                 }))
       ]);
     }).toList();
