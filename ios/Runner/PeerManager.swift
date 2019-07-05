@@ -157,7 +157,7 @@ private extension PeerManager {
                                 })
                                 
                                 // Send the localsdp to the server
-                                self.socket?.write(string: "offer::\(sdp)")
+                                self.socket?.write(string: "answer::\(sdp)")
                                 this.state = .connected
                             }
                     })
@@ -218,7 +218,7 @@ extension PeerManager: RTCPeerConnectionDelegate {
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
         let candidateString = "\(candidate.sdp)::\(candidate.sdpMLineIndex)::\(candidate.sdpMid ?? "")"
-        self.socket?.write(string: "offer::\(candidateString)")
+        self.socket?.write(string: "ice::\(candidateString)")
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove candidates: [RTCIceCandidate]) {
