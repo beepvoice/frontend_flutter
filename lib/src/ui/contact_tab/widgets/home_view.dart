@@ -40,7 +40,6 @@ class _HomeViewState extends State<HomeView> {
           final user = await userApiProvider.fetchUserByPhone(phone.value);
           await contactApiProvider.createContact(user);
         } catch (e) {
-          print("User doesn't exist");
           continue;
         }
       }

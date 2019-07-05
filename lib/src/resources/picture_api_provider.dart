@@ -1,6 +1,7 @@
 import "dart:async";
 import "dart:convert";
 import "dart:io";
+import "package:path_provider/path_provider.dart";
 import "package:async/async.dart";
 import "package:path/path.dart";
 import "package:http/http.dart" as http;
@@ -11,8 +12,21 @@ import "../../settings.dart";
 class PictureApiProvider {
   LoginManager loginManager = new LoginManager();
 
+  Future<File> getPicture(String imageUrl) async {
+    final jwt = await loginManager.getToken();
+
+    var response = await http.get("$baseUrlPicture/picture/$imageUrl",
+        headers: {HttpHeaders.authorizationHeader: "Bearer $jwt"});
+
+    Directory tempDir = await getTemporaryDirectory();
+    String tempPath = tempDir.path;
+
+    return File("$tempPath/$imageUrl").writeAsBytes(response.bodyBytes);
+  }
+
   Future<String> uploadPicture(File picture) async {
-    var stream = new http.ByteStream(DelegatingStream.typed(picture.openRead()));
+    var stream =
+        new http.ByteStream(DelegatingStream.typed(picture.openRead()));
     var length = await picture.length();
 
     var token = await loginManager.getToken();
@@ -21,7 +35,8 @@ class PictureApiProvider {
     var request = new http.MultipartRequest('POST', uri);
     request.headers['Authorization'] = "Bearer $token";
 
-    var multipartFile = new http.MultipartFile('file', stream, length, filename:basename(picture.path));
+    var multipartFile = new http.MultipartFile('file', stream, length,
+        filename: basename(picture.path));
     request.files.add(multipartFile);
 
     var response = await request.send();
@@ -29,7 +44,7 @@ class PictureApiProvider {
       throw response.statusCode;
     }
 
-    var completer = new Completer();
+    Completer<String> completer = new Completer();
     var contents = new StringBuffer();
     response.stream.transform(utf8.decoder).listen((data) {
       contents.write(data);
@@ -37,3 +52,5 @@ class PictureApiProvider {
     return completer.future;
   }
 }
+
+final pictureApiProvider = PictureApiProvider();

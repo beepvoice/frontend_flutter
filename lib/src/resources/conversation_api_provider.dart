@@ -14,9 +14,9 @@ import "./picture_api_provider.dart";
 class ConversationApiProvider {
   CacheHttp cache = CacheHttp();
   LoginManager loginManager = LoginManager();
-  PictureApiProvider pictureApiProvider = PictureApiProvider();
 
-  Future<Conversation> createConversation(String title, { File profile, bool dm = false }) async {
+  Future<Conversation> createConversation(String title,
+      {File profile, bool dm = false}) async {
     final jwt = await loginManager.getToken();
 
     String profileURL = "";
@@ -29,11 +29,7 @@ class ConversationApiProvider {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $jwt"
         },
-        body: jsonEncode({
-          "title": title,
-          "picture": profileURL,
-          "dm": dm
-        }));
+        body: jsonEncode({"title": title, "picture": profileURL, "dm": dm}));
 
     return Conversation.fromJson(jsonDecode(response.body));
   }

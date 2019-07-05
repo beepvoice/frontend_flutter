@@ -3,6 +3,7 @@ import "dart:io";
 
 import "../../models/user_model.dart";
 import "../../blocs/heartbeat_bloc.dart";
+import "../../resources/picture_api_provider.dart";
 
 class UserAvatar extends StatefulWidget {
   final User user;
@@ -42,6 +43,13 @@ class _UserAvatarState extends State<UserAvatar> {
       profileColors = _stringToColor(widget.user.lastName);
     } else {
       // Get picture
+      pictureApiProvider
+          .getPicture(widget.user.profilePic)
+          .then((File profile) {
+        setState(() {
+          profilePic = profile;
+        });
+      });
     }
   }
 
@@ -50,32 +58,38 @@ class _UserAvatarState extends State<UserAvatar> {
     return Padding(
         padding: widget.padding,
         child: Stack(alignment: Alignment.bottomRight, children: <Widget>[
-          Container(
-              height: (widget.radius * 2),
-              width: (widget.radius * 2),
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      stops: [
-                        0,
-                        1
-                      ],
-                      colors: [
-                        profileColors[0],
-                        profileColors[1],
-                      ]),
-                  borderRadius:
-                      BorderRadius.all(Radius.circular(widget.radius))),
-              child: Center(
-                child: Text(
-                  firstLetter.toUpperCase() + lastLetter.toUpperCase(),
-                  style: Theme.of(context)
-                      .accentTextTheme
-                      .title
-                      .copyWith(fontSize: widget.radius / 1.4),
-                ),
-              )),
+          (widget.user.profilePic == "")
+              ? Container(
+                  height: (widget.radius * 2),
+                  width: (widget.radius * 2),
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          stops: [
+                            0,
+                            1
+                          ],
+                          colors: [
+                            profileColors[0],
+                            profileColors[1],
+                          ]),
+                      borderRadius:
+                          BorderRadius.all(Radius.circular(widget.radius))),
+                  child: Center(
+                    child: Text(
+                      firstLetter.toUpperCase() + lastLetter.toUpperCase(),
+                      style: Theme.of(context)
+                          .accentTextTheme
+                          .title
+                          .copyWith(fontSize: widget.radius / 1.4),
+                    ),
+                  ))
+              : (profilePic != null)
+                  ? CircleAvatar(
+                      radius: widget.radius,
+                      backgroundImage: FileImage(profilePic))
+                  : Container(),
           StreamBuilder(
               stream: heartbeatReceiverBloc.stream,
               builder: (context, AsyncSnapshot<Map<String, String>> snapshot) {
