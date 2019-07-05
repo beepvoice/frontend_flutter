@@ -8,6 +8,7 @@
 
 import Foundation
 import WebRTC
+import Just
 import Starscream
 import PercentEncoder
 
@@ -70,9 +71,9 @@ class PeerManager: NSObject {
             var request = URLRequest(url: URL(string: "ws://localhost:8080/")!)
             request.setValue("Bearer \(self.authToken ?? "0")", forHTTPHeaderField: "Authorization")
             
-            self.socket = WebSocket(url: request)!
-            self?.socket.delegate = self
-            self?.socket.connect()
+            self.socket = WebSocket(request: request)
+            self.socket?.delegate = self
+            self.socket?.connect()
         } else if(self.peerConnection == nil) {
             self.connect()
         }
@@ -107,7 +108,7 @@ private extension PeerManager {
         // Add localstream to peerconnection
         self.state = .connecting
         let localStream = self.localStream()
-        peerConnection.add(localStream)
+        peerConnection?.add(localStream)
         
         // Store peerconnection
         self.peerConnection = peerConnection
@@ -138,10 +139,10 @@ private extension PeerManager {
                     print(error)
                 } else {
                     // Add ice-candidates after setting remote description
-                    for iceCandidate in self.remoteIceCandidates {
+                    for iceCandidate in this.remoteIceCandidates {
                         peerConnection.add(iceCandidate)
                     }
-                    self.remoteIceCandidates = []
+                    this.remoteIceCandidates = []
                     
                     // create answer
                     peerConnection.answer(for: this.channelConstraint, completionHandler:
@@ -151,13 +152,13 @@ private extension PeerManager {
                                 print(error)
                             } else {
                                 // add generated local sdp
-                                peerConnection.setLocalDescription(sdp, completionHandler: {[weak self] (error) in
+                                peerConnection.setLocalDescription(sdp!, completionHandler: {[weak self] (error) in
                                     guard let _ = self, let error = error else { return }
                                     print(error)
                                 })
                                 
                                 // Send the localsdp to the server
-                                self.socket?.write(string: "answer::\(sdp)")
+                                this.socket?.write(string: "answer::\(sdp!.sdp)")
                                 this.state = .connected
                             }
                     })
@@ -166,7 +167,7 @@ private extension PeerManager {
         }
     }
     
-    public func addIceCandidate(iceCandidate: RTCIceCandidate) {
+    func addIceCandidate(iceCandidate: RTCIceCandidate) {
         // Set ice candidate after setting remote description
         if self.peerConnection?.remoteDescription != nil {
             self.peerConnection?.add(iceCandidate)
@@ -233,7 +234,7 @@ extension PeerManager: RTCPeerConnectionDelegate {
 //****************************************************************************************************
 // START OF WEBSOCKET DELEGATIONS
 //****************************************************************************************************
-private extension PeerManager {
+extension PeerManager: WebSocketDelegate {
     func websocketDidConnect(socket: WebSocketClient) {
         print("websocket is connected")
     }
@@ -246,6 +247,10 @@ private extension PeerManager {
         } else {
             print("websocket disconnected")
         }
+    }
+    
+    func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
+        return
     }
     
     // FORMAT OF MESSAGE <message-type>::<message>
