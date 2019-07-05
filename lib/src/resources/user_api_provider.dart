@@ -15,14 +15,14 @@ class UserApiProvider {
   LoginManager loginManager = LoginManager();
   PictureApiProvider pictureApiProvider = new PictureApiProvider();
 
-  Future<User> createUser(
-      String username, String firstName, String lastName, String phoneNumber, String bio, File profilePic) async {
+  Future<User> createUser(String username, String firstName, String lastName,
+      String phoneNumber, String bio, File profilePic) async {
     final jwt = loginManager.getToken();
 
     // Upload picture
-    var profileURL = "";
+    var profileUrl = "";
     if (profilePic != null) {
-      profileURL = await pictureApiProvider.uploadPicture(profilePic);
+      profileUrl = await pictureApiProvider.uploadPicture(profilePic);
     }
 
     final response = await http.post("$baseUrlCore/user",
@@ -36,7 +36,7 @@ class UserApiProvider {
           "last_name": lastName,
           "phone_number": phoneNumber,
           "bio": bio,
-          "profile_pic": profileURL
+          "profile_pic": profileUrl
         }));
 
     return User.fromJson(jsonDecode(response.body));
@@ -74,8 +74,9 @@ class UserApiProvider {
   Future<User> fetchUserByUsername(String username) async {
     final jwt = await loginManager.getToken();
     try {
-      final responseBody =
-          await this.cache.fetch("$baseUrlCore/user/username/$username", headers: {
+      final responseBody = await this
+          .cache
+          .fetch("$baseUrlCore/user/username/$username", headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $jwt"
       });
@@ -85,13 +86,27 @@ class UserApiProvider {
     }
   }
 
-  Future<void> updateUser(String firstName, String lastName) async {
+  Future<void> updateUser(String firstName, String lastName, String username,
+      String bio, File profilePic) async {
     final jwt = await loginManager.getToken();
     final user = await loginManager.getUser();
+
+    // Upload picture
+    var profileUrl = "";
+    if (profilePic != null) {
+      profileUrl = await pictureApiProvider.uploadPicture(profilePic);
+    }
+
     final finalFirstName =
         firstName != "" ? firstName : user != null ? user.firstName : "";
     final finalLastName =
         lastName != "" ? lastName : user != null ? user.lastName : "";
+    final finalBio = bio != "" ? bio : user != null ? user.bio : "";
+    final finalUsername =
+        username != "" ? username : user != null ? user.username : "";
+    final finalProfileUrl =
+        profileUrl != "" ? profileUrl : user != null ? user.profilePic : "";
+
     await http.patch("$baseUrlCore/user",
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
@@ -100,6 +115,9 @@ class UserApiProvider {
         body: jsonEncode({
           "first_name": finalFirstName,
           "last_name": finalLastName,
+          "bio": finalBio,
+          "username": finalUsername,
+          "profile_pic": finalProfileUrl
         }));
   }
 }
