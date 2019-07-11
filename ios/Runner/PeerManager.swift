@@ -112,6 +112,7 @@ private extension PeerManager {
         
         // Store peerconnection
         self.peerConnection = peerConnection
+        self.createOffer()
     }
     
     func disconnect() {
@@ -124,6 +125,33 @@ private extension PeerManager {
             // Reset state
             self.peerConnection = nil
             self.state = .disconnected
+        }
+    }
+    
+    func createOffer() {
+        if let peerConnection = self.peerConnection {
+            
+            peerConnection.offer(for: self.channelConstraint, completionHandler: { [weak self]  (sdp, error) in
+                // Exit if this object doesn't exist anymore cause it is a weak link
+                guard let this = self else { return }
+                
+                if let error = error {
+                    print(error)
+                } else {
+                    // Use the sdp generated
+                    guard let sdp = sdp else{
+                        return
+                    }
+
+                    this.peerConnection?.setLocalDescription(sdp, completionHandler: {[weak self] (error) in
+                        guard let _ = self, let error = error else { return }
+                        print(error)
+                    })
+                    
+                    // Post it to the server
+                    this.socket?.write(string: "offer::\(sdp.sdp)")
+                }
+            })
         }
     }
     
@@ -151,14 +179,17 @@ private extension PeerManager {
                                 // Throw an error
                                 print(error)
                             } else {
+                                guard let sdp = sdp else{
+                                    return
+                                }
                                 // add generated local sdp
-                                peerConnection.setLocalDescription(sdp!, completionHandler: {[weak self] (error) in
+                                peerConnection.setLocalDescription(sdp, completionHandler: {[weak self] (error) in
                                     guard let _ = self, let error = error else { return }
                                     print(error)
                                 })
                                 
                                 // Send the localsdp to the server
-                                this.socket?.write(string: "answer::\(sdp!.sdp)")
+                                this.socket?.write(string: "answer::\(sdp.sdp)")
                                 this.state = .connected
                             }
                     })
@@ -166,6 +197,30 @@ private extension PeerManager {
             })
         }
     }
+    
+    func handleAnswer(remoteSdp: String) {
+        if let peerConnection = self.peerConnection {
+            let sessionDescription = RTCSessionDescription.init(type: .answer, sdp: remoteSdp)
+            
+            peerConnection.setRemoteDescription(sessionDescription, completionHandler: { [weak self] (error) in
+                // Exit if this object doesn't exist anymore cause it is a weak link
+                guard let this = self else { return }
+                
+                if let error = error {
+                    // Throw an error
+                    print(error)
+                } else {
+                    // Add ice-candidates after setting remote description
+                    for iceCandidate in this.remoteIceCandidates {
+                        peerConnection.add(iceCandidate)
+                    }
+                    this.remoteIceCandidates = []
+                    this.state = .connected
+                }
+            })
+        }
+    }
+
     
     func addIceCandidate(iceCandidate: RTCIceCandidate) {
         // Set ice candidate after setting remote description
@@ -258,23 +313,34 @@ extension PeerManager: WebSocketDelegate {
     // message:
     //  offer: <remoteSdp, String>
     //  ice: <sdp, String>::<sdpMLineIndex, String>::<sdpMid, String>
+    
     func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
         let dataArr = text.components(separatedBy: "::")
         
         if(dataArr[0] == "offer") {
             // Handle offer
             
-            // Check dataArr size of 3
+            // Check dataArr size of 2
             if dataArr.count != 2 {
                 // Incorrect data format error
                 return
             }
             
             self.createAnswerForOffer(remoteSdp: dataArr[1])
+        } else if (dataArr[0] == "answer") {
+            // Handle answer
+            
+            // Check dataArr size of 2
+            if dataArr.count != 2 {
+                // Incorrect data format error
+                return
+            }
+            
+            self.handleAnswer(remoteSdp: dataArr[1])
         } else if(dataArr[0] == "ice") {
             // Handle ice
             
-            // Check dataArr size of 3
+            // Check dataArr size of 4
             if dataArr.count != 4 {
                 // Incorrect data format error
                 return
