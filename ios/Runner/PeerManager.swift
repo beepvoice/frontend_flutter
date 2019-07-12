@@ -68,10 +68,11 @@ class PeerManager: NSObject {
         
         // Setup socket and peerconnection if it doesn't exist
         if (self.socket == nil) {
-            var request = URLRequest(url: URL(string: "ws://localhost:8080/")!)
+            var request = URLRequest(url: URL(string: "https://127.0.0.1/webrtc/connect")!)
             request.setValue("Bearer \(self.authToken ?? "0")", forHTTPHeaderField: "Authorization")
             
             self.socket = WebSocket(request: request)
+            self.socket?.disableSSLCertValidation = true
             self.socket?.delegate = self
             self.socket?.connect()
         } else if(self.peerConnection == nil) {
@@ -79,7 +80,7 @@ class PeerManager: NSObject {
         }
         
         // Configure SFU conversation Id
-        Just.post("http://localhost/join/\(conversationId)",
+        Just.post("http://localhost/webrtc/join/\(conversationId)",
             headers: ["Authorization": "Bearer \(self.authToken ?? "0")"])
     }
     
@@ -273,7 +274,7 @@ extension PeerManager: RTCPeerConnectionDelegate {
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
-        let candidateString = "\(candidate.sdp)::\(candidate.sdpMLineIndex)::\(candidate.sdpMid ?? "")"
+        let candidateString = "\(candidate.sdp)"
         self.socket?.write(string: "ice::\(candidateString)")
     }
     
@@ -319,7 +320,7 @@ extension PeerManager: WebSocketDelegate {
         
         if(dataArr[0] == "offer") {
             // Handle offer
-            
+            print("OFFER:\n\(dataArr[1])")
             // Check dataArr size of 2
             if dataArr.count != 2 {
                 // Incorrect data format error
@@ -329,7 +330,7 @@ extension PeerManager: WebSocketDelegate {
             self.createAnswerForOffer(remoteSdp: dataArr[1])
         } else if (dataArr[0] == "answer") {
             // Handle answer
-            
+            print("ANSWER:\n\(dataArr[1])")
             // Check dataArr size of 2
             if dataArr.count != 2 {
                 // Incorrect data format error
@@ -339,19 +340,15 @@ extension PeerManager: WebSocketDelegate {
             self.handleAnswer(remoteSdp: dataArr[1])
         } else if(dataArr[0] == "ice") {
             // Handle ice
-            
-            // Check dataArr size of 4
-            if dataArr.count != 4 {
+            print("ICE:\n\(dataArr[1])")
+            // Check dataArr size of 2
+            if dataArr.count != 2 {
                 // Incorrect data format error
                 return
             }
             
-            guard let sdpMLineIndex = Int32(dataArr[2]) else {
-                // Invalid sdpMLineIndex error
-                return
-            }
             
-            let iceCandidate = RTCIceCandidate(sdp: dataArr[1], sdpMLineIndex: sdpMLineIndex, sdpMid: dataArr[3])
+            let iceCandidate = RTCIceCandidate(sdp: dataArr[1], sdpMLineIndex: 0, sdpMid: nil)
             self.addIceCandidate(iceCandidate: iceCandidate)
         } else {
             // Invalid format error

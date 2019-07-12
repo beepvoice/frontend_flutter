@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import "../services/heartbeat_manager.dart";
 import "../services/conversation_manager.dart";
+import "../services/login_manager.dart";
 
 import "../blocs/message_bloc.dart";
 
@@ -19,6 +20,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final heartbeatSendManager = HeartbeatSendManager();
   final conversationManager = ConversationManager();
+  final loginManager = LoginManager();
 
   // Bottom Bar navigation
   int _tabNumber = 1;
@@ -37,6 +39,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     super.initState();
     controller = TabController(vsync: this, length: 3);
     controller.index = 1; // Set default page to conversation page
+
+    // initialize conversation manager
+    loginManager.getToken().then((authToken) async {
+      await ConversationManager.init(authToken);
+    });
 
     messageChannel.bus.listen(
         (Map<String, String> data) async => await _processMessage(data));
