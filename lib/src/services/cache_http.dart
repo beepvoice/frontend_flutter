@@ -43,7 +43,7 @@ class CacheHttp {
       } else {
         await this.db.rawInsert(
             "INSERT OR REPLACE INTO cache (url, resource) VALUES (?, ?)",
-            [url, response.body, response.body]);
+            [url, response.body]);
         return response.body;
       }
     } catch (e) {
