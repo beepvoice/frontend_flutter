@@ -42,8 +42,8 @@ class CacheHttp {
         return response.body;
       } else {
         await this.db.rawInsert(
-            "INSERT INTO cache (url, resource) VALUES (?, ?) ON CONFLICT(url) DO UPDATE SET resource = ?",
-            [url, response.body, response.body]);
+            "INSERT OR REPLACE INTO cache (url, resource) VALUES (?, ?)",
+            [url, response.body]);
         return response.body;
       }
     } catch (e) {
