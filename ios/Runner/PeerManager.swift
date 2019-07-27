@@ -68,8 +68,8 @@ class PeerManager: NSObject {
         
         // Setup socket and peerconnection if it doesn't exist
         if (self.socket == nil) {
-            var request = URLRequest(url: URL(string: "https://127.0.0.1/webrtc/connect")!)
-            request.setValue("Bearer \(self.authToken ?? "0")", forHTTPHeaderField: "Authorization")
+            var request = URLRequest(url: URL(string: "wss://localhost/webrtc/connect?token=\(self.authToken ?? "0")")!)
+            // request.setValue("Bearer \(self.authToken ?? "0")", forHTTPHeaderField: "Authorization")
             
             self.socket = WebSocket(request: request)
             self.socket?.disableSSLCertValidation = true
