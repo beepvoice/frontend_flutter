@@ -16,6 +16,16 @@ class LoginApiProvider {
     return response.body;
   }
 
+  Future<String> initAuthenticationBypass(String phoneNumber) async {
+    final response = await http.post("$baseUrlLogin/init/bypass",
+        headers: {HttpHeaders.contentTypeHeader: "application/json"},
+        body: jsonEncode({"phone_number": phoneNumber}));
+    if (response.statusCode == 400 || response.statusCode == 500) {
+      throw response.statusCode;
+    }
+    return response.body;
+  }
+
   Future<String> verifyOtp(String otp, String nonce, String clientid) async {
     final response = await http.post("$baseUrlLogin/verify",
         headers: {HttpHeaders.contentTypeHeader: "application/json"},

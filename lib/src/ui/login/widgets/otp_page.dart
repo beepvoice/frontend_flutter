@@ -57,8 +57,8 @@ class _OtpPageState extends State<OtpPage> {
                             autofocus: true,
                             highlightColor: Colors.white,
                             onTextChanged: (text) {},
-                            onDone: (text) {
-                              // widget.buttonCallback(text);
+                            onDone: (text) async {
+                              await processOtp();
                             },
                             pinBoxHeight:
                                 (MediaQuery.of(context).size.width / 6) - 15,
@@ -78,17 +78,7 @@ class _OtpPageState extends State<OtpPage> {
               ? TextButton(
                   text: "Done",
                   onClickCallback: () async {
-                    setState(() => isLoading = true);
-                    final authToken =
-                        await widget.loginManager.processOtp(controller.text);
-                    final user = await widget.loginManager.getUser();
-
-                    await ConversationManager.init(authToken);
-                    if (user.firstName == "" && user.lastName == "") {
-                      Navigator.pushNamed(context, 'welcome/register');
-                    } else {
-                      widget.homeCallback();
-                    }
+                    await processOtp();
                   })
               : Center(
                   child: SpinKitThreeBounce(
@@ -96,5 +86,18 @@ class _OtpPageState extends State<OtpPage> {
                   size: 40.0,
                 )),
         ]));
+  }
+
+  processOtp() async {
+    setState(() => isLoading = true);
+    final authToken = await widget.loginManager.processOtp(controller.text);
+    final user = await widget.loginManager.getUser();
+
+    await ConversationManager.init(authToken);
+    if (user.firstName == "" && user.lastName == "") {
+      Navigator.pushNamed(context, 'welcome/register');
+    } else {
+      widget.homeCallback();
+    }
   }
 }

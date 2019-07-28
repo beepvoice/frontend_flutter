@@ -36,6 +36,17 @@ class LoginManager {
     }
   }
 
+  Future<void> initAuthenticationBypass(String phoneNumber) async {
+    try {
+      final nonce =
+          await loginApiProvider.initAuthenticationBypass(phoneNumber);
+      this.nonce = nonce;
+      this.clientid = await UniqueIdentifier.serial;
+    } catch (e) {
+      throw e;
+    }
+  }
+
   // Throws error status code if it occurs, otherwise returns jwt
   Future<String> processOtp(String otp) async {
     try {
@@ -62,17 +73,6 @@ class LoginManager {
       final userApiProvider = UserApiProvider();
       final user = await userApiProvider.fetchUserById(userId);
       await prefs.setString("user", jsonEncode(user));
-      return jwt;
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  Future<String> loginTest(String userId) async {
-    try {
-      final jwt = await loginApiProvider.loginTest(userId, "1");
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString("token", jwt);
       return jwt;
     } catch (e) {
       throw e;
