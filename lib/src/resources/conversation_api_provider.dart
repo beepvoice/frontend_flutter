@@ -69,6 +69,7 @@ class ConversationApiProvider {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $jwt"
       });
+      print("HELLO $responseBody");
       return Conversation.fromJson(jsonDecode(responseBody));
     } catch (e) {
       throw e;

@@ -22,6 +22,7 @@ dependencies:
   unique_identifier: ^0.0.3
   contacts_service: ^0.2.8
   path_provider: ^1.1.0
+  image_jpeg: ^1.1.1
 
 
 dev_dependencies:

@@ -100,7 +100,8 @@ class _ConversationItemState extends State<ConversationItem> {
     if (data.length == 1) {
       return UserAvatar(radius: 25.0, user: data[0]);
     } else if (data.length > 1) {
-      final groupUser = new User("0", conversation.title, "", "", "", "", "");
+      final groupUser = new User(
+          "0", conversation.title, "", "", "", "", conversation.picture);
       return UserAvatar(radius: 25.0, user: groupUser);
     } else {
       return Container();

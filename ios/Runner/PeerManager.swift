@@ -30,6 +30,7 @@ class PeerManager: NSObject {
     
     // Required interfaces
     var connectionFactory: RTCPeerConnectionFactory?
+    var sock_connect: Bool = false
     var socket: WebSocket?
     
     // WebRTC
@@ -68,26 +69,26 @@ class PeerManager: NSObject {
         
         // Setup socket and peerconnection if it doesn't exist
         if (self.socket == nil) {
-            var request = URLRequest(url: URL(string: "wss://localhost/webrtc/connect?token=\(self.authToken ?? "0")")!)
-            // request.setValue("Bearer \(self.authToken ?? "0")", forHTTPHeaderField: "Authorization")
-            
+            var request = URLRequest(url: URL(string: "wss://staging.beepvoice.app/webrtc/connect")!)
+            request.setValue("Bearer \(self.authToken ?? "0")", forHTTPHeaderField: "Authorization")
+            request.setValue("staging.beepvoice.app", forHTTPHeaderField: "Host")
+
             self.socket = WebSocket(request: request)
             self.socket?.disableSSLCertValidation = true
             self.socket?.delegate = self
             self.socket?.connect()
-        } else if(self.peerConnection == nil) {
-            self.connect()
         }
         
         // Configure SFU conversation Id
-        Just.post("http://localhost/webrtc/join/\(conversationId)",
+        Just.post("https://staging.beepvoice.app/webrtc/join/\(conversationId)",
             headers: ["Authorization": "Bearer \(self.authToken ?? "0")"])
+
+        self.connect()
     }
     
     public func exit() {
         activeConversation = nil
         self.disconnect()
-        self.socket?.disconnect()
     }
     
     public func get() -> String? {
@@ -113,6 +114,7 @@ private extension PeerManager {
         
         // Store peerconnection
         self.peerConnection = peerConnection
+        print("CONNECTING")
         self.createOffer()
     }
     
@@ -122,9 +124,13 @@ private extension PeerManager {
             if let stream = peerConnection.localStreams.first {
                 peerConnection.remove(stream)
             }
+            self.socket?.disconnect()
+            self.socket?.delegate = nil
             
-            // Reset state
+            while(self.sock_connect) {}
+            
             self.peerConnection = nil
+            self.socket = nil
             self.state = .disconnected
         }
     }
@@ -149,7 +155,8 @@ private extension PeerManager {
                         print(error)
                     })
                     
-                    // Post it to the server
+                    while(!this.sock_connect){}
+
                     this.socket?.write(string: "offer::\(sdp.sdp)")
                 }
             })
@@ -275,7 +282,7 @@ extension PeerManager: RTCPeerConnectionDelegate {
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
         let candidateString = "\(candidate.sdp)"
-        self.socket?.write(string: "ice::\(candidateString)")
+        // self.socket?.write(string: "ice::\(candidateString)")
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove candidates: [RTCIceCandidate]) {
@@ -292,6 +299,7 @@ extension PeerManager: RTCPeerConnectionDelegate {
 //****************************************************************************************************
 extension PeerManager: WebSocketDelegate {
     func websocketDidConnect(socket: WebSocketClient) {
+        self.sock_connect = true
         print("websocket is connected")
     }
     
@@ -303,6 +311,8 @@ extension PeerManager: WebSocketDelegate {
         } else {
             print("websocket disconnected")
         }
+        
+        self.sock_connect = false
     }
     
     func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
@@ -317,7 +327,7 @@ extension PeerManager: WebSocketDelegate {
     
     func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
         let dataArr = text.components(separatedBy: "::")
-        
+        print(text)
         if(dataArr[0] == "offer") {
             // Handle offer
             print("OFFER:\n\(dataArr[1])")
