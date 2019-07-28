@@ -39,13 +39,11 @@ class CacheHttp {
       final response = await http.get(url, headers: headers);
 
       if (response.statusCode < 200 || response.statusCode >= 300) {
-        // Unsuccessful response, use cache
-        final body = await this.getCache(url);
-        return body;
+        return response.body;
       } else {
         await this.db.rawInsert(
-            "INSERT INTO cache (url, resource) VALUES (?, ?) ON CONFLICT(url) DO UPDATE SET resource = ?",
-            [url, response.body, response.body]);
+            "INSERT OR REPLACE INTO cache (url, resource) VALUES (?, ?)",
+            [url, response.body]);
         return response.body;
       }
     } catch (e) {
@@ -65,7 +63,7 @@ class CacheHttp {
       // Something exists in the cache
       return cached[0]["resource"]; // Return the first result
     } else {
-      throw 404;
+      throw new Exception("Network unavailable and not in cache");
     }
   }
 }
