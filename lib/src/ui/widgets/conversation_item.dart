@@ -23,6 +23,7 @@ class ConversationItem extends StatefulWidget {
 class _ConversationItemState extends State<ConversationItem> {
   final bloc;
   final Conversation conversation;
+  Widget _avatar;
 
   _ConversationItemState({@required this.conversation})
       : bloc = ConversationMembersBloc(conversation.id);
@@ -63,11 +64,11 @@ class _ConversationItemState extends State<ConversationItem> {
                           builder:
                               (context, AsyncSnapshot<List<User>> snapshot) {
                             if (snapshot.hasData) {
-                              return avatarBuilder(snapshot.data);
+                              _avatar = avatarBuilder(snapshot.data);
                             } else if (snapshot.hasError) {
                               return Text(snapshot.error.toString());
                             }
-                            return SizedBox(width: 18.0, height: 18.0);
+                            return _avatar ?? SizedBox(width: 18.0, height: 18.0);
                           }),
                       Expanded(
                           child: Container(
