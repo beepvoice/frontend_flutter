@@ -10,8 +10,10 @@ import "../widgets/user_avatar.dart";
 
 class ConversationItem extends StatefulWidget {
   final Conversation conversation;
+  final bool pinnable;
+  final bool deletable;
 
-  ConversationItem({@required this.conversation});
+  ConversationItem({@required this.conversation, this.pinnable=true, this.deletable=true});
   @override
   State<StatefulWidget> createState() {
     return _ConversationItemState(conversation: conversation);
@@ -39,7 +41,7 @@ class _ConversationItemState extends State<ConversationItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
+    Widget item = Material(
         type: MaterialType.transparency,
         elevation: 1,
         child: InkWell(
@@ -95,6 +97,27 @@ class _ConversationItemState extends State<ConversationItem> {
                                     color: Theme.of(context).primaryColorDark)),
                       ])
                     ]))));
+    return Slidable(
+      actionPane: SlidableDrawerActionPane(),
+      actionExtentRatio: 0.2,
+      showAllActionsThreshold: 1,
+      movementDuration: Duration(milliseconds: 500),
+      child: item,
+      actions: (widget.pinnable) ?
+        <Widget>[
+         IconSlideAction(
+          color: Colors.green,
+          icon: Icons.star,
+          onTap: () => print('Pin'))]
+        : [],
+      secondaryActions: (widget.deletable) ?
+        <Widget>[
+          IconSlideAction(
+            color: Colors.red,
+            icon: Icons.delete,
+            onTap: () => print('Delete'))]
+        : [],
+    );
   }
 
   Widget avatarBuilder(List<User> data) {
