@@ -98,27 +98,32 @@ class _ConversationItemState extends State<ConversationItem> {
                                     color: Theme.of(context).primaryColorDark)),
                       ])
                     ]))));
-    return Slidable(
-      actionPane: SlidableDrawerActionPane(),
-      actionExtentRatio: 0.2,
-      showAllActionsThreshold: 1,
-      movementDuration: Duration(milliseconds: 500),
-      child: item,
-      actions: (widget.pinnable) ?
-        <Widget>[
-         IconSlideAction(
-          color: Colors.green,
-          icon: Icons.star,
-          onTap: () => print('Pin'))]
-        : [],
-      secondaryActions: (widget.deletable) ?
-        <Widget>[
+    
+    if (widget.slidable) {
+      return Slidable(
+        actionPane: SlidableDrawerActionPane(),
+        actionExtentRatio: 0.18,
+        showAllActionsThreshold: 0.5,
+        movementDuration: Duration(milliseconds: 200),
+        child: item,
+        // actions: <Widget>[
+        //   IconSlideAction(
+        //       color: Colors.green,
+        //       icon: Icons.star,
+        //       onTap: () => print('Pin'))],
+        secondaryActions: <Widget>[
           IconSlideAction(
-            color: Colors.red,
-            icon: Icons.delete,
-            onTap: () => print('Delete'))]
-        : [],
-    );
+              color: Colors.green,
+              icon: Icons.star,
+              onTap: () => print('Pin')),
+          IconSlideAction(
+              color: Colors.red,
+              icon: Icons.delete,
+              onTap: () => print('Delete'))],
+      );
+    } else {
+      return item;
+    }
   }
 
   Widget avatarBuilder(List<User> data) {
