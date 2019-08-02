@@ -8,12 +8,15 @@ import "../../blocs/message_bloc.dart";
 
 import "../widgets/user_avatar.dart";
 
+typedef void OnSelectedCallback(bool state);
+
 class ConversationItem extends StatefulWidget {
   final Conversation conversation;
-  final bool pinnable;
-  final bool deletable;
+  final bool slidable;
+  final bool selectable;
+  final OnSelectedCallback onSelectedCallback;
 
-  ConversationItem({@required this.conversation, this.pinnable=true, this.deletable=true});
+  ConversationItem({@required this.conversation, this.slidable=false, this.selectable=false, this.onSelectedCallback});
   @override
   State<StatefulWidget> createState() {
     return _ConversationItemState(conversation: conversation);
@@ -24,6 +27,7 @@ class _ConversationItemState extends State<ConversationItem> {
   final bloc;
   final Conversation conversation;
   Widget _avatar;
+  bool selected = false;
 
   _ConversationItemState({@required this.conversation})
       : bloc = ConversationMembersBloc(conversation.id);
@@ -47,11 +51,19 @@ class _ConversationItemState extends State<ConversationItem> {
         elevation: 1,
         child: InkWell(
             onTap: () async {
-              await messageChannel.publish({
-                "target": "home",
-                "state": "connect",
-                "conversationId": conversation.id
-              });
+              if (widget.selectable) {
+                setState(() {
+                  selected = !selected;
+                });
+                // print('Checkbox $selected');
+              } else {
+                await messageChannel.publish({
+                  "target": "home",
+                  "state": "connect",
+                  "conversationId": conversation.id
+                });
+              }
+
             },
             child: Container(
                 padding: EdgeInsets.only(
@@ -59,6 +71,18 @@ class _ConversationItemState extends State<ConversationItem> {
                 child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+                      (widget.selectable)
+                          ? Checkbox(
+                              value: selected,
+                              activeColor: Theme.of(context).primaryColorDark,
+                              onChanged: (state) {
+                                setState(() {
+                                  selected = !selected;
+                                });
+                                // print('Checkbox $selected');
+                                // widget.onSelectedCallback(selected);
+                              })
+                          : Container(),
                       StreamBuilder(
                           stream: bloc.members,
                           builder:
