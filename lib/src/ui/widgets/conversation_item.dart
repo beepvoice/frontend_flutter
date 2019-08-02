@@ -5,6 +5,7 @@ import "../../models/user_model.dart";
 import "../../models/conversation_model.dart";
 import "../../blocs/conversation_bloc.dart";
 import "../../blocs/message_bloc.dart";
+import "../../resources/conversation_api_provider.dart";
 
 import "../widgets/user_avatar.dart";
 
@@ -145,7 +146,11 @@ class _ConversationItemState extends State<ConversationItem> {
           IconSlideAction(
               color: Colors.red,
               icon: Icons.delete,
-              onTap: () => print('Delete'))
+              onTap: () async {
+                await conversationApiProvider
+                    .deleteConversation(widget.conversation.id);
+                await conversationsBloc.fetchConversations();
+              })
         ],
       );
     } else {
