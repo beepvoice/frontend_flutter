@@ -16,7 +16,11 @@ class ConversationItem extends StatefulWidget {
   final bool selectable;
   final OnSelectedCallback onSelectedCallback;
 
-  ConversationItem({@required this.conversation, this.slidable=false, this.selectable=false, this.onSelectedCallback});
+  ConversationItem(
+      {@required this.conversation,
+      this.slidable = false,
+      this.selectable = false,
+      this.onSelectedCallback});
   @override
   State<StatefulWidget> createState() {
     return _ConversationItemState(conversation: conversation);
@@ -63,11 +67,10 @@ class _ConversationItemState extends State<ConversationItem> {
                   "conversationId": conversation.id
                 });
               }
-
             },
             child: Container(
                 padding: EdgeInsets.only(
-                    top: 8.0, left: 10.0, right: 10.0, bottom: 8.0),
+                    top: 10.0, left: 10.0, right: 10.0, bottom: 10.0),
                 child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -92,7 +95,8 @@ class _ConversationItemState extends State<ConversationItem> {
                             } else if (snapshot.hasError) {
                               return Text(snapshot.error.toString());
                             }
-                            return _avatar ?? SizedBox(width: 18.0, height: 18.0);
+                            return _avatar ??
+                                SizedBox(width: 18.0, height: 18.0);
                           }),
                       Expanded(
                           child: Container(
@@ -122,7 +126,7 @@ class _ConversationItemState extends State<ConversationItem> {
                                     color: Theme.of(context).primaryColorDark)),
                       ])
                     ]))));
-    
+
     if (widget.slidable) {
       return Slidable(
         actionPane: SlidableDrawerActionPane(),
@@ -137,13 +141,12 @@ class _ConversationItemState extends State<ConversationItem> {
         //       onTap: () => print('Pin'))],
         secondaryActions: <Widget>[
           IconSlideAction(
-              color: Colors.green,
-              icon: Icons.star,
-              onTap: () => print('Pin')),
+              color: Colors.green, icon: Icons.star, onTap: () => print('Pin')),
           IconSlideAction(
               color: Colors.red,
               icon: Icons.delete,
-              onTap: () => print('Delete'))],
+              onTap: () => print('Delete'))
+        ],
       );
     } else {
       return item;

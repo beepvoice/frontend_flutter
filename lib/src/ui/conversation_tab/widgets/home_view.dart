@@ -52,7 +52,7 @@ class _HomeViewState extends State<HomeView> {
           ]),
       Expanded(
           child:
-              ListView(padding: EdgeInsets.only(top: 10.0), children: <Widget>[
+              ListView(padding: EdgeInsets.only(top: 0.0), children: <Widget>[
         StreamBuilder(
             stream: conversationsBloc.conversations,
             builder: (context, AsyncSnapshot<List<Conversation>> snapshot) {
@@ -73,7 +73,7 @@ class _HomeViewState extends State<HomeView> {
       shrinkWrap: true,
       itemCount: data.length,
       itemBuilder: (context, index) {
-        return ConversationItem(conversation: data[index]);
+        return ConversationItem(conversation: data[index], slidable: true);
       },
     );
   }
