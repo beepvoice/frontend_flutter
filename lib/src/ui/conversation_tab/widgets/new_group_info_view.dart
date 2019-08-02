@@ -54,7 +54,6 @@ class _NewGroupInfoViewState extends State<NewGroupInfoView> {
                   .createConversation(nameController.text, profile: _image);
 
               for (var user in widget.users) {
-                print(user);
                 await conversationApiProvider.createConversationMember(
                     conversation.id, user.id);
               }

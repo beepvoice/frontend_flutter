@@ -34,14 +34,6 @@ class ConversationApiProvider {
     return Conversation.fromJson(jsonDecode(response.body));
   }
 
-  void deleteConversation(String id) async {
-    final jwt = await loginManager.getToken();
-    await http.delete("$baseUrlCore/user/conversation/$id", headers: {
-      HttpHeaders.contentTypeHeader: "application/json",
-      HttpHeaders.authorizationHeader: "Bearer $jwt"
-    });
-  }
-
   Future<List<Conversation>> fetchConversations() async {
     final jwt = await loginManager.getToken();
     print("BASEURLCORE: $baseUrlCore");
@@ -71,6 +63,19 @@ class ConversationApiProvider {
       });
       print("HELLO $responseBody");
       return Conversation.fromJson(jsonDecode(responseBody));
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> deleteConversation(String id) async {
+    final jwt = await loginManager.getToken();
+    try {
+      final responseBody =
+          await http.delete("$baseUrlCore/user/conversation/$id", headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $jwt"
+      });
     } catch (e) {
       throw e;
     }
