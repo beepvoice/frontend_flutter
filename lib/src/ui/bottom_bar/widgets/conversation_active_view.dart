@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 
-import "../../widgets/user_avatar.dart";
+import "../../widgets/image_avatar.dart";
 import "../../../resources/conversation_api_provider.dart";
 import "../../../models/conversation_model.dart";
 import "../../../blocs/message_bloc.dart";
@@ -44,8 +44,10 @@ class _ConversationActiveViewState extends State<ConversationActiveView> {
       print(users[0].id);
       setState(() {
         _users = users
-            .map((user) => UserAvatar(
-                radius: 18.0, padding: EdgeInsets.only(right: 5.0), user: user))
+            .map((user) => ImageAvatar(
+                info: ImageAvatarInfo.fromUser(user),
+                radius: 18.0,
+                padding: EdgeInsets.only(right: 5.0)))
             .toList();
       });
     });

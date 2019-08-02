@@ -7,7 +7,7 @@ import "../../blocs/conversation_bloc.dart";
 import "../../blocs/message_bloc.dart";
 import "../../resources/conversation_api_provider.dart";
 
-import "../widgets/user_avatar.dart";
+import "../widgets/image_avatar.dart";
 
 typedef void OnSelectedCallback(bool state);
 
@@ -160,10 +160,13 @@ class _ConversationItemState extends State<ConversationItem> {
 
   Widget avatarBuilder(List<User> data) {
     if (data.length == 1) {
-      return UserAvatar(radius: 25.0, user: data[0]);
+      // This means that it is a DM
+      final avatarInfo = ImageAvatarInfo.fromUser(data[0]);
+      return ImageAvatar(info: avatarInfo, radius: 25.0);
     } else if (data.length > 1) {
-      final groupUser = new User("0", conversation.title, "", "", "", "", "");
-      return UserAvatar(radius: 25.0, user: groupUser);
+      // This means that it is a group conversation
+      final avatarInfo = ImageAvatarInfo.fromConversation(widget.conversation);
+      return ImageAvatar(info: avatarInfo, radius: 25.0);
     } else {
       return Container();
     }

@@ -36,6 +36,7 @@ class ConversationApiProvider {
 
   Future<List<Conversation>> fetchConversations() async {
     final jwt = await loginManager.getToken();
+    print("BASEURLCORE: $baseUrlCore");
     try {
       final responseBody =
           await this.cache.fetch("$baseUrlCore/user/conversation", headers: {
@@ -60,6 +61,7 @@ class ConversationApiProvider {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $jwt"
       });
+      print("HELLO $responseBody");
       return Conversation.fromJson(jsonDecode(responseBody));
     } catch (e) {
       throw e;

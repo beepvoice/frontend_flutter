@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:image_picker_modern/image_picker_modern.dart';
+import 'package:image_jpeg/image_jpeg.dart';
+import "package:path_provider/path_provider.dart";
 import "dart:io";
 
 import "../../../models/user_model.dart";
@@ -94,11 +96,17 @@ class _NewGroupInfoViewState extends State<NewGroupInfoView> {
               icon: Icons.insert_photo,
               text: "Add a group photo",
               onClickCallback: () async {
+                // First get the image
                 var image =
                     await ImagePicker.pickImage(source: ImageSource.gallery);
 
+                // Compress image into temp
+                Directory tempDir = await getTemporaryDirectory();
+                String compressedImage = await ImageJpeg.encodeJpeg(
+                    image.path, "${tempDir.path}/temp_pic.jpg", 70, 500, 500);
+
                 setState(() {
-                  _image = image;
+                  _image = File(compressedImage);
                 });
               })),
       Expanded(

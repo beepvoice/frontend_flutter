@@ -1,28 +1,58 @@
 import "package:flutter/material.dart";
 import "dart:io";
 
-import "../../models/user_model.dart";
 import "../../blocs/heartbeat_bloc.dart";
 import "../../resources/picture_api_provider.dart";
+import "../../models/user_model.dart";
+import "../../models/conversation_model.dart";
 
-class UserAvatar extends StatefulWidget {
-  final User user;
+class ImageAvatarInfo {
+  final String firstName;
+  final String lastName;
+  final String coverPic;
+  final String heartbeatId;
+  final bool isHeartbeat;
+
+  ImageAvatarInfo(
+      {@required this.lastName,
+      this.firstName: "",
+      this.coverPic: "",
+      this.isHeartbeat: false,
+      this.heartbeatId: ""});
+
+  factory ImageAvatarInfo.fromUser(User user) {
+    return ImageAvatarInfo(
+        firstName: user.firstName,
+        lastName: user.lastName,
+        isHeartbeat: true,
+        heartbeatId: user.id,
+        coverPic: user.profilePic);
+  }
+
+  factory ImageAvatarInfo.fromConversation(Conversation conversation) {
+    return ImageAvatarInfo(
+        lastName: conversation.title, coverPic: conversation.picture);
+  }
+}
+
+class ImageAvatar extends StatefulWidget {
+  final ImageAvatarInfo info;
   final EdgeInsetsGeometry padding;
   final double radius;
 
-  UserAvatar(
-      {@required this.user,
+  ImageAvatar(
+      {@required this.info,
       this.padding: const EdgeInsets.all(0.0),
       this.radius: 20.0});
 
   @override
   State<StatefulWidget> createState() {
-    return _UserAvatarState();
+    return _ImageAvatarState();
   }
 }
 
-class _UserAvatarState extends State<UserAvatar> {
-  String lastStatus = "";
+class _ImageAvatarState extends State<ImageAvatar> {
+  String lastStatus;
   String firstLetter;
   String lastLetter;
 
@@ -33,19 +63,19 @@ class _UserAvatarState extends State<UserAvatar> {
   initState() {
     super.initState();
 
-    lastStatus = heartbeatReceiverBloc.getLastStatus(widget.user.id);
+    lastStatus = (widget.info.isHeartbeat)
+        ? heartbeatReceiverBloc.getLastStatus(widget.info.heartbeatId)
+        : "";
 
-    if (widget.user.profilePic == "") {
+    if (widget.info.coverPic == "") {
       firstLetter =
-          (widget.user.firstName.isEmpty) ? '' : widget.user.firstName[0];
+          (widget.info.firstName.isEmpty) ? '' : widget.info.firstName[0];
       lastLetter =
-          (widget.user.lastName.isEmpty) ? '' : widget.user.lastName[0];
-      profileColors = _stringToColor(widget.user.lastName);
+          (widget.info.lastName.isEmpty) ? '' : widget.info.lastName[0];
+      profileColors = _stringToColor(widget.info.lastName);
     } else {
       // Get picture
-      pictureApiProvider
-          .getPicture(widget.user.profilePic)
-          .then((File profile) {
+      pictureApiProvider.getPicture(widget.info.coverPic).then((File profile) {
         setState(() {
           profilePic = profile;
         });
@@ -58,7 +88,7 @@ class _UserAvatarState extends State<UserAvatar> {
     return Padding(
         padding: widget.padding,
         child: Stack(alignment: Alignment.bottomRight, children: <Widget>[
-          (widget.user.profilePic == "")
+          (widget.info.coverPic == "")
               ? Container(
                   height: (widget.radius * 2),
                   width: (widget.radius * 2),
@@ -97,7 +127,7 @@ class _UserAvatarState extends State<UserAvatar> {
                 if (snapshot.hasData) {
                   state = snapshot.data;
 
-                  if (state["user"] == widget.user.id) {
+                  if (state["user"] == widget.info.heartbeatId) {
                     this.lastStatus = state["status"];
                   }
 

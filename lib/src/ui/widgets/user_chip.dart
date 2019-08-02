@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 
 import "../../models/user_model.dart";
-import "./user_avatar.dart";
+import "./image_avatar.dart";
 
 class UserChip extends StatelessWidget {
   final User user;
@@ -11,7 +11,7 @@ class UserChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Chip(
-        avatar: UserAvatar(user: user, radius: 12.0),
+        avatar: ImageAvatar(info: ImageAvatarInfo.fromUser(user), radius: 12.0),
         elevation: 1.5,
         label: Text(user.firstName + " " + user.lastName));
   }

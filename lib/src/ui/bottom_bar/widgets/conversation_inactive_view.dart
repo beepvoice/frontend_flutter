@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 
-import "../../widgets/user_avatar.dart";
+import "../../widgets/image_avatar.dart";
 import "../../../models/user_model.dart";
 
 class ConversationInactiveView extends StatelessWidget {
@@ -12,18 +12,21 @@ class ConversationInactiveView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            UserAvatar(
+            ImageAvatar(
                 radius: 18,
                 padding: EdgeInsets.only(right: 5.0),
-                user: User("1", "Isaac", "Tay", "+65 91043593", "", "", "")),
-            UserAvatar(
+                info: ImageAvatarInfo.fromUser(
+                    User("1", "Isaac", "Tay", "+65 91043593", "", "", ""))),
+            ImageAvatar(
                 radius: 18,
                 padding: EdgeInsets.only(right: 5.0),
-                user: User("1", "Isaac", "Tay", "+65 91043593", "", "", "")),
-            UserAvatar(
+                info: ImageAvatarInfo.fromUser(
+                    User("1", "Isaac", "Tay", "+65 91043593", "", "", ""))),
+            ImageAvatar(
                 radius: 18,
                 padding: EdgeInsets.only(right: 5.0),
-                user: User("1", "Isaac", "Tay", "+65 91043593", "", "", ""))
+                info: ImageAvatarInfo.fromUser(
+                    User("1", "Isaac", "Tay", "+65 91043593", "", "", "")))
           ])
     ]));
   }

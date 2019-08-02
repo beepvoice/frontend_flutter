@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 
 import "../../models/user_model.dart";
-import "../widgets/user_avatar.dart";
+import "../widgets/image_avatar.dart";
 
 typedef void OnClickCallback(bool state);
 
@@ -54,8 +54,8 @@ class _ContactItemState extends State<ContactItem> {
                                 widget.onClickCallback(selected);
                               })
                           : Container(),
-                      UserAvatar(
-                          user: widget.user,
+                      ImageAvatar(
+                          info: ImageAvatarInfo.fromUser(widget.user),
                           radius: 18.0,
                           padding: EdgeInsets.only(
                               left: ((widget.selectable) ? 0 : 15.0))),

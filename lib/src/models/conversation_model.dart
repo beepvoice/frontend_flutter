@@ -6,9 +6,10 @@ part "conversation_model.g.dart";
 class Conversation {
   final String id;
   final String title;
+  final bool dm;
   final String picture;
 
-  Conversation(this.id, this.title, this.picture);
+  Conversation(this.id, this.title, this.picture, this.dm);
 
   factory Conversation.fromJson(Map<String, dynamic> json) =>
       _$ConversationFromJson(json);

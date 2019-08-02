@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import "../../widgets/text_button.dart";
 import "../../../services/login_manager.dart";
+import "../../../../settings.dart";
 import "phone_input.dart";
 
 class LoginPage extends StatefulWidget {
@@ -64,9 +65,13 @@ class _LoginPageState extends State<LoginPage> {
                       text: "Continue",
                       onClickCallback: () async {
                         setState(() => isLoading = true);
-
-                        await widget.loginManager
-                            .initAuthentication("+65${controller.text}");
+                        if (BYPASS_AUTH) {
+                          await widget.loginManager.initAuthenticationBypass(
+                              "+65${controller.text}");
+                        } else {
+                          await widget.loginManager
+                              .initAuthentication("+65${controller.text}");
+                        }
                         Navigator.pushNamed(context, 'welcome/otp');
                       })
                   : Center(
