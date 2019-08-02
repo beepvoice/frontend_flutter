@@ -60,7 +60,7 @@ class _ConversationItemState extends State<ConversationItem> {
                 setState(() {
                   selected = !selected;
                 });
-                // print('Checkbox $selected');
+                widget.onSelectedCallback(selected);
               } else {
                 await messageChannel.publish({
                   "target": "home",
@@ -84,7 +84,7 @@ class _ConversationItemState extends State<ConversationItem> {
                                   selected = !selected;
                                 });
                                 // print('Checkbox $selected');
-                                // widget.onSelectedCallback(selected);
+                                widget.onSelectedCallback(selected);
                               })
                           : Container(),
                       StreamBuilder(

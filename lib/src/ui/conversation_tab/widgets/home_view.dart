@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 
 import "../../../models/conversation_model.dart";
 import "../../../blocs/conversation_bloc.dart";
+import "../../../resources/conversation_api_provider.dart";
 
 import "../../widgets/conversation_item.dart";
 import "../../widgets/top_bar.dart";
@@ -17,6 +18,9 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final searchController = TextEditingController();
+
+  List<Conversation> selectedConversations = [];
+  bool editConversations = false;
 
   @override
   initState() {
@@ -37,19 +41,41 @@ class _HomeViewState extends State<HomeView> {
           title: "Conversations",
           search: SearchInput(
               controller: searchController, hintText: "Search for people"),
-          children: <Widget>[
-            SmallTextButton(
-                text: "Edit",
-                onClickCallback: () {
-                  print("hello");
-                }),
-            Spacer(),
-            IconButton(
-                icon: Icon(Icons.add_comment),
-                onPressed: () {
-                  Navigator.pushNamed(context, "conversation/new");
-                }),
-          ]),
+          children: (editConversations)
+              ? <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      setState(() => editConversations = false);
+                    },
+                  ),
+                  Spacer(),
+                  SmallTextButton(
+                      text: "Delete All",
+                      onClickCallback: () async {
+                        for (var conversation in selectedConversations) {
+                          await conversationApiProvider
+                              .deleteConversation(conversation.id);
+                        }
+                        setState(() {
+                          editConversations = false;
+                        });
+                        await conversationsBloc.fetchConversations();
+                      }),
+                ]
+              : <Widget>[
+                  SmallTextButton(
+                      text: "Edit",
+                      onClickCallback: () {
+                        setState(() => editConversations = true);
+                      }),
+                  Spacer(),
+                  IconButton(
+                      icon: Icon(Icons.add_comment),
+                      onPressed: () {
+                        Navigator.pushNamed(context, "conversation/new");
+                      }),
+                ]),
       Expanded(
           child:
               ListView(padding: EdgeInsets.only(top: 0.0), children: <Widget>[
@@ -73,7 +99,17 @@ class _HomeViewState extends State<HomeView> {
       shrinkWrap: true,
       itemCount: data.length,
       itemBuilder: (context, index) {
-        return ConversationItem(conversation: data[index], slidable: true);
+        return ConversationItem(
+            conversation: data[index],
+            slidable: !editConversations,
+            selectable: editConversations,
+            onSelectedCallback: (selected) {
+              if (selected) {
+                selectedConversations.add(data[index]);
+              } else {
+                selectedConversations.remove(data[index]);
+              }
+            });
       },
     );
   }
