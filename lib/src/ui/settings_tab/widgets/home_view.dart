@@ -1,3 +1,5 @@
+import 'dart:async' show Future;
+
 import "package:flutter/material.dart";
 import 'package:frontend_flutter/src/ui/widgets/image_avatar.dart';
 
@@ -12,7 +14,7 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final searchController = TextEditingController();
+  final _textFieldController = TextEditingController();
 
   @override
   initState() {
@@ -22,6 +24,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   dispose() {
     super.dispose();
+    _textFieldController.dispose();
   }
 
   @override
@@ -49,7 +52,17 @@ class _HomeViewState extends State<HomeView> {
               icon: Icons.person,
               text: 'Daniel Lim Hai',
               subtitle: 'Name',
-              onClickCallback: () {},
+              onClickCallback: () {
+                _displayTextFieldDialog(
+                  context: context,
+                  title: 'Edit Name',
+                  existingText: 'Daniel Lim Hai',
+                  hintText: 'Name',
+                ).then((text) {
+                  //TODO: Logic for changing name
+                  print(text);
+                });
+              },
               textStyle: Theme.of(context)
                   .textTheme
                   .title
@@ -60,7 +73,17 @@ class _HomeViewState extends State<HomeView> {
               icon: Icons.info,
               text: 'Hey there, I am using Beep!',
               subtitle: 'Bio',
-              onClickCallback: () {},
+              onClickCallback: () {
+                _displayTextFieldDialog(
+                  context: context,
+                  title: 'Edit Bio',
+                  existingText: 'Placeholder bio',
+                  hintText: 'Bio',
+                ).then((text) {
+                  //TODO: Logic for changing bio
+                  print(text);
+                });
+              },
               textStyle: Theme.of(context)
                   .textTheme
                   .title
@@ -102,5 +125,47 @@ class _HomeViewState extends State<HomeView> {
         ),
       ),
     ]);
+  }
+
+  _displayTextFieldDialog({
+    @required BuildContext context,
+    @required String title,
+    String existingText,
+    String hintText,
+  }) async {
+    _textFieldController.text = existingText;
+
+    // Introduce artificial delay so the button press animation can be seen
+    await new Future.delayed(const Duration(milliseconds: 220));
+
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              title,
+              style: Theme.of(context).textTheme.title,
+            ),
+            content: TextField(
+              controller: _textFieldController,
+              decoration: InputDecoration(hintText: hintText),
+              autofocus: true,
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              new FlatButton(
+                child: new Text('Submit'),
+                onPressed: () {
+                  Navigator.of(context).pop(_textFieldController.text);
+                },
+              ),
+            ],
+          );
+        });
   }
 }
