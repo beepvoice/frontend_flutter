@@ -40,22 +40,6 @@ class _HomeViewState extends State<HomeView> {
                 info: ImageAvatarInfo(lastName: 'Daniel'), radius: 70.0),
           ),
         ],
-        // Column(
-        //   crossAxisAlignment: CrossAxisAlignment.start,
-        //   children: <Widget>[
-        //     Text(
-        //       'Daniel Lim Hai',
-        //       style: Theme.of(context)
-        //           .textTheme
-        //           .title
-        //           .copyWith(fontSize: 18.0),
-        //     ),
-        //     Text(
-        //       'Insert bio here',
-        //       style: Theme.of(context).textTheme.subtitle,
-        //     ),
-        //   ],
-        // ),
       ),
       Expanded(
         child: ListView(
