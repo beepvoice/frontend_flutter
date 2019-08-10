@@ -9,6 +9,7 @@ import "../blocs/message_bloc.dart";
 
 import "./conversation_tab/conversation_tab.dart";
 import "./contact_tab/contact_tab.dart";
+import './settings_tab/settings_tab.dart';
 import "./bottom_bar/bottom_bar.dart";
 
 class Home extends StatefulWidget {
@@ -89,7 +90,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           children: <Widget>[
             ContactTab(),
             ConversationTab(),
-            Container(),
+            SettingsTab(),
           ]),
       bottomNavigationBar:
           Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
