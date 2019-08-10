@@ -64,7 +64,55 @@ class _HomeViewState extends State<HomeView> {
             ListButton(
               icon: Icons.person,
               text: 'Daniel Lim Hai',
+              subtitle: 'Name',
               onClickCallback: () {},
+              textStyle: Theme.of(context)
+                  .textTheme
+                  .title
+                  .copyWith(color: Theme.of(context).accentColor),
+              iconColor: Theme.of(context).primaryColorDark,
+            ),
+            ListButton(
+              icon: Icons.info,
+              text: 'Hey there, I am using Beep!',
+              subtitle: 'Bio',
+              onClickCallback: () {},
+              textStyle: Theme.of(context)
+                  .textTheme
+                  .title
+                  .copyWith(color: Theme.of(context).accentColor),
+              iconColor: Theme.of(context).primaryColorDark,
+            ),
+            Divider(),
+            ListButton(
+              icon: Icons.notifications,
+              text: 'Notifications',
+              onClickCallback: () {},
+              textStyle: Theme.of(context)
+                  .textTheme
+                  .title
+                  .copyWith(color: Theme.of(context).accentColor),
+              iconColor: Theme.of(context).primaryColorDark,
+            ),
+            ListButton(
+              icon: Icons.security,
+              text: 'Security',
+              onClickCallback: () {},
+              textStyle: Theme.of(context)
+                  .textTheme
+                  .title
+                  .copyWith(color: Theme.of(context).accentColor),
+              iconColor: Theme.of(context).primaryColorDark,
+            ),
+            ListButton(
+              icon: Icons.exit_to_app,
+              text: 'Sign Out',
+              onClickCallback: () {},
+              textStyle: Theme.of(context)
+                  .textTheme
+                  .title
+                  .copyWith(color: Colors.redAccent),
+              iconColor: Colors.redAccent,
             ),
           ],
         ),
