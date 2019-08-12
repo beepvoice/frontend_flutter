@@ -36,7 +36,13 @@ class _HomeViewState extends State<HomeView> {
         TopBar(
           title: "Settings",
           children: <Widget>[
-            BackButton(),
+            Visibility(
+              child: BackButton(),
+              maintainSize: true,
+              maintainAnimation: true,
+              maintainState: true,
+              visible: false,
+            ),
             Spacer(),
           ],
         ),
@@ -127,9 +133,11 @@ class _HomeViewState extends State<HomeView> {
               ),
               Divider(),
               ListButton(
-                icon: Icons.notifications,
-                text: 'Notifications',
-                onClickCallback: () {},
+                icon: Icons.color_lens,
+                text: 'Interface',
+                onClickCallback: () {
+                  Navigator.of(context).pushNamed("settings/interface");
+                },
                 textStyle: Theme.of(context)
                     .textTheme
                     .title
@@ -137,9 +145,11 @@ class _HomeViewState extends State<HomeView> {
                 iconColor: Theme.of(context).primaryColorDark,
               ),
               ListButton(
-                icon: Icons.color_lens,
-                text: 'Interface',
-                onClickCallback: () {},
+                icon: Icons.notifications,
+                text: 'Notifications',
+                onClickCallback: () {
+                  Navigator.of(context).pushNamed("settings/notifications");
+                },
                 textStyle: Theme.of(context)
                     .textTheme
                     .title
@@ -149,7 +159,9 @@ class _HomeViewState extends State<HomeView> {
               ListButton(
                 icon: Icons.security,
                 text: 'Privacy and Security',
-                onClickCallback: () {},
+                onClickCallback: () {
+                  Navigator.of(context).pushNamed("settings/privacy_security");
+                },
                 textStyle: Theme.of(context)
                     .textTheme
                     .title
@@ -159,7 +171,9 @@ class _HomeViewState extends State<HomeView> {
               ListButton(
                 icon: Icons.data_usage,
                 text: 'Data Usage',
-                onClickCallback: () {},
+                onClickCallback: () {
+                  Navigator.of(context).pushNamed("settings/data_usage");
+                },
                 textStyle: Theme.of(context)
                     .textTheme
                     .title
