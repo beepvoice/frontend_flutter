@@ -15,6 +15,8 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final _textFieldController = TextEditingController();
+  String name = 'Daniel Lim Hai';
+  String bio = 'Hey there, I am using Meep!';
 
   @override
   initState() {
@@ -37,11 +39,13 @@ class _HomeViewState extends State<HomeView> {
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: ImageAvatar(
-                info: ImageAvatarInfo(lastName: 'Daniel'), radius: 70.0),
-          ),
+          Stack(children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: ImageAvatar(
+                  info: ImageAvatarInfo(lastName: 'Daniel'), radius: 70.0),
+            ),
+          ]),
         ],
       ),
       Expanded(
@@ -50,17 +54,22 @@ class _HomeViewState extends State<HomeView> {
           children: <Widget>[
             ListButton(
               icon: Icons.person,
-              text: 'Daniel Lim Hai',
+              text: name,
               subtitle: 'Name',
               onClickCallback: () {
                 _displayTextFieldDialog(
                   context: context,
                   title: 'Edit Name',
-                  existingText: 'Daniel Lim Hai',
+                  existingText: name,
                   hintText: 'Name',
                 ).then((text) {
                   //TODO: Logic for changing name
-                  print(text);
+                  if (text != null) {
+                    setState(() {
+                      name = text;
+                      print(text);
+                    });
+                  }
                 });
               },
               textStyle: Theme.of(context)
@@ -71,17 +80,22 @@ class _HomeViewState extends State<HomeView> {
             ),
             ListButton(
               icon: Icons.info,
-              text: 'Hey there, I am using Beep!',
+              text: bio,
               subtitle: 'Bio',
               onClickCallback: () {
                 _displayTextFieldDialog(
                   context: context,
                   title: 'Edit Bio',
-                  existingText: 'Placeholder bio',
+                  existingText: bio,
                   hintText: 'Bio',
                 ).then((text) {
                   //TODO: Logic for changing bio
-                  print(text);
+                  if (text != null) {
+                    setState(() {
+                      bio = text;
+                      print(text);
+                    });
+                  }
                 });
               },
               textStyle: Theme.of(context)
