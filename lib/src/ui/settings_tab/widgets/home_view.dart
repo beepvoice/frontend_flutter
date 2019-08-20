@@ -31,6 +31,10 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    var _titleTheme = Theme.of(context)
+        .textTheme
+        .title
+        .copyWith(color: Theme.of(context).accentColor);
     return Column(
       children: <Widget>[
         TopBar(
@@ -99,10 +103,7 @@ class _HomeViewState extends State<HomeView> {
                     }
                   });
                 },
-                textStyle: Theme.of(context)
-                    .textTheme
-                    .title
-                    .copyWith(color: Theme.of(context).accentColor),
+                textStyle: _titleTheme,
                 iconColor: Theme.of(context).primaryColorDark,
               ),
               ListButton(
@@ -125,10 +126,7 @@ class _HomeViewState extends State<HomeView> {
                     }
                   });
                 },
-                textStyle: Theme.of(context)
-                    .textTheme
-                    .title
-                    .copyWith(color: Theme.of(context).accentColor),
+                textStyle: _titleTheme,
                 iconColor: Theme.of(context).primaryColorDark,
               ),
               Divider(),
@@ -138,10 +136,7 @@ class _HomeViewState extends State<HomeView> {
                 onClickCallback: () {
                   Navigator.of(context).pushNamed("settings/interface");
                 },
-                textStyle: Theme.of(context)
-                    .textTheme
-                    .title
-                    .copyWith(color: Theme.of(context).accentColor),
+                textStyle: _titleTheme,
                 iconColor: Theme.of(context).primaryColorDark,
               ),
               ListButton(
@@ -150,10 +145,7 @@ class _HomeViewState extends State<HomeView> {
                 onClickCallback: () {
                   Navigator.of(context).pushNamed("settings/notifications");
                 },
-                textStyle: Theme.of(context)
-                    .textTheme
-                    .title
-                    .copyWith(color: Theme.of(context).accentColor),
+                textStyle: _titleTheme,
                 iconColor: Theme.of(context).primaryColorDark,
               ),
               ListButton(
@@ -162,10 +154,7 @@ class _HomeViewState extends State<HomeView> {
                 onClickCallback: () {
                   Navigator.of(context).pushNamed("settings/privacy_security");
                 },
-                textStyle: Theme.of(context)
-                    .textTheme
-                    .title
-                    .copyWith(color: Theme.of(context).accentColor),
+                textStyle: _titleTheme,
                 iconColor: Theme.of(context).primaryColorDark,
               ),
               ListButton(
@@ -174,10 +163,7 @@ class _HomeViewState extends State<HomeView> {
                 onClickCallback: () {
                   Navigator.of(context).pushNamed("settings/data_usage");
                 },
-                textStyle: Theme.of(context)
-                    .textTheme
-                    .title
-                    .copyWith(color: Theme.of(context).accentColor),
+                textStyle: _titleTheme,
                 iconColor: Theme.of(context).primaryColorDark,
               ),
               Divider(),
