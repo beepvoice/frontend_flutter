@@ -25,10 +25,12 @@ class ListTextButton extends StatelessWidget {
       child: InkWell(
         onTap: onClickCallback,
         child: Container(
+          height: 62.0,
           padding:
               EdgeInsets.only(left: 15.0, right: 15.0, top: 12.0, bottom: 12.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
                 text,
