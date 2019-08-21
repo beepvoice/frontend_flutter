@@ -10,10 +10,13 @@ class ConversationsBloc {
   Observable<List<Conversation>> get conversations =>
       _conversationsFetcher.stream;
 
+  Observable<List<Conversation>> get pinnedConversations =>
+      _conversationsFetcher.stream.map((conversationList) =>
+          conversationList.where((conversation) => conversation.pinned));
+
   fetchConversations() async {
     List<Conversation> conversationList =
         await conversationApiProvider.fetchConversations();
-    print(conversationList);
     _conversationsFetcher.sink.add(conversationList);
   }
 
@@ -35,6 +38,7 @@ class ConversationMembersBloc {
   fetchMembers() async {
     List<User> memberList =
         await _provider.fetchConversationMembers(conversationId);
+    print(memberList);
     _membersFetcher.sink.add(memberList);
   }
 

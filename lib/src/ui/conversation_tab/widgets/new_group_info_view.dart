@@ -51,7 +51,8 @@ class _NewGroupInfoViewState extends State<NewGroupInfoView> {
             text: "Create",
             onClickCallback: () async {
               final conversation = await conversationApiProvider
-                  .createConversation(nameController.text, profile: _image);
+                  .createConversation(nameController.text,
+                      profile: _image, dm: true);
 
               for (var user in widget.users) {
                 await conversationApiProvider.createConversationMember(
