@@ -25,7 +25,7 @@ class ListTextButton extends StatelessWidget {
       child: InkWell(
         onTap: onClickCallback,
         child: Container(
-          height: 62.0,
+          height: (subtitle == null) ? 62.0 : null, // Default height if no subtitles
           padding:
               EdgeInsets.only(left: 15.0, right: 15.0, top: 12.0, bottom: 12.0),
           child: Column(
