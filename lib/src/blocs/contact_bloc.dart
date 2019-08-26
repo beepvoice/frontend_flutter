@@ -11,11 +11,14 @@ import "../../settings.dart";
 
 class ContactBloc {
   final _contactsFetcher = PublishSubject<List<User>>();
+  final http.Client client = http.Client();
   LoginManager loginManager = LoginManager();
 
-  final http.Client client = http.Client();
-
   Observable<List<User>> get contacts => _contactsFetcher.stream;
+
+  ContactBloc() {
+    init();
+  }
 
   init() async {
     final authToken = await loginManager.getToken();

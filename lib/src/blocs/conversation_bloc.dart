@@ -1,11 +1,20 @@
-import "package:rxdart/rxdart.dart";
+import "dart:io";
+import "dart:convert";
 
-import "../resources/conversation_api_provider.dart";
+import "package:rxdart/rxdart.dart";
+import "package:eventsource/eventsource.dart";
+import "package:http/http.dart" as http;
+
+import "../services/login_manager.dart";
 import "../models/user_model.dart";
 import "../models/conversation_model.dart";
+import "../../settings.dart";
 
-class ConversationsBloc {
+class ConversationBloc {
   final _conversationsFetcher = PublishSubject<List<Conversation>>();
+  final http.Client client = http.Client();
+
+  LoginManager loginManager = LoginManager();
 
   Observable<List<Conversation>> get conversations =>
       _conversationsFetcher.stream;
@@ -15,10 +24,30 @@ class ConversationsBloc {
           .where((conversation) => conversation.pinned)
           .toList());
 
-  fetchConversations() async {
-    List<Conversation> conversationList =
-        await conversationApiProvider.fetchConversations();
-    _conversationsFetcher.sink.add(conversationList);
+  ConversationBloc() {
+    init();
+  }
+
+  init() async {
+    final authToken = await loginManager.getToken();
+
+    // REGISTERING THE CONVERSATION
+    EventSource.connect("$baseUrlCore/user/conversation", headers: {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $authToken"
+    }).then((es) {
+      es.listen((Event event) {
+        if (event.data == null) {
+          return;
+        }
+
+        List<Conversation> conversations = jsonDecode(event.data)
+            .map<Conversation>(
+                (conversation) => Conversation.fromJson(conversation))
+            .toList();
+        _conversationsFetcher.sink.add(conversations);
+      });
+    }).catchError((e) => {});
   }
 
   dispose() {
@@ -26,21 +55,39 @@ class ConversationsBloc {
   }
 }
 
-// Should be a scoped widget
 class ConversationMembersBloc {
   final String conversationId;
-  final _provider = ConversationApiProvider();
   final _membersFetcher = PublishSubject<List<User>>();
+  final http.Client client = http.Client();
 
-  ConversationMembersBloc(this.conversationId);
+  LoginManager loginManager = LoginManager();
 
   Observable<List<User>> get members => _membersFetcher.stream;
 
-  fetchMembers() async {
-    List<User> memberList =
-        await _provider.fetchConversationMembers(conversationId);
-    print(memberList);
-    _membersFetcher.sink.add(memberList);
+  ConversationMembersBloc(this.conversationId) {
+    init();
+  }
+
+  init() async {
+    final authToken = await loginManager.getToken();
+
+    EventSource.connect(
+        "$baseUrlCore/user/conversation/${this.conversationId}/member",
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer $authToken"
+        }).then((es) {
+      es.listen((Event event) {
+        if (event.data == null) {
+          return;
+        }
+
+        List<User> members = jsonDecode(event.data)
+            .map<User>((user) => User.fromJson(user))
+            .toList();
+        _membersFetcher.sink.add(members);
+      });
+    }).catchError((e) => {});
   }
 
   dispose() {
@@ -48,4 +95,4 @@ class ConversationMembersBloc {
   }
 }
 
-final conversationsBloc = ConversationsBloc();
+final conversationBloc = ConversationBloc();
