@@ -3,12 +3,10 @@ import "dart:io";
 
 import "http_client.dart";
 import "../models/user_model.dart";
-import "../services/cache_http.dart";
 import "../services/login_manager.dart";
 import "../../settings.dart";
 
 class ContactApiProvider {
-  CacheHttp cache = CacheHttp();
   LoginManager loginManager = LoginManager();
 
   Future<void> createContact(User user) async {

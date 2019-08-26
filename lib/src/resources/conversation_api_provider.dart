@@ -4,14 +4,12 @@ import "dart:convert";
 
 import "../resources/http_client.dart";
 import "../models/conversation_model.dart";
-import "../services/cache_http.dart";
 import "../services/login_manager.dart";
 import "../../settings.dart";
 
 import "./picture_api_provider.dart";
 
 class ConversationApiProvider {
-  CacheHttp cache = CacheHttp();
   LoginManager loginManager = LoginManager();
 
   Future<Conversation> createConversation(String title,

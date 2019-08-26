@@ -4,14 +4,12 @@ import "dart:io";
 
 import "http_client.dart";
 import "../models/user_model.dart";
-import "../services/cache_http.dart";
 import "../services/login_manager.dart";
 import "../../settings.dart";
 
 import "./picture_api_provider.dart";
 
 class UserApiProvider {
-  CacheHttp cache = CacheHttp();
   LoginManager loginManager = LoginManager();
   PictureApiProvider pictureApiProvider = new PictureApiProvider();
 
@@ -45,13 +43,12 @@ class UserApiProvider {
   Future<User> fetchUserByPhone(String phoneNumber) async {
     final jwt = loginManager.getToken();
     try {
-      final responseBody = await this
-          .cache
-          .fetch("$baseUrlCore/user?phone_number=$phoneNumber", headers: {
+      final response = await globalHttpClient
+          .get("$baseUrlCore/user?phone_number=$phoneNumber", headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $jwt"
       });
-      return User.fromJson(jsonDecode(responseBody));
+      return User.fromJson(jsonDecode(response.body));
     } catch (e) {
       throw e;
     }
@@ -60,12 +57,12 @@ class UserApiProvider {
   Future<User> fetchUserById(String id) async {
     final jwt = await loginManager.getToken();
     try {
-      final responseBody =
-          await this.cache.fetch("$baseUrlCore/user/id/$id", headers: {
+      final response =
+          await globalHttpClient.get("$baseUrlCore/user/id/$id", headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $jwt"
       });
-      return User.fromJson(jsonDecode(responseBody));
+      return User.fromJson(jsonDecode(response.body));
     } catch (e) {
       throw e;
     }
@@ -74,13 +71,12 @@ class UserApiProvider {
   Future<User> fetchUserByUsername(String username) async {
     final jwt = await loginManager.getToken();
     try {
-      final responseBody = await this
-          .cache
-          .fetch("$baseUrlCore/user/username/$username", headers: {
+      final response = await globalHttpClient
+          .get("$baseUrlCore/user/username/$username", headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $jwt"
       });
-      return User.fromJson(jsonDecode(responseBody));
+      return User.fromJson(jsonDecode(response.body));
     } catch (e) {
       throw e;
     }
