@@ -1,8 +1,8 @@
 import "dart:async";
-import "package:http/http.dart" as http;
 import "dart:io";
 import "dart:convert";
 
+import "../resources/http_client.dart";
 import "../models/conversation_model.dart";
 import "../models/user_model.dart";
 import "../services/cache_http.dart";
@@ -24,7 +24,8 @@ class ConversationApiProvider {
       profileURL = await pictureApiProvider.uploadPicture(profile);
     }
 
-    final response = await http.post("$baseUrlCore/user/conversation",
+    final response = await globalHttpClient.post(
+        "$baseUrlCore/user/conversation",
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $jwt"
@@ -69,8 +70,8 @@ class ConversationApiProvider {
   Future<void> deleteConversation(String id) async {
     final jwt = await loginManager.getToken();
     try {
-      final responseBody =
-          await http.delete("$baseUrlCore/user/conversation/$id", headers: {
+      await globalHttpClient
+          .delete("$baseUrlCore/user/conversation/$id", headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $jwt"
       });
@@ -82,7 +83,8 @@ class ConversationApiProvider {
   Future<void> createConversationMember(
       String conversationId, String userId) async {
     final jwt = await loginManager.getToken();
-    await http.post("$baseUrlCore/user/conversation/$conversationId/member",
+    await globalHttpClient.post(
+        "$baseUrlCore/user/conversation/$conversationId/member",
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $jwt"

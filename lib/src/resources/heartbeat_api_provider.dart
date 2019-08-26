@@ -1,8 +1,8 @@
 import "dart:async";
 import "dart:io";
 import 'dart:convert';
-import "package:http/http.dart" as http;
 
+import "http_client.dart";
 import "../../settings.dart";
 import "../services/login_manager.dart";
 
@@ -11,7 +11,7 @@ class HeartbeatApiProvider {
 
   Future<void> ping({String status = ""}) async {
     final jwt = await loginManager.getToken();
-    await http.post("$baseUrlHeartbeat/ping",
+    await globalHttpClient.post("$baseUrlHeartbeat/ping",
         headers: {HttpHeaders.authorizationHeader: "Bearer $jwt"},
         body: jsonEncode({"status": status}));
   }

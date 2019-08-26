@@ -1,8 +1,7 @@
 import "dart:async";
-import "package:http/http.dart" as http;
 import "dart:io";
-import "dart:convert";
 
+import "http_client.dart";
 import "../models/user_model.dart";
 import "../services/cache_http.dart";
 import "../services/login_manager.dart";
@@ -12,6 +11,7 @@ class ContactApiProvider {
   CacheHttp cache = CacheHttp();
   LoginManager loginManager = LoginManager();
 
+  /*
   Future<List<User>> fetchContacts() async {
     final jwt = await loginManager.getToken();
 
@@ -27,12 +27,12 @@ class ContactApiProvider {
     } catch (e) {
       throw e;
     }
-  }
+  } */
 
   Future<void> createContact(User user) async {
     final jwt = await loginManager.getToken();
 
-    await http.post("$baseUrlCore/user/contact",
+    await globalHttpClient.post("$baseUrlCore/user/contact",
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $jwt"

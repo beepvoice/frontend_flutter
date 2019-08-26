@@ -1,8 +1,8 @@
 import "dart:async";
 import "dart:convert";
 import "dart:io";
-import "package:http/http.dart" as http;
 
+import "http_client.dart";
 import "../models/user_model.dart";
 import "../services/cache_http.dart";
 import "../services/login_manager.dart";
@@ -25,7 +25,7 @@ class UserApiProvider {
       profileUrl = await pictureApiProvider.uploadPicture(profilePic);
     }
 
-    final response = await http.post("$baseUrlCore/user",
+    final response = await globalHttpClient.post("$baseUrlCore/user",
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $jwt"
@@ -107,7 +107,7 @@ class UserApiProvider {
     final finalProfileUrl =
         profileUrl != "" ? profileUrl : user != null ? user.profilePic : "";
 
-    await http.patch("$baseUrlCore/user",
+    await globalHttpClient.patch("$baseUrlCore/user",
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $jwt"

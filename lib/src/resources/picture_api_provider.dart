@@ -6,6 +6,7 @@ import "package:async/async.dart";
 import "package:path/path.dart";
 import "package:http/http.dart" as http;
 
+import "http_client.dart";
 import "../services/login_manager.dart";
 import "../../settings.dart";
 
@@ -15,7 +16,8 @@ class PictureApiProvider {
   Future<File> getPicture(String imageUrl) async {
     final jwt = await loginManager.getToken();
 
-    var response = await http.get("$baseUrlPicture/picture/$imageUrl",
+    var response = await globalHttpClient.get(
+        "$baseUrlPicture/picture/$imageUrl",
         headers: {HttpHeaders.authorizationHeader: "Bearer $jwt"});
 
     Directory tempDir = await getTemporaryDirectory();
