@@ -25,7 +25,6 @@ class _HomeViewState extends State<HomeView> {
   @override
   initState() {
     super.initState();
-    conversationsBloc.fetchConversations();
   }
 
   @override
@@ -60,7 +59,6 @@ class _HomeViewState extends State<HomeView> {
                         setState(() {
                           editConversations = false;
                         });
-                        await conversationsBloc.fetchConversations();
                       }),
                 ]
               : <Widget>[
@@ -80,7 +78,7 @@ class _HomeViewState extends State<HomeView> {
           child:
               ListView(padding: EdgeInsets.only(top: 0.0), children: <Widget>[
         StreamBuilder(
-            stream: conversationsBloc.conversations,
+            stream: conversationBloc.conversations,
             builder: (context, AsyncSnapshot<List<Conversation>> snapshot) {
               if (snapshot.hasData) {
                 return buildList(snapshot.data);

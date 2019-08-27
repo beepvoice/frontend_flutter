@@ -25,7 +25,6 @@ class _NewGroupViewState extends State<NewGroupView> {
   @override
   void initState() {
     super.initState();
-    contactBloc.fetchContacts();
   }
 
   @override

@@ -20,11 +20,15 @@ class HeartbeatReceiverBloc {
   final Map<String, String> status = {};
 
   final http.Client client = http.Client();
-  final _statusFetcher = PublishSubject<Map<String, String>>();
+  final _statusFetcher = PublishSubject<Map<String, String>>(onListen: () {
+    print("Listened");
+  });
 
   List<User> lastContacts;
 
   Observable<Map<String, String>> get stream => _statusFetcher.stream;
+  Observable<String> getStatusStream(String userId) =>
+      _statusFetcher.stream.map((statusMap) => statusMap[userId]);
 
   HeartbeatReceiverBloc() {
     init();
@@ -56,7 +60,6 @@ class HeartbeatReceiverBloc {
             Ping ping = Ping.fromJson(jsonDecode(event.data));
             this.lastSeen[contact.id] =
                 DateTime.fromMillisecondsSinceEpoch(ping.time * 1000);
-            _statusFetcher.sink.add({"user": contact.id, "status": "online"});
             this.status[contact.id] = "online";
           });
 
@@ -67,7 +70,7 @@ class HeartbeatReceiverBloc {
     });
 
     // Setting up timers to send the heartbeat to the stream
-    final checkDuration = Duration(seconds: 20);
+    final checkDuration = Duration(seconds: 1);
     final timeoutDuration = Duration(minutes: 1);
 
     Timer.periodic(checkDuration, (Timer t) {

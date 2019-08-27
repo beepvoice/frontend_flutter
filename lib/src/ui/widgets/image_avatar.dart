@@ -63,10 +63,6 @@ class _ImageAvatarState extends State<ImageAvatar> {
   initState() {
     super.initState();
 
-    lastStatus = (widget.info.isHeartbeat)
-        ? heartbeatReceiverBloc.getLastStatus(widget.info.heartbeatId)
-        : "";
-
     if (widget.info.coverPic == "") {
       firstLetter =
           (widget.info.firstName.isEmpty) ? '' : widget.info.firstName[0];
@@ -121,17 +117,11 @@ class _ImageAvatarState extends State<ImageAvatar> {
                       backgroundImage: FileImage(profilePic))
                   : Container(),
           StreamBuilder(
-              stream: heartbeatReceiverBloc.stream,
-              builder: (context, AsyncSnapshot<Map<String, String>> snapshot) {
-                Map<String, String> state;
+              stream: heartbeatReceiverBloc
+                  .getStatusStream(widget.info.heartbeatId),
+              builder: (context, AsyncSnapshot<String> snapshot) {
                 if (snapshot.hasData) {
-                  state = snapshot.data;
-
-                  if (state["user"] == widget.info.heartbeatId) {
-                    this.lastStatus = state["status"];
-                  }
-
-                  if (lastStatus == "online") {
+                  if (snapshot.data == "online") {
                     return Container(
                         width: 12.0,
                         height: 12.0,

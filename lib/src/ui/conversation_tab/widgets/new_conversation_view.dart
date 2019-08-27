@@ -23,7 +23,6 @@ class _NewConversationViewState extends State<NewConversationView> {
   @override
   void initState() {
     super.initState();
-    contactBloc.fetchContacts();
   }
 
   @override

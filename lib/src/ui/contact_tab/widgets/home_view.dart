@@ -34,9 +34,7 @@ class _HomeViewState extends State<HomeView> {
   void initializeAsync() async {
     Iterable<Contact> contacts = await ContactsService.getContacts();
 
-    // Pull all the existing contacts TODO: Remove after the caching mechanism catches up
-    await contactBloc.fetchContacts();
-
+    // Should put this in a dartt isolate
     for (var contact in contacts) {
       for (var phone in contact.phones) {
         try {
@@ -47,7 +45,6 @@ class _HomeViewState extends State<HomeView> {
         }
       }
     }
-    await contactBloc.fetchContacts();
   }
 
   @override

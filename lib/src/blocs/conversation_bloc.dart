@@ -24,6 +24,11 @@ class ConversationBloc {
           .where((conversation) => conversation.pinned)
           .toList());
 
+  Observable<Conversation> getConversation(String id) =>
+      _conversationsFetcher.stream.map((conversationList) => conversationList
+          .where((conversation) => (conversation.id == id))
+          .first);
+
   ConversationBloc() {
     init();
   }

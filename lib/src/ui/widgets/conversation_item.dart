@@ -149,7 +149,6 @@ class _ConversationItemState extends State<ConversationItem> {
               onTap: () async {
                 await conversationApiProvider
                     .deleteConversation(widget.conversation.id);
-                await conversationsBloc.fetchConversations();
               })
         ],
       );
