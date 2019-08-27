@@ -42,6 +42,7 @@ class ContactBloc {
 
   dispose() {
     _contactsFetcher.close();
+    client.close();
   }
 }
 

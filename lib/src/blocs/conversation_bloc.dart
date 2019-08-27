@@ -92,6 +92,7 @@ class ConversationMembersBloc {
 
   dispose() {
     _membersFetcher.close();
+    client.close();
   }
 }
 
