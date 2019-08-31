@@ -1,6 +1,7 @@
 import "dart:async";
 import "dart:convert";
 import "dart:io";
+import "dart:core";
 import "package:http/http.dart" as http;
 
 import "../models/user_model.dart";
@@ -43,11 +44,12 @@ class UserApiProvider {
   }
 
   Future<User> fetchUserByPhone(String phoneNumber) async {
-    final jwt = loginManager.getToken();
+    final jwt = await loginManager.getToken();
+    final encoded = Uri.encodeComponent(phoneNumber);
     try {
       final responseBody = await this
           .cache
-          .fetch("$baseUrlCore/user?phone_number=$phoneNumber", headers: {
+          .fetch("$baseUrlCore/user?phone_number=$encoded", headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $jwt"
       });

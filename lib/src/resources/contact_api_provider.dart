@@ -31,13 +31,15 @@ class ContactApiProvider {
 
   Future<void> createContact(User user) async {
     final jwt = await loginManager.getToken();
-
-    await http.post("$baseUrlCore/user/contact",
+    print(user.toString());
+    final responseBody = await http.post("$baseUrlCore/user/contact",
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $jwt"
         },
-        body: user.toJson);
+        body: jsonEncode(user.toJson()));
+
+    print(responseBody.body);
   }
 }
 

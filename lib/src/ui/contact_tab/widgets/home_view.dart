@@ -41,6 +41,7 @@ class _HomeViewState extends State<HomeView> {
       for (var phone in contact.phones) {
         try {
           final user = await userApiProvider.fetchUserByPhone(phone.value);
+          print(user);
           await contactApiProvider.createContact(user);
         } catch (e) {
           continue;
