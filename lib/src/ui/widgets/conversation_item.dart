@@ -142,7 +142,13 @@ class _ConversationItemState extends State<ConversationItem> {
         //       onTap: () => print('Pin'))],
         secondaryActions: <Widget>[
           IconSlideAction(
-              color: Colors.green, icon: Icons.star, onTap: () => print('Pin')),
+              color: Colors.green,
+              icon: Icons.star,
+              onTap: () async {
+                await conversationApiProvider
+                    .pinConversation(widget.conversation.id);
+                await conversationsBloc.fetchConversations();
+              }),
           IconSlideAction(
               color: Colors.red,
               icon: Icons.delete,
