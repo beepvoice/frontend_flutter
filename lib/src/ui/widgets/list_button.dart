@@ -6,11 +6,19 @@ class ListButton extends StatelessWidget {
   final IconData icon;
   final String text;
   final OnClickCallback onClickCallback;
+  final String subtitle;
+  final TextStyle textStyle;
+  final TextStyle subtitleStyle;
+  final Color iconColor;
 
   ListButton(
       {@required this.icon,
       @required this.text,
-      @required this.onClickCallback});
+      @required this.onClickCallback,
+      this.subtitle,
+      this.textStyle,
+      this.subtitleStyle,
+      this.iconColor});
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +35,33 @@ class ListButton extends StatelessWidget {
                     children: <Widget>[
                       Icon(icon,
                           size: 30.0,
-                          color: Theme.of(context).primaryColorDark),
+                          color:
+                              iconColor ?? Theme.of(context).primaryColorDark),
                       Padding(
-                          padding: EdgeInsets.only(left: 20.0),
-                          child: Text(text,
-                              style: Theme.of(context).textTheme.title.copyWith(
-                                  color: Theme.of(context).primaryColorDark))),
+                        padding: EdgeInsets.only(left: 20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              text,
+                              style: textStyle ??
+                                  Theme.of(context).textTheme.title.copyWith(
+                                      color:
+                                          Theme.of(context).primaryColorDark),
+                            ),
+                            (subtitle == null)
+                                ? Container()
+                                : Padding(
+                                    padding: EdgeInsets.only(top: 3.0),
+                                    child: Text(
+                                      subtitle,
+                                      style: subtitleStyle ??
+                                          Theme.of(context).textTheme.subtitle,
+                                    ),
+                                  ),
+                          ],
+                        ),
+                      ),
                     ]))));
   }
 }
