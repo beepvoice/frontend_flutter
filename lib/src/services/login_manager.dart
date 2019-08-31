@@ -47,6 +47,11 @@ class LoginManager {
     }
   }
 
+  Future<void> logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("token", "");
+  }
+
   // Throws error status code if it occurs, otherwise returns jwt
   Future<String> processOtp(String otp) async {
     try {

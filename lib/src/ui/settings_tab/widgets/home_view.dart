@@ -3,6 +3,7 @@ import 'dart:async' show Future;
 import "package:flutter/material.dart";
 import 'package:frontend_flutter/src/ui/widgets/image_avatar.dart';
 
+import "../../../services/login_manager.dart";
 import "../../widgets/top_bar.dart";
 import "../../widgets/list_button.dart";
 
@@ -15,6 +16,7 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final _textFieldController = TextEditingController();
+  final loginManager = LoginManager();
   String name = 'Daniel Lim Hai';
   String bio = 'Hey there, I am using Meep!';
 
@@ -170,7 +172,9 @@ class _HomeViewState extends State<HomeView> {
               ListButton(
                 icon: Icons.exit_to_app,
                 text: 'Sign Out',
-                onClickCallback: () {},
+                onClickCallback: () async {
+                  await loginManager.logout();
+                },
                 textStyle: Theme.of(context)
                     .textTheme
                     .title
