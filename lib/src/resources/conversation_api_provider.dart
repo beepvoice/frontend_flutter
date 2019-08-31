@@ -42,6 +42,7 @@ class ConversationApiProvider {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $jwt"
       });
+      print(responseBody);
       return jsonDecode(responseBody)
           .map<Conversation>(
               (conversation) => Conversation.fromJson(conversation))
@@ -69,9 +70,20 @@ class ConversationApiProvider {
   Future<void> deleteConversation(String id) async {
     final jwt = await loginManager.getToken();
     try {
-      final responseBody =
-          await http.delete("$baseUrlCore/user/conversation/$id", headers: {
+      await http.delete("$baseUrlCore/user/conversation/$id", headers: {
         HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $jwt"
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> pinConversation(String id) async {
+    final jwt = await loginManager.getToken();
+    try {
+      await http.post("$baseUrlCore/user/conversation/$id/pin", headers: {
+        HttpHeaders.contentTypeHeader: " application/json",
         HttpHeaders.authorizationHeader: "Bearer $jwt"
       });
     } catch (e) {
