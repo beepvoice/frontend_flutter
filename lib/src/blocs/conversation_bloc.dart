@@ -21,7 +21,7 @@ class ConversationBloc {
 
   Observable<List<Conversation>> get pinnedConversations =>
       _conversationsFetcher.stream.map((conversationList) => conversationList
-          .where((conversation) => conversation.pinned)
+          .where((conversation) => conversation.pinned ?? false)
           .toList());
 
   Observable<Conversation> getConversation(String id) =>

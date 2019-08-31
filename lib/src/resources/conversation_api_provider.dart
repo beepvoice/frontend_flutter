@@ -45,6 +45,19 @@ class ConversationApiProvider {
     }
   }
 
+  Future<void> pinConversation(String id) async {
+    final jwt = await loginManager.getToken();
+    try {
+      await globalHttpClient
+          .post("$baseUrlCore/user/conversation/$id/pin", headers: {
+        HttpHeaders.contentTypeHeader: " application/json",
+        HttpHeaders.authorizationHeader: "Bearer $jwt"
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+
   Future<void> createConversationMember(
       String conversationId, String userId) async {
     final jwt = await loginManager.getToken();
