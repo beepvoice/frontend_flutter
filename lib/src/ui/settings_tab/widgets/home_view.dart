@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 import 'package:frontend_flutter/src/ui/widgets/image_avatar.dart';
 
 import "../../../services/login_manager.dart";
+import "../../../models/user_model.dart";
 import "../../widgets/top_bar.dart";
 import "../../widgets/list_button.dart";
 
@@ -21,12 +22,18 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final _textFieldController = TextEditingController();
   final loginManager = LoginManager();
-  String name = 'Daniel Lim Hai';
-  String bio = 'Hey there, I am using Meep!';
+  User currentUser;
 
   @override
   initState() {
     super.initState();
+
+    // Getting current user name and bio
+    loginManager.getUser().then((User user) {
+      setState(() {
+        currentUser = user;
+      });
+    });
   }
 
   @override
@@ -63,10 +70,10 @@ class _HomeViewState extends State<HomeView> {
               children: <Widget>[
                 Positioned(
                   child: ImageAvatar(
-                    padding: EdgeInsets.all(20.0),
-                    info: ImageAvatarInfo(lastName: 'Daniel'),
-                    radius: 70.0,
-                  ),
+                      padding: EdgeInsets.all(20.0),
+                      info: ImageAvatarInfo.fromUser(currentUser),
+                      radius: 70.0,
+                      showStatus: false),
                 ),
                 Positioned(
                   top: 115.0,
@@ -91,19 +98,21 @@ class _HomeViewState extends State<HomeView> {
             children: <Widget>[
               ListButton(
                 icon: Icons.person,
-                text: name,
+                text: currentUser.firstName ??
+                    "" + " " + currentUser.lastName ??
+                    "",
                 subtitle: 'Name',
                 onClickCallback: () {
                   _displayTextFieldDialog(
                     context: context,
                     title: 'Edit Name',
-                    existingText: name,
+                    existingText:
+                        currentUser.firstName + " " + currentUser.lastName,
                     hintText: 'Name',
                   ).then((text) {
                     //TODO: Logic for changing name
                     if (text != null) {
                       setState(() {
-                        name = text;
                         print(text);
                       });
                     }
@@ -114,19 +123,18 @@ class _HomeViewState extends State<HomeView> {
               ),
               ListButton(
                 icon: Icons.info,
-                text: bio,
+                text: currentUser.bio,
                 subtitle: 'Bio',
                 onClickCallback: () {
                   _displayTextFieldDialog(
                     context: context,
                     title: 'Edit Bio',
-                    existingText: bio,
+                    existingText: currentUser.bio,
                     hintText: 'Bio',
                   ).then((text) {
                     //TODO: Logic for changing bio
                     if (text != null) {
                       setState(() {
-                        bio = text;
                         print(text);
                       });
                     }

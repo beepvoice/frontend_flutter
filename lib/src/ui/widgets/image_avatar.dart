@@ -22,8 +22,8 @@ class ImageAvatarInfo {
 
   factory ImageAvatarInfo.fromUser(User user) {
     return ImageAvatarInfo(
-        firstName: user.firstName,
-        lastName: user.lastName,
+        firstName: user.firstName ?? "",
+        lastName: user.lastName ?? "",
         isHeartbeat: true,
         heartbeatId: user.id,
         coverPic: user.profilePic);
@@ -39,11 +39,13 @@ class ImageAvatar extends StatefulWidget {
   final ImageAvatarInfo info;
   final EdgeInsetsGeometry padding;
   final double radius;
+  final bool showStatus;
 
   ImageAvatar(
       {@required this.info,
       this.padding: const EdgeInsets.all(0.0),
-      this.radius: 20.0});
+      this.radius: 20.0,
+      this.showStatus: true});
 
   @override
   State<StatefulWidget> createState() {
@@ -120,31 +122,34 @@ class _ImageAvatarState extends State<ImageAvatar> {
                       radius: widget.radius,
                       backgroundImage: FileImage(profilePic))
                   : Container(),
-          StreamBuilder(
-              stream: heartbeatReceiverBloc.stream,
-              builder: (context, AsyncSnapshot<Map<String, String>> snapshot) {
-                Map<String, String> state;
-                if (snapshot.hasData) {
-                  state = snapshot.data;
+          (widget.showStatus)
+              ? StreamBuilder(
+                  stream: heartbeatReceiverBloc.stream,
+                  builder:
+                      (context, AsyncSnapshot<Map<String, String>> snapshot) {
+                    Map<String, String> state;
+                    if (snapshot.hasData) {
+                      state = snapshot.data;
 
-                  if (state["user"] == widget.info.heartbeatId) {
-                    this.lastStatus = state["status"];
-                  }
+                      if (state["user"] == widget.info.heartbeatId) {
+                        this.lastStatus = state["status"];
+                      }
 
-                  if (lastStatus == "online") {
-                    return Container(
-                        width: 12.0,
-                        height: 12.0,
-                        decoration: BoxDecoration(
-                            color: Colors.green[400],
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                width: 1.5, color: const Color(0xFFFFFFFF))));
-                  }
-                }
-
-                return Container();
-              }),
+                      if (lastStatus == "online") {
+                        return Container(
+                            width: 12.0,
+                            height: 12.0,
+                            decoration: BoxDecoration(
+                                color: Colors.green[400],
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    width: 1.5,
+                                    color: const Color(0xFFFFFFFF))));
+                      }
+                    }
+                    return Container();
+                  })
+              : Container(),
         ]));
   }
 
