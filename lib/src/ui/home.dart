@@ -90,7 +90,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           children: <Widget>[
             ContactTab(),
             ConversationTab(),
-            SettingsTab(),
+            SettingsTab(toWelcomePage: () {
+              Navigator.pushNamed(context, '/welcome');
+            }),
           ]),
       bottomNavigationBar:
           Column(mainAxisSize: MainAxisSize.min, children: <Widget>[

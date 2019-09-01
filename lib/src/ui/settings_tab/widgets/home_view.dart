@@ -8,6 +8,10 @@ import "../../widgets/top_bar.dart";
 import "../../widgets/list_button.dart";
 
 class HomeView extends StatefulWidget {
+  final VoidCallback toWelcomePage;
+
+  HomeView({@required this.toWelcomePage});
+
   @override
   State<StatefulWidget> createState() {
     return _HomeViewState();
@@ -174,6 +178,7 @@ class _HomeViewState extends State<HomeView> {
                 text: 'Sign Out',
                 onClickCallback: () async {
                   await loginManager.logout();
+                  widget.toWelcomePage();
                 },
                 textStyle: Theme.of(context)
                     .textTheme
