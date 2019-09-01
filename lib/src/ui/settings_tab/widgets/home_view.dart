@@ -5,6 +5,7 @@ import 'package:frontend_flutter/src/ui/widgets/image_avatar.dart';
 
 import "../../../services/login_manager.dart";
 import "../../../models/user_model.dart";
+import "../../../resources/user_api_provider.dart";
 import "../../widgets/top_bar.dart";
 import "../../widgets/list_button.dart";
 
@@ -110,9 +111,9 @@ class _HomeViewState extends State<HomeView> {
                         currentUser.firstName + " " + currentUser.lastName,
                     hintText: 'Name',
                   ).then((text) {
-                    //TODO: Logic for changing name
                     if (text != null) {
                       setState(() {
+                        userApiProvider.updateUser(lastName: text);
                         print(text);
                       });
                     }
@@ -132,9 +133,9 @@ class _HomeViewState extends State<HomeView> {
                     existingText: currentUser.bio,
                     hintText: 'Bio',
                   ).then((text) {
-                    //TODO: Logic for changing bio
                     if (text != null) {
                       setState(() {
+                        userApiProvider.updateUser(bio: text);
                         print(text);
                       });
                     }

@@ -88,8 +88,12 @@ class UserApiProvider {
     }
   }
 
-  Future<void> updateUser(String firstName, String lastName, String username,
-      String bio, File profilePic) async {
+  Future<void> updateUser(
+      {String firstName: "",
+      String lastName: "",
+      String username: "",
+      String bio: "",
+      File profilePic}) async {
     final jwt = await loginManager.getToken();
     final user = await loginManager.getUser();
 
