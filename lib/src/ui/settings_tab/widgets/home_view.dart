@@ -99,21 +99,65 @@ class _HomeViewState extends State<HomeView> {
             children: <Widget>[
               ListButton(
                 icon: Icons.person,
-                text: currentUser.firstName ??
-                    "" + " " + currentUser.lastName ??
-                    "",
-                subtitle: 'Name',
+                text: currentUser.firstName ?? "",
+                subtitle: 'First name',
                 onClickCallback: () {
                   _displayTextFieldDialog(
                     context: context,
-                    title: 'Edit Name',
+                    title: 'Edit first name',
                     existingText:
                         currentUser.firstName + " " + currentUser.lastName,
-                    hintText: 'Name',
+                    hintText: 'First name',
+                  ).then((text) {
+                    if (text != null) {
+                      setState(() {
+                        userApiProvider.updateUser(firstName: text);
+                        print(text);
+                      });
+                    }
+                  });
+                },
+                textStyle: _titleTheme,
+                iconColor: Theme.of(context).primaryColorDark,
+              ),
+              ListButton(
+                icon: Icons.person,
+                text: currentUser.lastName ?? "",
+                subtitle: 'Last name',
+                onClickCallback: () {
+                  _displayTextFieldDialog(
+                    context: context,
+                    title: 'Edit last name',
+                    existingText:
+                        currentUser.firstName + " " + currentUser.lastName,
+                    hintText: 'Last name',
                   ).then((text) {
                     if (text != null) {
                       setState(() {
                         userApiProvider.updateUser(lastName: text);
+                        print(text);
+                      });
+                    }
+                  });
+                },
+                textStyle: _titleTheme,
+                iconColor: Theme.of(context).primaryColorDark,
+              ),
+              ListButton(
+                icon: Icons.person,
+                text: currentUser.username ?? "",
+                subtitle: 'Username',
+                onClickCallback: () {
+                  _displayTextFieldDialog(
+                    context: context,
+                    title: 'Edit username',
+                    existingText:
+                        currentUser.firstName + " " + currentUser.lastName,
+                    hintText: 'Username',
+                  ).then((text) {
+                    if (text != null) {
+                      setState(() {
+                        userApiProvider.updateUser(username: text);
                         print(text);
                       });
                     }
