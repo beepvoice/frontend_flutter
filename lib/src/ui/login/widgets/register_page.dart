@@ -99,7 +99,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
                     // Creating the new user
                     await userApiProvider.updateUser(
-                        firstName, lastName, "", "", _image);
+                        firstName: firstName,
+                        lastName: lastName,
+                        profilePic: _image);
                     widget.homeCallback();
                   })),
         ]));
