@@ -69,13 +69,16 @@ class PeerManager(applicationContext: Context) {
         URL("https://staging.beepvoice.app/webrtc/join/${conversationId}")
                 .openConnection()
                 .run {
+                    // Cast to a HTTP connection
                     this as HttpURLConnection
                 }.apply {
+                    // Configure request and connect to the URL
                     requestMethod = "POST"
                     setRequestProperty("Authorization", "Bearer ${authToken ?: "0"}")
                     connect()
                 }
 
+        // Connect the PeerConnection
         connect()
     }
 
@@ -95,7 +98,7 @@ class PeerManager(applicationContext: Context) {
     private fun connect() {
         // Create peerConnection
         val configuration = RTCConfiguration(iceServers).apply { enableDtlsSrtp = true }
-        peerConnection = connectionFactory.createPeerConnection(configuration, CustomObserver())
+        peerConnection = connectionFactory.createPeerConnection(configuration, CustomPeerConnectionObserver())
 
         // Add localStream to peerConnection
         state = PeerConnectionState.CONNECTING
@@ -107,6 +110,7 @@ class PeerManager(applicationContext: Context) {
     }
 
     private fun disconnect() {
+        // Executes if peerConnection is not null
         peerConnection?.let {
             it.close()
             it.dispose()
@@ -139,6 +143,7 @@ class PeerManager(applicationContext: Context) {
     }
 
     private fun createAnswerForOffer(remoteSdp: String) {
+        // Executes if peerConnection is not null
         peerConnection?.let {
             val sessionDescription = SessionDescription(SessionDescription.Type.OFFER, remoteSdp)
 
@@ -173,6 +178,7 @@ class PeerManager(applicationContext: Context) {
     }
 
     private fun handleAnswer(remoteSdp: String) {
+        // Executes if peerConnection is not null
         peerConnection?.let {
             val sessionDescription = SessionDescription(SessionDescription.Type.ANSWER, remoteSdp)
 
@@ -215,7 +221,7 @@ class PeerManager(applicationContext: Context) {
     //****************************************************************************************************
     // PeerConnection.Observer implementation
     //****************************************************************************************************
-    inner class CustomObserver: PeerConnection.Observer {
+    inner class CustomPeerConnectionObserver: PeerConnection.Observer {
         override fun onSignalingChange(signalingState: PeerConnection.SignalingState) {}
         override fun onIceConnectionChange(iceConnectionState: PeerConnection.IceConnectionState) {}
         override fun onIceConnectionReceivingChange(b: Boolean) {}
@@ -227,7 +233,8 @@ class PeerManager(applicationContext: Context) {
         override fun onAddTrack(rtpReceiver: RtpReceiver, mediaStreams: Array<MediaStream>) {}
 
         override fun onIceCandidate(iceCandidate: IceCandidate) {
-//        callbacks.onIceCandidate(iceCandidate.sdp, iceCandidate.sdpMid, iceCandidate.sdpMLineIndex)
+            // TODO: Check if this is necessary
+            socket?.sendText("ice::${iceCandidate}")
         }
 
         override fun onAddStream(stream: MediaStream) {
