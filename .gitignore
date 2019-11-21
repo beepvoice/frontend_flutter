@@ -115,3 +115,4 @@ unlinked_spec.ds
 
 # Generated files fom json_serializable
 *.g.dart
+ios/Flutter/flutter_export_environment.sh
