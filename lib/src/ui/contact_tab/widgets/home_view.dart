@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:contacts_service/contacts_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import "../../../models/user_model.dart";
 
@@ -32,6 +33,15 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void initializeAsync() async {
+    // Get contacts permission
+    Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([PermissionGroup.contacts]);
+
+    if (permissions[PermissionGroup.contacts] != PermissionStatus.granted) {
+      // Contacts permission not granted
+      // TODO: Display message asking the user to grant contacts permission
+      print("Contacts permission not granted");
+    }
+
     Iterable<Contact> contacts = await ContactsService.getContacts();
 
     // Pull all the existing contacts TODO: Remove after the caching mechanism catches up
