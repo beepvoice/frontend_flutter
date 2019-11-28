@@ -82,12 +82,17 @@ class _HomeViewState extends State<HomeView> {
         StreamBuilder(
             stream: conversationsBloc.conversations,
             builder: (context, AsyncSnapshot<List<Conversation>> snapshot) {
-              if (snapshot.hasData) {
+              if (snapshot.data.isNotEmpty) {
                 return buildList(snapshot.data);
               } else if (snapshot.hasError) {
                 return Text(snapshot.error.toString());
-              }
-              return Center(child: CircularProgressIndicator());
+              } 
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: Text("No conversations found. Start one now!"),
+                ));
+              // return Center(child: CircularProgressIndicator());
             })
       ]))
     ]);
