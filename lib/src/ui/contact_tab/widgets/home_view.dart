@@ -33,32 +33,31 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void initializeAsync() async {
-    // Get contacts permission
-    Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([PermissionGroup.contacts]);
-
-    if (permissions[PermissionGroup.contacts] != PermissionStatus.granted) {
-      // Contacts permission not granted
-      // TODO: Display message asking the user to grant contacts permission
-      print("Contacts permission not granted");
-    }
-
-    Iterable<Contact> contacts = await ContactsService.getContacts();
-
     // Pull all the existing contacts TODO: Remove after the caching mechanism catches up
     await contactBloc.fetchContacts();
 
-    for (var contact in contacts) {
-      for (var phone in contact.phones) {
-        try {
-          final user = await userApiProvider.fetchUserByPhone(phone.value);
-          print(user);
-          await contactApiProvider.createContact(user);
-        } catch (e) {
-          continue;
+    // Get contacts permission
+    Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([PermissionGroup.contacts]);
+
+    if (permissions[PermissionGroup.contacts] == PermissionStatus.granted) {
+      Iterable<Contact> contacts = await ContactsService.getContacts();
+      for (var contact in contacts) {
+        for (var phone in contact.phones) {
+          try {
+            final user = await userApiProvider.fetchUserByPhone(phone.value);
+            print(user);
+            await contactApiProvider.createContact(user);
+          } catch (e) {
+            continue;
+          }
         }
       }
+      await contactBloc.fetchContacts();
+    } else { // Contacts permission not granted
+      // TODO: Display message asking the user to grant contacts permission
+      print("Contacts permission not granted");
     }
-    await contactBloc.fetchContacts();
+    
   }
 
   @override
@@ -91,12 +90,19 @@ class _HomeViewState extends State<HomeView> {
           child: StreamBuilder(
               stream: contactBloc.contacts,
               builder: (context, AsyncSnapshot<List<User>> snapshot) {
-                if (snapshot.hasData) {
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.data.isNotEmpty) {
                   return buildList(snapshot);
                 } else if (snapshot.hasError) {
                   return Text(snapshot.error.toString());
+                } else {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: Text("No contacts found"),
+                    ));
                 }
-                return Center(child: CircularProgressIndicator());
               }))
     ]);
   }
