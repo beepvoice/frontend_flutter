@@ -33,7 +33,7 @@ class LoginApiProvider {
     if (response.statusCode == 400 ||
         response.statusCode == 404 ||
         response.statusCode == 500) {
-      throw response.statusCode;
+      throw HttpException("Error verifying OTP. HTTP ${response.statusCode}: ${response.body}");
     }
     return response.body;
   }
