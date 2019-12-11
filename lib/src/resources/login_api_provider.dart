@@ -11,7 +11,7 @@ class LoginApiProvider {
         headers: {HttpHeaders.contentTypeHeader: "application/json"},
         body: jsonEncode({"phone_number": phoneNumber}));
     if (response.statusCode == 400 || response.statusCode == 500) {
-      throw response.statusCode;
+      throw HttpException("Error verifying phone number. HTTP ${response.statusCode}: ${response.body}");
     }
     return response.body;
   }
@@ -21,7 +21,7 @@ class LoginApiProvider {
         headers: {HttpHeaders.contentTypeHeader: "application/json"},
         body: jsonEncode({"phone_number": phoneNumber}));
     if (response.statusCode == 400 || response.statusCode == 500) {
-      throw response.statusCode;
+      throw HttpException("Error bypassing phone number authentication. HTTP ${response.statusCode}: ${response.body}");
     }
     return response.body;
   }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -19,7 +21,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final String phoneSvg = "assets/phoneno.svg";
   final controller = TextEditingController();
-  bool isLoading = false;
+  bool _isLoading = false;
+  String _errorText = "";
 
   @override
   void dispose() {
@@ -56,23 +59,22 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                       padding: EdgeInsets.only(top: 20.0),
                       child: PhoneInput(controller: controller)),
+                  Padding(
+                      padding: EdgeInsets.only(top: 20.0),
+                      child: Text(
+                          _errorText,
+                          style: Theme.of(context).textTheme.display1.copyWith(
+                              fontSize: 15.0, 
+                              color: Color(0xFFFFFFFF)))),
                 ])
           ]))),
           Padding(
               padding: EdgeInsets.only(top: 10.0),
-              child: (!isLoading)
+              child: (!_isLoading)
                   ? TextButton(
                       text: "Continue",
                       onClickCallback: () async {
-                        setState(() => isLoading = true);
-                        if (BYPASS_AUTH) {
-                          await widget.loginManager.initAuthenticationBypass(
-                              "+65${controller.text}");
-                        } else {
-                          await widget.loginManager
-                              .initAuthentication("+65${controller.text}");
-                        }
-                        Navigator.pushNamed(context, 'welcome/otp');
+                        await _processPhoneNumber();
                       })
                   : Center(
                       child: SpinKitThreeBounce(
@@ -80,5 +82,29 @@ class _LoginPageState extends State<LoginPage> {
                       size: 40.0,
                     ))),
         ]));
+  }
+
+  _processPhoneNumber() async {
+    setState(() {
+      _isLoading = true;
+      _errorText = "";
+    });
+    try {
+      await widget.loginManager.initAuthentication("+65${controller.text}");
+      // if (false) {
+      //   await widget.loginManager.initAuthenticationBypass("+65${controller.text}");
+      // } else {
+      //   await widget.loginManager.initAuthentication("+65${controller.text}");
+      // }
+      Navigator.pushNamed(context, 'welcome/otp');
+    } on HttpException catch (e) {
+      print(e.toString());
+      setState(() {
+        _isLoading = false;
+        _errorText = "Error processing phone number. Please try again.";
+      });
+    } on Exception catch (e) {
+      print("Unknown exception: $e");
+    }
   }
 }
