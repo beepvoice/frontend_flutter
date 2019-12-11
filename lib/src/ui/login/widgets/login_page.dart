@@ -90,12 +90,11 @@ class _LoginPageState extends State<LoginPage> {
       _errorText = "";
     });
     try {
-      await widget.loginManager.initAuthentication("+65${controller.text}");
-      // if (false) {
-      //   await widget.loginManager.initAuthenticationBypass("+65${controller.text}");
-      // } else {
-      //   await widget.loginManager.initAuthentication("+65${controller.text}");
-      // }
+      if (BYPASS_AUTH) {
+        await widget.loginManager.initAuthenticationBypass("+65${controller.text}");
+      } else {
+        await widget.loginManager.initAuthentication("+65${controller.text}");
+      }
       Navigator.pushNamed(context, 'welcome/otp');
     } on HttpException catch (e) {
       print(e.toString());
