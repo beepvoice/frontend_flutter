@@ -66,7 +66,7 @@ class _OtpPageState extends State<OtpPage> {
                               });
                             },
                             onDone: (text) async {
-                              await processOtp();
+                              await _processOtp();
                             },
                             pinBoxHeight:
                                 (MediaQuery.of(context).size.width / 6) - 15,
@@ -93,7 +93,7 @@ class _OtpPageState extends State<OtpPage> {
               ? TextButton(
                   text: "Done",
                   onClickCallback: () async {
-                    await processOtp();
+                    await _processOtp();
                   })
               : Center(
                   child: SpinKitThreeBounce(
@@ -103,7 +103,7 @@ class _OtpPageState extends State<OtpPage> {
         ]));
   }
 
-  processOtp() async {
+  _processOtp() async {
     setState(() {
       _isLoading = true;
       _errorText = "";
