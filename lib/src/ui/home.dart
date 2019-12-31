@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:frontend_flutter/src/services/connection_status.dart';
 import 'dart:ui' as ui;
 
 import "../services/heartbeat_manager.dart";
@@ -35,6 +36,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   // Current conversaton
   String currentConversationId = "";
 
+  // Online status
+  ConnectionStatus connectionStatus = ConnectionStatus();
+  bool isOnline = true;
+
   @override
   initState() {
     super.initState();
@@ -48,6 +53,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
     messageChannel.bus.listen(
         (Map<String, String> data) async => await _processMessage(data));
+
+    connectionStatus.connectionChange.listen((bool online) {
+      // TODO: implement some timer to remove the message after 3 seconds
+      setState(() {
+        isOnline = online;
+      });
+    });
   }
 
   @override
@@ -124,7 +136,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     : Icon(data, color: Colors.grey, size: 20),
                 title: Container(),
               );
-            }).toList())
+            }).toList()),
+        Container(
+            width: MediaQuery.of(context).size.width,
+            alignment: Alignment(0.0, 0.0),
+            color: isOnline ? Colors.green : Colors.red,
+            child: Text(isOnline ? 'Online' : 'Offline')),
       ]),
     );
   }
