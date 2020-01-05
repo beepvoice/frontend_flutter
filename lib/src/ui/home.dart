@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:frontend_flutter/src/services/connection_status.dart';
 import 'dart:ui' as ui;
+import 'dart:async';
 
 import "../services/heartbeat_manager.dart";
 import "../services/conversation_manager.dart";
@@ -38,7 +39,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   // Online status
   ConnectionStatus connectionStatus = ConnectionStatus();
-  bool isOnline = true;
+  bool _isOnline = true;
+  bool _connectionStatusVisible = false;
+  Timer _connectionStatusVisibilityTimer;
 
   @override
   initState() {
@@ -57,7 +60,19 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     connectionStatus.connectionChange.listen((bool online) {
       // TODO: implement some timer to remove the message after 3 seconds
       setState(() {
-        isOnline = online;
+        _isOnline = online;
+        _connectionStatusVisible = true;
+      });
+
+      if (_connectionStatusVisibilityTimer != null) {
+        _connectionStatusVisibilityTimer.cancel();
+        _connectionStatusVisibilityTimer = null;
+      }
+
+      _connectionStatusVisibilityTimer = Timer(Duration(seconds: 3), () {
+        setState(() {
+          _connectionStatusVisible = false;
+        });
       });
     });
   }
@@ -137,11 +152,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 title: Container(),
               );
             }).toList()),
-        Container(
-            width: MediaQuery.of(context).size.width,
-            alignment: Alignment(0.0, 0.0),
-            color: isOnline ? Colors.green : Colors.red,
-            child: Text(isOnline ? 'Online' : 'Offline')),
+        Visibility(
+          visible: _connectionStatusVisible,
+          child: Container(
+              padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
+              width: MediaQuery.of(context).size.width,
+              alignment: Alignment(0.0, 0.0),
+              color: _isOnline ? Colors.green : Colors.red,
+              child: Text(_isOnline ? 'Online' : 'Offline')),
+        ),
       ]),
     );
   }
