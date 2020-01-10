@@ -58,7 +58,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         (Map<String, String> data) async => await _processMessage(data));
 
     connectionStatus.connectionChange.listen((bool online) {
-      // TODO: implement some timer to remove the message after 3 seconds
       setState(() {
         _isOnline = online;
         _connectionStatusVisible = true;
