@@ -116,7 +116,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       SettingsTab(
           navigatorKey: navigatorKeys[2],
           toWelcomePage: () {
-            Navigator.pushReplacementNamed(context, '/welcome');
+            Navigator.of(context).pushNamedAndRemoveUntil('/welcome', (Route<dynamic> route) => false);
           }),
     ];
 
