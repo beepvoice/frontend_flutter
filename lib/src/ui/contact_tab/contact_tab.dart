@@ -3,6 +3,10 @@ import "package:flutter/material.dart";
 import "./widgets/home_view.dart";
 
 class ContactTab extends StatefulWidget {
+  final GlobalKey<NavigatorState> navigatorKey;
+
+  ContactTab({@required this.navigatorKey});
+
   @override
   State<StatefulWidget> createState() {
     return _ContactTabState();
@@ -21,6 +25,7 @@ class _ContactTabState extends State<ContactTab> {
   @override
   Widget build(BuildContext context) {
     return Navigator(
+      key: widget.navigatorKey,
       initialRoute: "contact/home",
       onGenerateRoute: (RouteSettings settings) {
         WidgetBuilder builder;

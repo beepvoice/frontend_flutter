@@ -8,8 +8,9 @@ import "./widgets/home_view.dart";
 
 class SettingsTab extends StatefulWidget {
   final VoidCallback toWelcomePage;
+  final GlobalKey<NavigatorState> navigatorKey;
 
-  SettingsTab({@required this.toWelcomePage});
+  SettingsTab({@required this.toWelcomePage, @required this.navigatorKey});
 
   @override
   State<StatefulWidget> createState() {
@@ -21,6 +22,7 @@ class _SettingsTabState extends State<SettingsTab> {
   @override
   Widget build(BuildContext context) {
     return Navigator(
+      key: widget.navigatorKey,
       initialRoute: "settings/home",
       onGenerateRoute: (RouteSettings settings) {
         WidgetBuilder builder;

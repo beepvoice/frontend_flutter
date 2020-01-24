@@ -8,6 +8,10 @@ import "./widgets/new_group_info_view.dart";
 import "../../models/user_model.dart";
 
 class ConversationTab extends StatefulWidget {
+  final GlobalKey<NavigatorState> navigatorKey;
+
+  ConversationTab({@required this.navigatorKey});
+
   @override
   State<StatefulWidget> createState() {
     return _ConversationTabState();
@@ -18,6 +22,7 @@ class _ConversationTabState extends State<ConversationTab> {
   @override
   Widget build(BuildContext context) {
     return Navigator(
+      key: widget.navigatorKey,
       initialRoute: "conversation/home",
       onGenerateRoute: (RouteSettings settings) {
         WidgetBuilder builder;

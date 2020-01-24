@@ -26,13 +26,18 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   final loginManager = LoginManager();
 
   // Bottom Bar navigation
-  int _tabNumber = 1;
+  int _tabIndex = 1;
   List<IconData> itemsList = [
     Icons.contacts,
     Icons.chat,
     Icons.settings,
   ];
-  TabController controller;
+
+  List<GlobalKey<NavigatorState>> navigatorKeys = [
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>()
+  ];
 
   // Current conversaton
   String currentConversationId = "";
@@ -46,8 +51,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   initState() {
     super.initState();
-    controller = TabController(vsync: this, length: 3);
-    controller.index = 1; // Set default page to conversation page
 
     // initialize conversation manager
     loginManager.getToken().then((authToken) async {
@@ -78,7 +81,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   dispose() {
-    controller.dispose();
     super.dispose();
   }
 
@@ -108,59 +110,65 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      body: TabBarView(
-          physics: NeverScrollableScrollPhysics(),
-          controller: controller,
-          children: <Widget>[
-            ContactTab(),
-            ConversationTab(),
-            SettingsTab(toWelcomePage: () {
-              Navigator.pushNamed(context, '/welcome');
-            }),
-          ]),
-      bottomNavigationBar:
-          Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-        BottomBar(conversationId: currentConversationId),
-        BottomNavigationBar(
-            onTap: (int index) {
-              setState(() {
-                _tabNumber = index;
-                controller.index = _tabNumber;
-              });
-            },
-            items: itemsList.map((data) {
-              return BottomNavigationBarItem(
-                icon: itemsList[_tabNumber] == data
-                    ? ShaderMask(
-                        blendMode: BlendMode.srcIn,
-                        shaderCallback: (Rect bounds) {
-                          return ui.Gradient.linear(
-                            Offset(4.0, 24.0),
-                            Offset(24.0, 4.0),
-                            [
-                              Theme.of(context).primaryColor,
-                              Theme.of(context).primaryColorDark,
-                            ],
-                          );
-                        },
-                        child: Icon(data, size: 25.0),
-                      )
-                    : Icon(data, color: Colors.grey, size: 20),
-                title: Container(),
-              );
-            }).toList()),
-        Visibility(
-          visible: _connectionStatusVisible,
-          child: Container(
-              padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
-              width: MediaQuery.of(context).size.width,
-              alignment: Alignment(0.0, 0.0),
-              color: _isOnline ? Colors.green : Colors.red,
-              child: Text(_isOnline ? 'Online' : 'Offline')),
+    List<Widget> tabsList = [
+      ContactTab(navigatorKey: navigatorKeys[0]),
+      ConversationTab(navigatorKey: navigatorKeys[1]),
+      SettingsTab(
+          navigatorKey: navigatorKeys[2],
+          toWelcomePage: () {
+            Navigator.pushReplacementNamed(context, '/welcome');
+          }),
+    ];
+
+    return WillPopScope(
+      onWillPop: () async => !await navigatorKeys[_tabIndex].currentState.maybePop(),
+      child: Scaffold(
+        key: _scaffoldKey,
+        body: IndexedStack(
+          index: _tabIndex,
+          children: tabsList,
         ),
-      ]),
+        bottomNavigationBar:
+            Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+          BottomBar(conversationId: currentConversationId),
+          BottomNavigationBar(
+              onTap: (int index) {
+                setState(() {
+                  _tabIndex = index;
+                });
+              },
+              items: itemsList.map((data) {
+                return BottomNavigationBarItem(
+                  icon: itemsList[_tabIndex] == data
+                      ? ShaderMask(
+                          blendMode: BlendMode.srcIn,
+                          shaderCallback: (Rect bounds) {
+                            return ui.Gradient.linear(
+                              Offset(4.0, 24.0),
+                              Offset(24.0, 4.0),
+                              [
+                                Theme.of(context).primaryColor,
+                                Theme.of(context).primaryColorDark,
+                              ],
+                            );
+                          },
+                          child: Icon(data, size: 25.0),
+                        )
+                      : Icon(data, color: Colors.grey, size: 20),
+                  title: Container(),
+                );
+              }).toList()),
+          Visibility(
+            visible: _connectionStatusVisible,
+            child: Container(
+                padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
+                width: MediaQuery.of(context).size.width,
+                alignment: Alignment(0.0, 0.0),
+                color: _isOnline ? Colors.green : Colors.red,
+                child: Text(_isOnline ? 'Online' : 'Offline')),
+          ),
+        ]),
+      ),
     );
   }
 }
