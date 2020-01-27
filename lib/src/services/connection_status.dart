@@ -14,6 +14,10 @@ class ConnectionStatus {
   /// Stream of current connection status. Only updates when there is a change in connection.
   Stream<bool> get connectionChange => _connectionChangeController.stream;
 
+  factory ConnectionStatus() {
+    return _singleton;
+  }
+
   /// Private internal constructor for the Singleton
   ConnectionStatus._internal() {
     // Only call the init function when there is a subscriber to the stream
@@ -59,9 +63,5 @@ class ConnectionStatus {
 
   void dispose() {
     _connectionChangeController.close();
-  }
-
-  factory ConnectionStatus() {
-    return _singleton;
   }
 }
